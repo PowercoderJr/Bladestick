@@ -1,0 +1,37 @@
+#pragma once
+
+#include "Facet.h"
+
+using namespace Geometry;
+
+Facet::Facet(array<Point^>^ vertices, System::Drawing::Color color)
+{
+	this->vertices = vertices;
+	this->color = color;
+}
+
+Facet::Facet(array<Point^>^ vertices) : Facet::Facet(vertices, System::Drawing::Color::Black) {}
+
+Facet::Facet(Point^ p1, Point^ p2, Point^ p3) : Facet::Facet(gcnew array<Point^> {p1, p2, p3}) {}
+
+Facet::Facet() : Facet::Facet(gcnew Point(), gcnew Point(), gcnew Point()) {}
+
+array<Point^>^ Facet::getVertices()
+{
+	return vertices;
+}
+
+void Facet::setVertices(array<Point^>^ vertices)
+{
+	this->vertices = vertices;
+}
+
+System::Drawing::Color Facet::getColor()
+{
+	return color;
+}
+
+void Facet::setColor(System::Drawing::Color color)
+{
+	this->color = color;
+}

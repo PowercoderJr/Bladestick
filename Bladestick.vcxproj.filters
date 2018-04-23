@@ -30,6 +30,15 @@
     <ClCompile Include="Facet.cpp">
       <Filter>Исходные файлы\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Исходные файлы\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Исходные файлы\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="HollowCylinder.cpp">
+      <Filter>Исходные файлы\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -41,5 +50,31 @@
     <ClInclude Include="Facet.h">
       <Filter>Файлы заголовков\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ITransformable.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="IUpdatable.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="HollowCylinder.h">
+      <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

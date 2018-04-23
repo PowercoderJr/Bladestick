@@ -4,7 +4,7 @@
 
 using namespace Geometry;
 
-Point::Point(float x, float y, float z, float w, float sx, float sy, float sz, float sw)
+Point::Point(double x, double y, double z, double w, double sx, double sy, double sz, double sw)
 {
 	this->x = x;
 	this->y = y;
@@ -16,83 +16,83 @@ Point::Point(float x, float y, float z, float w, float sx, float sy, float sz, f
 	this->sw = sw;
 }
 
-Point::Point(float x, float y, float z, float w) : Point::Point(x, y, z, w, x, y, z, w) {}
+Point::Point(double x, double y, double z, double w) : Point::Point(x, y, z, w, x, y, z, w) {}
 
-Point::Point(float x, float y, float z) : Point::Point(x, y, z, 1) {}
+Point::Point(double x, double y, double z) : Point::Point(x, y, z, 1) {}
 
 Point::Point() : Point::Point(0, 0, 0) {}
 
-float Point::getX()
+double Point::getX()
 {
 	return x;
 }
 
-void Point::setX(float x)
+void Point::setX(double x)
 {
 	this->x = x;
 }
 
-float Point::getY()
+double Point::getY()
 {
 	return y;
 }
 
-void Point::setY(float y)
+void Point::setY(double y)
 {
 	this->y = y;
 }
 
-float Point::getZ()
+double Point::getZ()
 {
 	return z;
 }
 
-void Point::setZ(float z)
+void Point::setZ(double z)
 {
 	this->z = z;
 }
 
-float Point::getW()
+double Point::getW()
 {
 	return w;
 }
 
-void Point::setW(float w)
+void Point::setW(double w)
 {
 	this->w = w;
 }
 
-float Point::getSx()
+double Point::getSx()
 {
 	return sx;
 }
 
-float Point::getSy()
+double Point::getSy()
 {
 	return sy;
 }
 
-float Point::getSz()
+double Point::getSz()
 {
 	return sz;
 }
 
-float Point::getSw()
+double Point::getSw()
 {
 	return sw;
 }
 
-Point^ Point::add(float x, float y, float z)
+Point ^ Point::add(double x, double y, double z)
 {
 	return gcnew Point(this->sx + x, this->sy + y, this->sz + z);
 }
 
-Point^ Point::add(Point^ point)
+Point ^ Point::add(Point ^ point)
 {
 	return gcnew Point(this->sx + point->sx, this->sy + point->sy, this->sz + point->sz);
 }
 
-Point ^ Point::operator+(Point^ point)
+Point  ^ Point::operator+(Point ^ point)
 {
 	return add(point);
 }

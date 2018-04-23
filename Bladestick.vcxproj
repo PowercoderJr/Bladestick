@@ -133,16 +133,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Facet.cpp" />
+    <ClCompile Include="HollowCylinder.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Facet.h" />
+    <ClInclude Include="HollowCylinder.h" />
+    <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

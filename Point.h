@@ -1,38 +1,40 @@
 #pragma once
 
+#include "ITransformable.h"
+
 namespace Geometry
 {
-	public ref class Point
+	public ref class Point : public ITransformable
 	{
-	private:
-		float x;
-		float y;
-		float z;
-		float w;
-		float sx;
-		float sy;
-		float sz;
-		float sw;
+	internal:
+		double x;
+		double y;
+		double z;
+		double w;
+		double sx;
+		double sy;
+		double sz;
+		double sw;
 
 	public:
-		Point(float x, float y, float z, float w, float sx, float sy, float sz, float sw);
-		Point(float x, float y, float z, float w);
-		Point(float x, float y, float z);
+		Point(double x, double y, double z, double w, double sx, double sy, double sz, double sw);
+		Point(double x, double y, double z, double w);
+		Point(double x, double y, double z);
 		Point();
-		float getX();
-		void setX(float x);
-		float getY();
-		void setY(float y);
-		float getZ();
-		void setZ(float z);
-		float getW();
-		void setW(float w);
-		float getSx();
-		float getSy();
-		float getSz();
-		float getSw();
-		Point^ add(float x, float y, float z);
-		Point^ add(Point^ point);
-		Point^ operator+ (Point^ point);
+		double getX();
+		void setX(double x);
+		double getY();
+		void setY(double y);
+		double getZ();
+		void setZ(double z);
+		double getW();
+		void setW(double w);
+		double getSx();
+		double getSy();
+		double getSz();
+		double getSw();
+		Point ^ add(double x, double y, double z);
+		Point ^ add(Point ^ point);
+		Point ^ operator+ (Point ^ point);
 	};
 }

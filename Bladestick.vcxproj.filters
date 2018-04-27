@@ -39,6 +39,9 @@
     <ClCompile Include="HollowCylinder.cpp">
       <Filter>Исходные файлы\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="ZBuffer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="HollowCylinder.h">
       <Filter>Файлы заголовков\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ZBuffer.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

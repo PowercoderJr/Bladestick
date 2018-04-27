@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Point.h"
+#include "IDrawable.h"
 
 namespace Geometry
 {
-	public ref class Facet : public ITransformable
+	public ref class Facet : public ITransformable, public IDrawable
 	{
 	internal:
 		array<Point^> ^ vertices;  //3 вершины
@@ -16,6 +17,7 @@ namespace Geometry
 		Facet(array<Point^> ^ vertices);
 		Facet(Point ^ p1, Point ^ p2, Point ^ p3);
 		Facet();
+		virtual void draw(Bladestick::ZBuffer ^ buffer);
 		array<Point^> ^ getVertices();
 		void setVertices(array<Point^> ^ vertices);
 		System::Drawing::Color getColor();

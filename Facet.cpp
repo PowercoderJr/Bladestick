@@ -22,6 +22,13 @@ Facet::Facet(Point ^ p1, Point ^ p2, Point ^ p3) : Facet::Facet(gcnew array<Poin
 
 Facet::Facet() : Facet::Facet(gcnew Point(), gcnew Point(), gcnew Point()) {}
 
+void Facet::draw(Bladestick::ZBuffer ^ buffer)
+{
+	buffer->drawLine(System::Drawing::Pens::Aqua, vertices[0], vertices[1]);
+	buffer->drawLine(System::Drawing::Pens::Aqua, vertices[1], vertices[2]);
+	buffer->drawLine(System::Drawing::Pens::Aqua, vertices[2], vertices[0]);
+}
+
 array<Point^> ^ Facet::getVertices()
 {
 	return vertices;

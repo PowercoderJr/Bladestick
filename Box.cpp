@@ -30,6 +30,14 @@ void Box::update()
 	updateFacets();
 }
 
+void Box::draw(Bladestick::ZBuffer ^ buffer)
+{
+	for each (Facet ^ facet in facets)
+	{
+		facet->draw(buffer);
+	}
+}
+
 void Box::updatePoints()
 {
 	vertices = gcnew array<Point^>(N_VERTICES)

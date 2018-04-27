@@ -22,7 +22,8 @@ namespace Geometry
 
 		Box(Point ^ bottomCenter, double width, double length, double height);
 		Box(Point ^ corner1, Point ^ corner2);
-		virtual void update() override;
+		virtual void update();
+		virtual void draw(Bladestick::ZBuffer ^ buffer);
 		void updatePoints();
 		void updateFacets();
 		double getWidth();

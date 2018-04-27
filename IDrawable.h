@@ -1,10 +1,12 @@
 #pragma once
 
+#include "ZBuffer.h"
+
 namespace Geometry
 {
 	public interface class IDrawable
 	{
 	public:
-		//void draw(System::Drawing::Graphics ^ g);
+		void draw(Bladestick::ZBuffer ^ buffer);
 	};
 }

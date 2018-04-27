@@ -139,6 +139,7 @@
     <ClCompile Include="HollowCylinder.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
@@ -153,6 +154,7 @@
     </ClInclude>
     <ClInclude Include="Point.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="ZBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

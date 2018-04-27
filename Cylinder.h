@@ -6,7 +6,7 @@
 
 namespace Geometry
 {
-	public ref class Cylinder : public ITransformable, public IUpdatable, public IDrawable
+	public ref class Cylinder : public ITransformable, public IUpdatable/*, public IDrawable*/
 	{
 	internal:
 		Point ^ bottomCenter;
@@ -25,7 +25,7 @@ namespace Geometry
 		static const int N_SIZE_FACETS = 72;
 
 		Cylinder(Point ^ bottomCenter, double exRadius, double height);
-		virtual void update() override;
+		virtual void update();
 		virtual void updatePoints();
 		virtual void updateFacets();
 		Point ^ getBottomCenter();

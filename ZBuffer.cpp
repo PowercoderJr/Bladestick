@@ -1,41 +1,68 @@
 #include "ZBuffer.h"
+#include "Utils.h"
 
-using namespace Bladestick;
+using namespace Bladestick::Drawing;
+using namespace System::Drawing;
 
-template <typename T> void swap(T * a, T * b);
-
-ZBuffer::ZBuffer(System::Drawing::Pen ^ bgPen)
+ZBuffer::ZBuffer(int width, int height, Color ^ bgColor)
 {
-	this->buffer = gcnew array<Pixel, 2>(MAX_WIDTH, MAX_HEIGHT);
-	this->bgPen = bgPen;
+	this->width = width > MAX_WIDTH ? MAX_WIDTH : width;
+	this->height = height > MAX_HEIGHT ? MAX_HEIGHT : height;
+	this->bitmap = gcnew Bitmap(this->width, this->height);
+	this->zbuffer = gcnew array<double>(this->width * this->height);
+	this->bgColor = bgColor;
 }
 
-ZBuffer::ZBuffer() : ZBuffer::ZBuffer(System::Drawing::Pens::Black) {}
+ZBuffer::ZBuffer(int width, int height) : ZBuffer::ZBuffer(width, height, Color::Black) {}
 
-void ZBuffer::clearArea(int w, int h)
+ZBuffer::ZBuffer() : ZBuffer::ZBuffer(600, 400) {}
+
+void ZBuffer::setSize(int width, int height)
 {
-	for (int i = 0; i < w; ++i)
-		for (int j = 0; j < h; ++j)
+	this->width = width > MAX_WIDTH ? MAX_WIDTH : width;
+	this->height = height > MAX_HEIGHT ? MAX_HEIGHT : height;
+	this->bitmap = gcnew Bitmap(this->width, this->height);
+	this->zbuffer = gcnew array<double>(this->width * this->height);
+}
+
+int ZBuffer::getWidth()
+{
+	return width;
+}
+
+int ZBuffer::getHeight()
+{
+	return height;
+}
+
+void ZBuffer::clear()
+{
+	for (int i = 0; i < width; ++i)
+		for (int j = 0; j < height; ++j)
 		{
-			buffer[i, j].z = System::Double::NegativeInfinity;
-			buffer[i, j].pen = bgPen;
+			zbuffer[i * height + j] = System::Double::NegativeInfinity;
+			bitmap->SetPixel(i, j, *bgColor);
 		}
 }
 
-void ZBuffer::render(System::Drawing::Graphics ^ g, int w, int h)
+void ZBuffer::render(System::Drawing::Graphics ^ g)
 {
-	for (int i = 0; i < w; ++i)
-		for (int j = 0; j < h; ++j)
-			g->DrawLine(buffer[i, j].pen, i, j, i+1, j+1);
+	g->DrawImage(bitmap, 0, 0, width, height);
 }
 
-void Bladestick::ZBuffer::setPixel(int x, int y, Pixel pixel)
+void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 {
-	if (pixel.z > buffer[x, y].z)
-		buffer[x, y] = pixel;
+	if (x < 0 || x > MAX_WIDTH || y < 0 || y > MAX_HEIGHT) return;
+
+	int index = x * height + y;
+	if (z > zbuffer[index])
+	{
+		zbuffer[index] = z;
+		bitmap->SetPixel(x, y, *color);
+	}
 }
 
-void ZBuffer::drawLine(System::Drawing::Pen ^ pen, double x0, double y0, double z0, double x1, double y1, double z1)
+void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1)
 {
 	bool steep = false;
 	if (System::Math::Abs(x0 - x1) < System::Math::Abs(y0 - y1))
@@ -56,13 +83,10 @@ void ZBuffer::drawLine(System::Drawing::Pen ^ pen, double x0, double y0, double 
 	int y = y0;
 	for (int x = x0; x <= x1; x++)
 	{
-		Pixel pixel;
-		pixel.z = 0;
-		pixel.pen = pen;
 		if (steep)
-			setPixel(y, x, pixel);
+			setPixel(y, x, 0, color);
 		else
-			setPixel(x, y, pixel);
+			setPixel(x, y, 0, color);
 		error2 += derror2;
 
 		if (error2 > dx) {
@@ -72,24 +96,17 @@ void ZBuffer::drawLine(System::Drawing::Pen ^ pen, double x0, double y0, double 
 	}
 }
 
-void ZBuffer::drawLine(System::Drawing::Pen ^ pen, Geometry::Point ^ p1, Geometry::Point ^ p2)
+void ZBuffer::drawLine(Color ^ color, Bladestick::Drawing::Geometry::Point ^ p1, Bladestick::Drawing::Geometry::Point ^ p2)
 {
-	ZBuffer::drawLine(pen, p1->x, p1->y, p1->z, p2->x, p2->y, p2->z);
+	ZBuffer::drawLine(color, p1->x, p1->y, p1->z, p2->x, p2->y, p2->z);
 }
 
-System::Drawing::Pen ^ ZBuffer::getBgPen()
+Color ^ ZBuffer::getBgColor()
 {
-	return bgPen;
+	return this->bgColor;
 }
 
-void ZBuffer::setBgPen(System::Drawing::Pen ^ bgPen)
+void ZBuffer::setBgColor(Color ^ color)
 {
-	this->bgPen = bgPen;
-}
-
-template <typename T> void swap(T * a, T * b)
-{
-	double h = *a;
-	*a = *b;
-	*b = h;
+	this->bgColor = color;
 }

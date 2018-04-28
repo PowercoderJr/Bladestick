@@ -1,10 +1,16 @@
 #pragma once
 
-namespace Geometry
+namespace Bladestick
 {
-	public interface class ITransformable
+	namespace Drawing
 	{
-	public:
-		
-	};
+		namespace Geometry
+		{
+			public interface class ITransformable
+			{
+			public:
+
+			};
+		}
+	}
 }

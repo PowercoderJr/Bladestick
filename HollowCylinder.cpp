@@ -1,7 +1,7 @@
 #include "HollowCylinder.h"
 #include "Utils.h"
 
-using namespace Geometry;
+using namespace Bladestick::Drawing::Geometry;
 
 HollowCylinder::HollowCylinder(Point ^ bottomCenter, double exRadius, double inRadius, double height) : Cylinder::Cylinder(bottomCenter, exRadius, height)
 {	
@@ -20,7 +20,7 @@ void HollowCylinder::updatePoints()
 	Cylinder::Cylinder::updatePoints();
 	inBottomPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
 	inTopPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
-	double dAlpha = degToRad(360.0 / N_CIRCLE_POINTS);
+	double dAlpha = Bladestick::degToRad(360.0 / N_CIRCLE_POINTS);
 	double alpha = 0;
 	for (int i = 0; i < N_CIRCLE_POINTS; ++i)
 	{

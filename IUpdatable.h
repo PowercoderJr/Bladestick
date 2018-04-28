@@ -1,10 +1,16 @@
 #pragma once
 
-namespace Geometry
+namespace Bladestick
 {
-	public interface class IUpdatable
+	namespace Drawing
 	{
-	public:
-		void update();
-	};
+		namespace Geometry
+		{
+			public interface class IUpdatable
+			{
+			public:
+				void update();
+			};
+		}
+	}
 }

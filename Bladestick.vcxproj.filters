@@ -13,10 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Файлы заголовков\Geometry">
+    <Filter Include="Файлы заголовков\Drawing">
+      <UniqueIdentifier>{5f7940d2-a209-4d96-af42-511b66ae2f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Drawing\Geometry">
       <UniqueIdentifier>{ca9a571b-5e2c-4b10-9357-3ced42906d1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Geometry">
+    <Filter Include="Исходные файлы\Drawing">
+      <UniqueIdentifier>{b9b73214-1c9a-4de8-8044-abc43c4d3224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Drawing\Geometry">
       <UniqueIdentifier>{fce63d4c-cd34-4740-9737-febbe87aabe2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -25,22 +31,22 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Point.cpp">
-      <Filter>Исходные файлы\Geometry</Filter>
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Facet.cpp">
-      <Filter>Исходные файлы\Geometry</Filter>
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Box.cpp">
-      <Filter>Исходные файлы\Geometry</Filter>
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Cylinder.cpp">
-      <Filter>Исходные файлы\Geometry</Filter>
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="HollowCylinder.cpp">
-      <Filter>Исходные файлы\Geometry</Filter>
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="ZBuffer.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,34 +54,34 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Facet.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="ITransformable.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="IUpdatable.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="IDrawable.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Cylinder.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="HollowCylinder.h">
-      <Filter>Файлы заголовков\Geometry</Filter>
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="ZBuffer.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,32 +4,35 @@
 
 namespace Bladestick
 {
-	public ref class ZBuffer
+	namespace Drawing
 	{
-	private:
-		value struct Pixel
+		public ref class ZBuffer
 		{
-			double z;
-			System::Drawing::Pen ^ pen;
+		private:
+			System::Drawing::Bitmap ^ bitmap;
+			array<double> ^ zbuffer;
+			System::Drawing::Color ^ bgColor;
+			int width;
+			int height;
+
+		public:
+			static const int MAX_WIDTH = 1920;
+			static const int MAX_HEIGHT = 1080;
+
+			ZBuffer(int width, int height, System::Drawing::Color ^ bgColor);
+			ZBuffer(int width, int height);
+			ZBuffer();
+			void setSize(int width, int height);
+			int getWidth();
+			int getHeight();
+			void clear();
+			void render(System::Drawing::Graphics ^ g);
+			void setPixel(int x, int y, double z, System::Drawing::Color ^ color);
+			void drawLine(System::Drawing::Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1);
+			void drawLine(System::Drawing::Color ^ color, Geometry::Point ^ p1, Geometry::Point ^ p2);
+			System::Drawing::Color ^ getBgColor();
+			void setBgColor(System::Drawing::Color ^ color);
 		};
 
-		array<Pixel, 2> ^ buffer;
-		System::Drawing::Pen ^ bgPen;
-
-		void setPixel(int x, int y, Pixel pixel);
-
-	public:
-		static const int MAX_WIDTH = 1920;
-		static const int MAX_HEIGHT = 1080;
-
-		ZBuffer(System::Drawing::Pen ^ bgPen);
-		ZBuffer();
-		void clearArea(int w, int h);
-		void render(System::Drawing::Graphics ^ g, int w, int h);
-		void drawLine(System::Drawing::Pen ^ pen, double x0, double y0, double z0, double x1, double y1, double z1);
-		void drawLine(System::Drawing::Pen ^ pen, Geometry::Point ^ p1, Geometry::Point ^ p2);
-		System::Drawing::Pen ^ getBgPen();
-		void setBgPen(System::Drawing::Pen ^ bgPen);
-	};
-
+	}
 }

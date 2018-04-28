@@ -23,12 +23,12 @@ namespace Bladestick {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Panel^  panel2;
 	private: System::Windows::Forms::PictureBox^  canvas;
-			 ZBuffer ^ zb;
+			 Bladestick::Drawing::ZBuffer ^ zb;
 	public:
 		MainForm(void)
 		{
 			InitializeComponent();
-			zb = gcnew ZBuffer();
+			zb = gcnew Bladestick::Drawing::ZBuffer();
 			g = canvas->CreateGraphics();
 		}
 

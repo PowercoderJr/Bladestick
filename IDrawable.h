@@ -2,11 +2,17 @@
 
 #include "ZBuffer.h"
 
-namespace Geometry
+namespace Bladestick
 {
-	public interface class IDrawable
+	namespace Drawing
 	{
-	public:
-		void draw(Bladestick::ZBuffer ^ buffer);
-	};
+		namespace Geometry
+		{
+			public interface class IDrawable
+			{
+			public:
+				void draw(Bladestick::Drawing::ZBuffer ^ buffer);
+			};
+		}
+	}
 }

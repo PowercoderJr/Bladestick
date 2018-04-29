@@ -83,17 +83,20 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 	}
 	int dx = x1 - x0;
 	int dy = y1 - y0;
+	int y = y0;
+	double z = z0;
+	double zStep = (z1 - z0) / dx;//System::Math::Sqrt(dx * dx + dy * dy);
 	int derror2 = System::Math::Abs(dy) * 2;
 	int error2 = 0;
-	int y = y0;
 	int diry = y1 > y0 ? 1 : -1;
 	for (int x = x0; x <= x1; x++)
 	{
 		if (steep)
-			setPixel(y, x, 0, color);
+			setPixel(y, x, z, color);
 		else
-			setPixel(x, y, 0, color);
+			setPixel(x, y, z, color);
 		error2 += derror2;
+		z += zStep;
 
 		if (error2 > dx) {
 			y += diry;

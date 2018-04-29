@@ -27,8 +27,10 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Orange);
 	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Point(0, 0, 0), gcnew Geometry::Point(100, 200, 100), Color::Orange);
 	//box->update();	
+	/*zb->drawLine(Color::Red, 100, 0, 0, 300, 200, 0);
+	zb->drawLine(Color::Green, 100, 0, -50, 300, 200, 50);*/
 	for (int i = 0; i < 100; ++i)
-		zb->drawToBuffer(gcnew Geometry::Facet(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))));
+		zb->drawToBuffer(gcnew Geometry::Facet(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))));
 	//box = gcnew Geometry::Box(gcnew Geometry::Point(300, 400, 0), gcnew Geometry::Point(600, 500, 100), Color::Lime);
 	//box = gcnew Geometry::Box(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Lime);
 	//box->update();

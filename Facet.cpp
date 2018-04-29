@@ -5,7 +5,6 @@
 #include "ZBuffer.h"
 
 using namespace Bladestick::Drawing::Geometry;
-//using namespace System::Drawing;
 
 Facet::Facet(array<Point^> ^ vertices, System::Drawing::Color ^ color)
 {
@@ -46,10 +45,10 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 	else
 	{
 		//Контур
-		System::Drawing::Color ^ edgeColor = System::Drawing::Color::White;
+		/*System::Drawing::Color ^ edgeColor = System::Drawing::Color::White;
 		buffer->drawLine(edgeColor, vertices[0], vertices[1]);
 		buffer->drawLine(edgeColor, vertices[1], vertices[2]);
-		buffer->drawLine(edgeColor, vertices[2], vertices[0]);
+		buffer->drawLine(edgeColor, vertices[2], vertices[0]);*/
 
 		int height = vertices[2]->y - vertices[0]->y;
 		Point ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
@@ -87,10 +86,17 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 		for (int i = 0; i <= height; i++)
 		{
 			double k = (double)i / height;
-			Point ^ A = leftSmaller + (leftBigger - leftSmaller) * k;
-			Point ^ B = rightSmaller + (rightBigger - rightSmaller) * k;
-			for (int j = A->x; j <= B->x; j++)
-				buffer->setPixel(j, vertices[0]->y + i, 0, color);
+			int leftX = leftSmaller->x + (leftBigger->x - leftSmaller->x) * k;
+			int rightX = rightSmaller->x + (rightBigger->x - rightSmaller->x) * k;
+			int leftZ = leftSmaller->z + (leftBigger->z - leftSmaller->z) * k;
+			int rightZ = rightSmaller->z + (rightBigger->z - rightSmaller->z) * k;
+			int length = rightX - leftX;
+			for (int j = 0; j <= length; j++)
+			{
+				double k2 = (double)j / length;
+				double z = leftZ + (rightZ - leftZ) * k2;
+				buffer->setPixel(leftX + j, vertices[0]->y + i, z, color);
+			}
 		}
 	}
 }

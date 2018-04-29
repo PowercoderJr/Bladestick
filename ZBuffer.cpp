@@ -1,15 +1,13 @@
 #include "ZBuffer.h"
 #include "Utils.h"
+#include "IDrawable.h"
 
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
 
 ZBuffer::ZBuffer(int width, int height, Color ^ bgColor)
 {
-	this->width = width > MAX_WIDTH ? MAX_WIDTH : width;
-	this->height = height > MAX_HEIGHT ? MAX_HEIGHT : height;
-	this->bitmap = gcnew Bitmap(this->width, this->height);
-	this->zbuffer = gcnew array<double>(this->width * this->height);
+	setSize(width, height);
 	this->bgColor = bgColor;
 }
 
@@ -19,8 +17,8 @@ ZBuffer::ZBuffer() : ZBuffer::ZBuffer(600, 400) {}
 
 void ZBuffer::setSize(int width, int height)
 {
-	this->width = width > MAX_WIDTH ? MAX_WIDTH : width;
-	this->height = height > MAX_HEIGHT ? MAX_HEIGHT : height;
+	this->width = width < 1 ? 1 : width;
+	this->height = height < 1 ? 1 : height;
 	this->bitmap = gcnew Bitmap(this->width, this->height);
 	this->zbuffer = gcnew array<double>(this->width * this->height);
 }
@@ -45,6 +43,11 @@ void ZBuffer::clear()
 		}
 }
 
+void ZBuffer::drawToBuffer(IDrawable ^ drawable)
+{
+	drawable->draw(this);
+}
+
 void ZBuffer::render(System::Drawing::Graphics ^ g)
 {
 	g->DrawImage(bitmap, 0, 0, width, height);
@@ -52,7 +55,8 @@ void ZBuffer::render(System::Drawing::Graphics ^ g)
 
 void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 {
-	if (x < 0 || x > MAX_WIDTH || y < 0 || y > MAX_HEIGHT) return;
+	//if (x < 0 || x >= MAX_WIDTH || y < 0 || y >= MAX_HEIGHT) return;
+	if (x < 0 || x >= width || y < 0 || y >= height) return;
 
 	int index = x * height + y;
 	if (z > zbuffer[index])
@@ -62,6 +66,7 @@ void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 	}
 }
 
+//TODO: пересмотреть со введением Z
 void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1)
 {
 	bool steep = false;
@@ -81,6 +86,7 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 	int derror2 = System::Math::Abs(dy) * 2;
 	int error2 = 0;
 	int y = y0;
+	int diry = y1 > y0 ? 1 : -1;
 	for (int x = x0; x <= x1; x++)
 	{
 		if (steep)
@@ -90,7 +96,7 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 		error2 += derror2;
 
 		if (error2 > dx) {
-			y += (y1 > y0 ? 1 : -1);
+			y += diry;
 			error2 -= dx * 2;
 		}
 	}

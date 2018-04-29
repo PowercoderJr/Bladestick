@@ -56,6 +56,11 @@ namespace Bladestick
 				Point ^ multiply(Point ^ point);
 				Point ^ operator* (double x);
 				Point ^ operator* (Point ^ point);
+				Point ^ divide(double x, double y, double z);
+				Point ^ divide(double x);
+				Point ^ divide(Point ^ point);
+				Point ^ operator/ (double x);
+				Point ^ operator/ (Point ^ point);
 			};
 		}
 	}

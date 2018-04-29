@@ -2,6 +2,7 @@
 
 #include "Facet.h"
 #include "IUpdatable.h"
+#include "ZBuffer.h"
 #include "IDrawable.h"
 
 namespace Bladestick
@@ -13,7 +14,8 @@ namespace Bladestick
 			public ref class Box : public ITransformable, public IUpdatable, public IDrawable
 			{
 			internal:
-				Point ^ corner1, ^ corner2;
+				Point ^ corner1;
+				Point ^ corner2;
 				array<Point^> ^ vertices;  //8 вершин
 				array<Facet^> ^ facets;  //12 треугольников
 				double width;

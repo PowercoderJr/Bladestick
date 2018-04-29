@@ -1,18 +1,15 @@
 #pragma once
 
-#include "ZBuffer.h"
-
 namespace Bladestick
 {
 	namespace Drawing
 	{
-		namespace Geometry
+		ref class ZBuffer;
+
+		public interface class IDrawable
 		{
-			public interface class IDrawable
-			{
-			public:
-				void draw(Bladestick::Drawing::ZBuffer ^ buffer);
-			};
-		}
+		public:
+			void draw(ZBuffer ^ buffer);
+		};
 	}
 }

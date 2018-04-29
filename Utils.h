@@ -27,4 +27,10 @@ namespace Bladestick
 		a[i] = a[j];
 		a[j] = h;
 	}
+
+	static double cmpDoubles(double a, double b)
+	{
+		static const double epsilon = 0.00000001;
+		return System::Math::Abs(a - b) > epsilon ? a - b : 0;
+	}
 }

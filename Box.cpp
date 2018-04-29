@@ -36,7 +36,7 @@ void Box::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 {
 	for each (Facet ^ facet in facets)
 	{
-		facet->draw(buffer);
+		buffer->drawToBuffer(facet);
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include "IDrawable.h"
 
 namespace Bladestick
 {
@@ -16,8 +17,8 @@ namespace Bladestick
 			int height;
 
 		public:
-			static const int MAX_WIDTH = 1920;
-			static const int MAX_HEIGHT = 1080;
+			/*static const int MAX_WIDTH = 1920;
+			static const int MAX_HEIGHT = 1080;*/
 
 			ZBuffer(int width, int height, System::Drawing::Color ^ bgColor);
 			ZBuffer(int width, int height);
@@ -26,6 +27,7 @@ namespace Bladestick
 			int getWidth();
 			int getHeight();
 			void clear();
+			void drawToBuffer(IDrawable ^ drawable);
 			void render(System::Drawing::Graphics ^ g);
 			void setPixel(int x, int y, double z, System::Drawing::Color ^ color);
 			void drawLine(System::Drawing::Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1);

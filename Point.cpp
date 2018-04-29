@@ -191,6 +191,31 @@ Point ^ Point::operator*(Point ^ point)
 	return multiply(point);
 }
 
+Point ^ Point::divide(double x, double y, double z)
+{
+	return multiply(1.0 / x, 1.0 / y, 1.0 / z);
+}
+
+Point ^ Point::divide(double x)
+{
+	return divide(x, x, x);
+}
+
+Point ^ Point::divide(Point ^ point)
+{
+	return divide(point->sx, point->sy, point->sz);
+}
+
+Point ^ Point::operator/(double x)
+{
+	return divide(x);
+}
+
+Point ^ Point::operator/(Point ^ point)
+{
+	return divide(point);
+}
+
 /*void toString()
 {
 	return "Point(" + x + ", " + y + ", " + z + ")";

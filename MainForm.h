@@ -93,6 +93,7 @@ namespace Bladestick {
 			// 
 			// panel2
 			// 
+			this->panel2->BackColor = System::Drawing::SystemColors::Control;
 			this->panel2->Controls->Add(this->canvas);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel2->Location = System::Drawing::Point(0, 0);
@@ -102,7 +103,11 @@ namespace Bladestick {
 			// 
 			// canvas
 			// 
-			this->canvas->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->canvas->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->canvas->BackColor = System::Drawing::SystemColors::Control;
+			this->canvas->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->canvas->Location = System::Drawing::Point(0, 0);
 			this->canvas->Name = L"canvas";
 			this->canvas->Size = System::Drawing::Size(964, 682);

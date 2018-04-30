@@ -25,7 +25,7 @@ namespace Bladestick
 				virtual void draw(ZBuffer ^ buffer);
 				virtual void move(double x, double y, double z);
 				virtual void scale(double a, double b, double c);
-				virtual void rotate(double alpha, double beta, double gamma);
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg);
 				array<Vector3D^> ^ getVertices();
 				void setVertices(array<Vector3D^> ^ vertices);
 				System::Drawing::Color ^ getColor();

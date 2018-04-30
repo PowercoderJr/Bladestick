@@ -3,6 +3,7 @@
 #include "Facet.h"
 #include "Utils.h"
 #include "ZBuffer.h"
+#include "Vector3D.h"
 
 using namespace Bladestick::Drawing::Geometry;
 
@@ -28,6 +29,8 @@ Facet::Facet() : Facet::Facet(gcnew Vector3D(), gcnew Vector3D(), gcnew Vector3D
 
 void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 {
+	System::Random ^ rnd = gcnew System::Random();
+	System::Drawing::Color color = System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));
 	if (cmpDoubles(vertices[0]->y, vertices[1]->y) == 0 && cmpDoubles(vertices[1]->y, vertices[2]->y) == 0) return;
 
 	if (vertices[0]->y > vertices[1]->y) swap(vertices, 0, 1);
@@ -110,9 +113,10 @@ void Facet::scale(double a, double b, double c)
 	throw gcnew System::NotImplementedException();
 }
 
-void Facet::rotate(double alpha, double beta, double gamma)
+void Facet::rotate(double alphaDeg, double betaDeg, double gammaDeg)
 {
-	throw gcnew System::NotImplementedException();
+	for each (Vector3D ^ vector in vertices)
+		vector->rotate(alphaDeg, betaDeg, gammaDeg);
 }
 
 array<Vector3D^> ^ Facet::getVertices()

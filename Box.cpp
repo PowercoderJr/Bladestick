@@ -1,4 +1,5 @@
 #include "Box.h"
+#include "Vector3D.h"
 
 using namespace Bladestick::Drawing::Geometry;
 
@@ -83,9 +84,10 @@ void Box::scale(double a, double b, double c)
 	throw gcnew System::NotImplementedException();
 }
 
-void Box::rotate(double alpha, double beta, double gamma)
+void Box::rotate(double alphaDeg, double betaDeg, double gammaDeg)
 {
-	throw gcnew System::NotImplementedException();
+	for each (Facet ^ facet in facets)
+		facet->rotate(alphaDeg, betaDeg, gammaDeg);
 }
 
 double Box::getWidth()

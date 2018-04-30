@@ -33,7 +33,7 @@ namespace Bladestick
 				virtual void draw(Bladestick::Drawing::ZBuffer ^ buffer);
 				virtual void move(double x, double y, double z);
 				virtual void scale(double a, double b, double c);
-				virtual void rotate(double alpha, double beta, double gamma);
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg);
 				void updatePoints();
 				void updateFacets();
 				double getWidth();

@@ -138,6 +138,7 @@
     <ClCompile Include="Facet.cpp" />
     <ClCompile Include="HollowCylinder.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Vector3D.cpp" />
     <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="ZBuffer.h" />

@@ -66,7 +66,6 @@ void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 	}
 }
 
-//TODO: пересмотреть со введением Z
 void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1)
 {
 	bool steep = false;
@@ -98,14 +97,15 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 		error2 += derror2;
 		z += zStep;
 
-		if (error2 > dx) {
+		if (error2 > dx)
+		{
 			y += diry;
 			error2 -= dx * 2;
 		}
 	}
 }
 
-void ZBuffer::drawLine(Color ^ color, Bladestick::Drawing::Geometry::Point ^ p1, Bladestick::Drawing::Geometry::Point ^ p2)
+void ZBuffer::drawLine(Color ^ color, Geometry::Vector3D ^ p1, Geometry::Vector3D ^ p2)
 {
 	ZBuffer::drawLine(color, p1->x, p1->y, p1->z, p2->x, p2->y, p2->z);
 }

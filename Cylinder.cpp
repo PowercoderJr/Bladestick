@@ -3,7 +3,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Cylinder::Cylinder(Point ^ bottomCenter, double exRadius, double height)
+Cylinder::Cylinder(Vector3D ^ bottomCenter, double exRadius, double height)
 {
 	this->bottomCenter = bottomCenter;
 	this->exRadius = exRadius;
@@ -19,17 +19,17 @@ void Cylinder::update()
 
 void Cylinder::updatePoints()
 {
-	this->topCenter = bottomCenter + gcnew Point(0, 0, height);
-	exBottomPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
-	exTopPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
+	this->topCenter = bottomCenter + gcnew Vector3D(0, 0, height);
+	exBottomPoints = gcnew array<Vector3D^>(N_CIRCLE_POINTS);
+	exTopPoints = gcnew array<Vector3D^>(N_CIRCLE_POINTS);
 	double dAlpha = Bladestick::degToRad(360.0 / N_CIRCLE_POINTS);
 	double alpha = 0;
 	for (int i = 0; i < N_CIRCLE_POINTS; ++i)
 	{
 		double x = bottomCenter->sx + exRadius * System::Math::Cos(alpha);
 		double y = bottomCenter->sy + exRadius * System::Math::Sin(alpha);
-		exBottomPoints[i] = gcnew Point(x, y, bottomCenter->sz);
-		exTopPoints[i] = gcnew Point(x, y, topCenter->sz);
+		exBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->sz);
+		exTopPoints[i] = gcnew Vector3D(x, y, topCenter->sz);
 		alpha += dAlpha;
 	}
 }
@@ -49,22 +49,22 @@ void Cylinder::updateFacets()
 	}
 }
 
-Point ^ Cylinder::getBottomCenter()
+Vector3D ^ Cylinder::getBottomCenter()
 {
 	return bottomCenter;
 }
 
-void Cylinder::setBottomCenter(Point ^ bottomCenter)
+void Cylinder::setBottomCenter(Vector3D ^ bottomCenter)
 {
 	this->bottomCenter = bottomCenter;
 }
 
-Point ^ Cylinder::getTopCenter()
+Vector3D ^ Cylinder::getTopCenter()
 {
 	return topCenter;
 }
 
-void Cylinder::setTopCenter(Point ^ topCenter)
+void Cylinder::setTopCenter(Vector3D ^ topCenter)
 {
 	this->topCenter = topCenter;
 }
@@ -89,12 +89,12 @@ void Cylinder::setHeight(double height)
 	this->height = height;
 }
 
-array<Point^> ^ Cylinder::getExBottomPoints()
+array<Vector3D^> ^ Cylinder::getExBottomPoints()
 {
 	return exBottomPoints;
 }
 
-array<Point^> ^ Cylinder::getExTopPoints()
+array<Vector3D^> ^ Cylinder::getExTopPoints()
 {
 	return exTopPoints;
 }

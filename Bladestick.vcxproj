@@ -138,7 +138,7 @@
     <ClCompile Include="Facet.cpp" />
     <ClCompile Include="HollowCylinder.cpp" />
     <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Vector3D.cpp" />
     <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,13 +152,14 @@
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="Point.h" />
+    <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="ZBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

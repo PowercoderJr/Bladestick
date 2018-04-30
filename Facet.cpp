@@ -6,15 +6,15 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Facet::Facet(array<Point^> ^ vertices, System::Drawing::Color ^ color)
+Facet::Facet(array<Vector3D^> ^ vertices, System::Drawing::Color ^ color)
 {
 	this->vertices = vertices;
 	this->color = color;
 }
 
-Facet::Facet(array<Point^> ^ vertices) : Facet::Facet(vertices, System::Drawing::Color::Black) {}
+Facet::Facet(array<Vector3D^> ^ vertices) : Facet::Facet(vertices, System::Drawing::Color::Black) {}
 
-Facet::Facet(Point ^ p1, Point ^ p2, Point ^ p3, System::Drawing::Color ^ color) : Facet::Facet(gcnew array<Point^>(3), color)
+Facet::Facet(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color ^ color) : Facet::Facet(gcnew array<Vector3D^>(3), color)
 {
 	//TODO?: можно обойтись без тела?
 	vertices->SetValue(p1, 0);
@@ -22,11 +22,10 @@ Facet::Facet(Point ^ p1, Point ^ p2, Point ^ p3, System::Drawing::Color ^ color)
 	vertices->SetValue(p3, 2);
 }
 
-Facet::Facet(Point ^ p1, Point ^ p2, Point ^ p3) : Facet::Facet(p1, p2, p3, System::Drawing::Color::Black) {}
+Facet::Facet(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3) : Facet::Facet(p1, p2, p3, System::Drawing::Color::Black) {}
 
-Facet::Facet() : Facet::Facet(gcnew Point(), gcnew Point(), gcnew Point()) {}
+Facet::Facet() : Facet::Facet(gcnew Vector3D(), gcnew Vector3D(), gcnew Vector3D()) {}
 
-//TODO: пересмотреть со введением Z
 void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 {
 	if (cmpDoubles(vertices[0]->y, vertices[1]->y) == 0 && cmpDoubles(vertices[1]->y, vertices[2]->y) == 0) return;
@@ -38,7 +37,7 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 	if (cmpDoubles(vertices[0]->y, vertices[1]->y) != 0 && cmpDoubles(vertices[1]->y, vertices[2]->y) != 0)
 	{
 		double yRatio = (vertices[2]->y - vertices[0]->y) / (vertices[1]->y - vertices[0]->y);
-		Point ^ breakPoint = vertices[0] + (vertices[2] - vertices[0]) / yRatio;
+		Vector3D ^ breakPoint = vertices[0] + (vertices[2] - vertices[0]) / yRatio;
 		(gcnew Facet(vertices[0], vertices[1], breakPoint, color))->draw(buffer);
 		(gcnew Facet(breakPoint, vertices[1], vertices[2], color))->draw(buffer);
 	}
@@ -51,7 +50,7 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 		buffer->drawLine(edgeColor, vertices[2], vertices[0]);*/
 
 		int height = vertices[2]->y - vertices[0]->y;
-		Point ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
+		Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
 #pragma region Узнаю кто левый-правый-верхний-нижний
 		if (cmpDoubles(vertices[0]->y, vertices[1]->y) == 0)
 		{
@@ -101,12 +100,27 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 	}
 }
 
-array<Bladestick::Drawing::Geometry::Point^> ^ Facet::getVertices()
+void Facet::move(double x, double y, double z)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+void Facet::scale(double a, double b, double c)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+void Facet::rotate(double alpha, double beta, double gamma)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+array<Vector3D^> ^ Facet::getVertices()
 {
 	return vertices;
 }
 
-void Facet::setVertices(array<Point^> ^ vertices)
+void Facet::setVertices(array<Vector3D^> ^ vertices)
 {
 	this->vertices = vertices;
 }

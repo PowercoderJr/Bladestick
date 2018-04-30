@@ -30,9 +30,6 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>Исходные файлы\Drawing\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Facet.cpp">
       <Filter>Исходные файлы\Drawing\Geometry</Filter>
     </ClCompile>
@@ -48,13 +45,13 @@
     <ClCompile Include="ZBuffer.cpp">
       <Filter>Исходные файлы\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Vector3D.cpp">
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
       <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Facet.h">
       <Filter>Файлы заголовков\Drawing\Geometry</Filter>
@@ -82,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="IDrawable.h">
       <Filter>Файлы заголовков\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3D.h">
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

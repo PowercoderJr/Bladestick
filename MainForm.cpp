@@ -24,27 +24,25 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	zb->setSize(canvas->Width, canvas->Height);
 	zb->clear();
 	Random ^ rnd = gcnew Random();
-	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Orange);
-	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Point(0, 0, 0), gcnew Geometry::Point(100, 200, 100), Color::Orange);
+	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Orange);
+	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(0, 0, 0), gcnew Geometry::Vector3D(100, 200, 100), Color::Orange);
 	//box->update();	
 	/*zb->drawLine(Color::Red, 100, 0, 0, 300, 200, 0);
 	zb->drawLine(Color::Green, 100, 0, -50, 300, 200, 50);*/
-	for (int i = 0; i < 100; ++i)
-		zb->drawToBuffer(gcnew Geometry::Facet(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))));
-	//box = gcnew Geometry::Box(gcnew Geometry::Point(300, 400, 0), gcnew Geometry::Point(600, 500, 100), Color::Lime);
-	//box = gcnew Geometry::Box(gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Point(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Lime);
+	for (int i = 0; i < 10; ++i)
+		zb->drawToBuffer(gcnew Geometry::Facet(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))));
+	//box = gcnew Geometry::Box(gcnew Geometry::Vector3D(300, 400, 0), gcnew Geometry::Vector3D(600, 500, 100), Color::Lime);
+	//box = gcnew Geometry::Box(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Lime);
 	//box->update();
 	//zb->drawToBuffer(box);
-	zb->render(g);
 	/*clock_t start, stop;
 	start = clock();
 	for (int i = 0; i < 100000; ++i)
 	{
-		Geometry::Facet ^ facet = gcnew Geometry::Facet(gcnew Geometry::Point(50, 50, 50), gcnew Geometry::Point(100, 300, 50), gcnew Geometry::Point(200, 100, 50), Color::Red);
+		Geometry::Facet ^ facet = gcnew Geometry::Facet(gcnew Geometry::Vector3D(50, 50, 50), gcnew Geometry::Vector3D(100, 300, 50), gcnew Geometry::Vector3D(200, 100, 50), Color::Red);
 		zb->drawToBuffer(facet);
-		zb->render(g);
 	}
 	stop = clock();*/
-
+	zb->render(g);
 	return System::Void();
 }

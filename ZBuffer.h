@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Point.h"
+#include "Vector3D.h"
 #include "IDrawable.h"
 
 namespace Bladestick
@@ -31,7 +31,7 @@ namespace Bladestick
 			void render(System::Drawing::Graphics ^ g);
 			void setPixel(int x, int y, double z, System::Drawing::Color ^ color);
 			void drawLine(System::Drawing::Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1);
-			void drawLine(System::Drawing::Color ^ color, Geometry::Point ^ p1, Geometry::Point ^ p2);
+			void drawLine(System::Drawing::Color ^ color, Geometry::Vector3D ^ p1, Geometry::Vector3D ^ p2);
 			System::Drawing::Color ^ getBgColor();
 			void setBgColor(System::Drawing::Color ^ color);
 		};

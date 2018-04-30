@@ -2,19 +2,19 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Box::Box(Point ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color)
+Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color)
 {
 	this->width = width;
 	this->length = length;
 	this->height = height;
 	this->color = color;
 
-	this->corner1 = gcnew Point(bottomCenter->sx - width / 2, bottomCenter->sy - length / 2, bottomCenter->sz);
-	this->corner2 = gcnew Point(bottomCenter->sx + width / 2, bottomCenter->sy + length / 2, bottomCenter->sz + height);
+	this->corner1 = gcnew Vector3D(bottomCenter->sx - width / 2, bottomCenter->sy - length / 2, bottomCenter->sz);
+	this->corner2 = gcnew Vector3D(bottomCenter->sx + width / 2, bottomCenter->sy + length / 2, bottomCenter->sz + height);
 	update();
 }
 
-Box::Box(Point ^ corner1, Point ^ corner2, System::Drawing::Color ^ color)
+Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color)
 {
 	this->width = corner2->sx - corner1->sx;
 	this->length = corner2->sy - corner1->sy;
@@ -22,8 +22,7 @@ Box::Box(Point ^ corner1, Point ^ corner2, System::Drawing::Color ^ color)
 	this->corner1 = corner1;
 	this->corner2 = corner2;
 	this->color = color;
-	updatePoints();
-	updateFacets();
+	update();
 }
 
 void Box::update()
@@ -42,16 +41,16 @@ void Box::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 
 void Box::updatePoints()
 {
-	vertices = gcnew array<Point^>(N_VERTICES)
+	vertices = gcnew array<Vector3D^>(N_VERTICES)
 	{
-		gcnew Point(corner1->sx, corner1->sy, corner1->sz),		//0 - левый ближний нижний
-			gcnew Point(corner1->sx, corner2->sy, corner1->sz), //1 - левый дальний нижний
-			gcnew Point(corner2->sx, corner1->sy, corner1->sz), //2 - правый ближний нижний
-			gcnew Point(corner2->sx, corner2->sy, corner1->sz), //3 - правый дальний нижний
-			gcnew Point(corner1->sx, corner1->sy, corner2->sz), //4 - левый ближний верхний
-			gcnew Point(corner1->sx, corner2->sy, corner2->sz), //5 - левый дальний верхний
-			gcnew Point(corner2->sx, corner1->sy, corner2->sz), //6 - правый ближний верхний
-			gcnew Point(corner2->sx, corner2->sy, corner2->sz)	//7 - правый дальний верхний
+		gcnew Vector3D(corner1->sx, corner1->sy, corner1->sz),		//0 - левый ближний нижний
+			gcnew Vector3D(corner1->sx, corner2->sy, corner1->sz), //1 - левый дальний нижний
+			gcnew Vector3D(corner2->sx, corner1->sy, corner1->sz), //2 - правый ближний нижний
+			gcnew Vector3D(corner2->sx, corner2->sy, corner1->sz), //3 - правый дальний нижний
+			gcnew Vector3D(corner1->sx, corner1->sy, corner2->sz), //4 - левый ближний верхний
+			gcnew Vector3D(corner1->sx, corner2->sy, corner2->sz), //5 - левый дальний верхний
+			gcnew Vector3D(corner2->sx, corner1->sy, corner2->sz), //6 - правый ближний верхний
+			gcnew Vector3D(corner2->sx, corner2->sy, corner2->sz)	//7 - правый дальний верхний
 	};
 }
 
@@ -72,6 +71,21 @@ void Box::updateFacets()
 			gcnew Facet(vertices[4], vertices[5], vertices[6], color),
 			gcnew Facet(vertices[5], vertices[6], vertices[7], color)
 	};
+}
+
+void Box::move(double x, double y, double z)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+void Box::scale(double a, double b, double c)
+{
+	throw gcnew System::NotImplementedException();
+}
+
+void Box::rotate(double alpha, double beta, double gamma)
+{
+	throw gcnew System::NotImplementedException();
 }
 
 double Box::getWidth()
@@ -104,7 +118,7 @@ void Box::setHeight(double height)
 	this->height = height;
 }
 
-array<Point^> ^ Box::getVertices()
+array<Vector3D^> ^ Box::getVertices()
 {
 	return vertices;
 }

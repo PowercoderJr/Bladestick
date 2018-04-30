@@ -14,9 +14,9 @@ namespace Bladestick
 			public ref class Box : public ITransformable, public IUpdatable, public IDrawable
 			{
 			internal:
-				Point ^ corner1;
-				Point ^ corner2;
-				array<Point^> ^ vertices;  //8 вершин
+				Vector3D ^ corner1;
+				Vector3D ^ corner2;
+				array<Vector3D^> ^ vertices;  //8 вершин
 				array<Facet^> ^ facets;  //12 треугольников
 				double width;
 				double length;
@@ -27,10 +27,13 @@ namespace Bladestick
 				static const int N_VERTICES = 8;
 				static const int N_FACETS = 12;
 
-				Box(Point ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color);
-				Box(Point ^ corner1, Point ^ corner2, System::Drawing::Color ^ color);
+				Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color);
+				Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color);
 				virtual void update();
 				virtual void draw(Bladestick::Drawing::ZBuffer ^ buffer);
+				virtual void move(double x, double y, double z);
+				virtual void scale(double a, double b, double c);
+				virtual void rotate(double alpha, double beta, double gamma);
 				void updatePoints();
 				void updateFacets();
 				double getWidth();
@@ -39,7 +42,7 @@ namespace Bladestick
 				void setLength(double length);
 				double getHeight();
 				void setHeight(double height);
-				array<Point^> ^ getVertices();
+				array<Vector3D^> ^ getVertices();
 				array<Facet^> ^ getFacets();
 			};
 		}

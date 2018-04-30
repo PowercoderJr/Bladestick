@@ -10,15 +10,15 @@ namespace Bladestick
 	{
 		namespace Geometry
 		{
-			public ref class Cylinder : public ITransformable, public IUpdatable/*, public IDrawable*/
+			public ref class Cylinder : public IUpdatable/*, public ITransformable, public IDrawable*/
 			{
 			internal:
-				Point ^ bottomCenter;
-				Point ^ topCenter;
+				Vector3D ^ bottomCenter;
+				Vector3D ^ topCenter;
 				double exRadius;
 				double height;
-				array<Point^> ^ exBottomPoints;		//36 точек нижней окружности
-				array<Point^> ^ exTopPoints;		//36 точек верхней окружности
+				array<Vector3D^> ^ exBottomPoints;		//36 точек нижней окружности
+				array<Vector3D^> ^ exTopPoints;		//36 точек верхней окружности
 				array<Facet^> ^ exFacets;			//72 внешние боковые грани
 				array<Facet^> ^ topCircleFacets;	//36(72?) грани оснований
 				array<Facet^> ^ bottomCircleFacets;	//36(72?) грани оснований
@@ -28,20 +28,20 @@ namespace Bladestick
 				static const int N_CIRCLE_FACETS = 36;
 				static const int N_SIZE_FACETS = 72;
 
-				Cylinder(Point ^ bottomCenter, double exRadius, double height);
+				Cylinder(Vector3D ^ bottomCenter, double exRadius, double height);
 				virtual void update();
 				virtual void updatePoints();
 				virtual void updateFacets();
-				Point ^ getBottomCenter();
-				void setBottomCenter(Point ^ bottomCenter);
-				Point ^ getTopCenter();
-				void setTopCenter(Point ^ topCenter);
+				Vector3D ^ getBottomCenter();
+				void setBottomCenter(Vector3D ^ bottomCenter);
+				Vector3D ^ getTopCenter();
+				void setTopCenter(Vector3D ^ topCenter);
 				double getExRadius();
 				void setExRadius(double exRadius);
 				double getHeight();
 				void setHeight(double height);
-				array<Point^> ^ getExBottomPoints();
-				array<Point^> ^ getExTopPoints();
+				array<Vector3D^> ^ getExBottomPoints();
+				array<Vector3D^> ^ getExTopPoints();
 				array<Facet^> ^ getExFacets();
 				array<Facet^> ^ getTopCircleFacets();
 				array<Facet^> ^ getBottomCircleFacets();

@@ -3,7 +3,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-HollowCylinder::HollowCylinder(Point ^ bottomCenter, double exRadius, double inRadius, double height) : Cylinder::Cylinder(bottomCenter, exRadius, height)
+HollowCylinder::HollowCylinder(Vector3D ^ bottomCenter, double exRadius, double inRadius, double height) : Cylinder::Cylinder(bottomCenter, exRadius, height)
 {	
 	this->inRadius = inRadius;
 	update();
@@ -17,17 +17,17 @@ void HollowCylinder::update()
 
 void HollowCylinder::updatePoints()
 {
-	Cylinder::Cylinder::updatePoints();
-	inBottomPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
-	inTopPoints = gcnew array<Point^>(N_CIRCLE_POINTS);
+	Cylinder::updatePoints();
+	inBottomPoints = gcnew array<Vector3D^>(N_CIRCLE_POINTS);
+	inTopPoints = gcnew array<Vector3D^>(N_CIRCLE_POINTS);
 	double dAlpha = Bladestick::degToRad(360.0 / N_CIRCLE_POINTS);
 	double alpha = 0;
 	for (int i = 0; i < N_CIRCLE_POINTS; ++i)
 	{
 		double x = bottomCenter->sx + inRadius * System::Math::Cos(alpha);
 		double y = bottomCenter->sy + inRadius * System::Math::Sin(alpha);
-		inBottomPoints[i] = gcnew Point(x, y, bottomCenter->sz);
-		inTopPoints[i] = gcnew Point(x, y, topCenter->sz);
+		inBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->sz);
+		inTopPoints[i] = gcnew Vector3D(x, y, topCenter->sz);
 		alpha += dAlpha;
 	}
 }
@@ -62,12 +62,12 @@ void HollowCylinder::setInRadius(double inRadius)
 	this->inRadius = inRadius;
 }
 
-array<Point^> ^ HollowCylinder::getInBottomPoints()
+array<Vector3D^> ^ HollowCylinder::getInBottomPoints()
 {
 	return inBottomPoints;
 }
 
-array<Point^> ^ HollowCylinder::getInTopPoints()
+array<Vector3D^> ^ HollowCylinder::getInTopPoints()
 {
 	return inTopPoints;
 }

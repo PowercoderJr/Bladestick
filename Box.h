@@ -11,7 +11,7 @@ namespace Bladestick
 	{
 		namespace Geometry
 		{
-			public ref class Box : public ITransformable, public IUpdatable, public IDrawable
+			public ref class Box : public AbstractTransformable, public IUpdatable, public IDrawable
 			{
 			internal:
 				Vector3D ^ corner1;
@@ -31,9 +31,9 @@ namespace Bladestick
 				Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color);
 				virtual void update();
 				virtual void draw(Bladestick::Drawing::ZBuffer ^ buffer);
-				virtual void move(double x, double y, double z);
-				virtual void scale(double a, double b, double c);
-				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg);
+				virtual void move(double x, double y, double z) override;
+				virtual void scale(double a, double b, double c) override;
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;
 				void updatePoints();
 				void updateFacets();
 				double getWidth();

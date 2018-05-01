@@ -51,6 +51,9 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="AbstractTransformable.cpp">
+      <Filter>Исходные файлы\Drawing\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -60,9 +63,6 @@
       <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
-      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="ITransformable.h">
       <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="IUpdatable.h">
@@ -88,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractTransformable.h">
+      <Filter>Файлы заголовков\Drawing\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

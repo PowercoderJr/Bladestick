@@ -8,12 +8,19 @@ namespace Bladestick
 		{
 			ref class Vector3D;
 
-			public interface class ITransformable
+			public ref class AbstractTransformable abstract
 			{
+			internal:
+				Vector3D ^ origin;
+				Vector3D ^ offset;
+				Vector3D ^ scaling;
+				Vector3D ^ rotationDeg;
+
 			public:
-				void move(double x, double y, double z);
-				void scale(double a, double b, double c);
-				void rotate(double alphaDeg, double betaDeg, double gammaDeg);
+				AbstractTransformable();
+				virtual void move(double x, double y, double z) abstract;
+				virtual void scale(double a, double b, double c) abstract;
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) abstract;
 				/*void move(double x, double y, double z);
 				void move(Vector3D ^ offset) : move(offset->x, offset->y, offset->z);
 				void scale(double a, double b, double c);

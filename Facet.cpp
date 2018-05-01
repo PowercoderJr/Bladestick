@@ -7,7 +7,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Facet::Facet(array<Vector3D^> ^ vertices, System::Drawing::Color ^ color)
+Facet::Facet(array<Vector3D^> ^ vertices, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
 	this->vertices = vertices;
 	this->color = color;

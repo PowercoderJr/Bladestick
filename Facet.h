@@ -9,7 +9,7 @@ namespace Bladestick
 	{
 		namespace Geometry
 		{
-			public ref class Facet : public ITransformable, public IDrawable
+			public ref class Facet : public AbstractTransformable, public IDrawable
 			{
 			internal:
 				array<Vector3D^> ^ vertices;  //3 вершины
@@ -23,9 +23,9 @@ namespace Bladestick
 				Facet(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3);
 				Facet();
 				virtual void draw(ZBuffer ^ buffer);
-				virtual void move(double x, double y, double z);
-				virtual void scale(double a, double b, double c);
-				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg);
+				virtual void move(double x, double y, double z) override;
+				virtual void scale(double a, double b, double c) override;
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;
 				array<Vector3D^> ^ getVertices();
 				void setVertices(array<Vector3D^> ^ vertices);
 				System::Drawing::Color ^ getColor();

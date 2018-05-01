@@ -6,7 +6,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Vector3D::Vector3D(double x, double y, double z, double w, double sx, double sy, double sz, double sw)
+Vector3D::Vector3D(double x, double y, double z, double w, double sx, double sy, double sz, double sw) : AbstractTransformable::AbstractTransformable()
 {
 	this->x = x;
 	this->y = y;
@@ -45,7 +45,6 @@ void Vector3D::rotate(double alphaDeg, double betaDeg, double gammaDeg)
 	double beta = degToRad(betaDeg);
 	double gamma = degToRad(gammaDeg);
 
-
 	using namespace System;
 #define sin Math::Sin
 #define cos Math::Cos
@@ -69,6 +68,8 @@ void Vector3D::rotate(double alphaDeg, double betaDeg, double gammaDeg)
 #undef cos
 }
 
+#pragma region Accessors
+/*
 double Vector3D::getX()
 {
 	return x;
@@ -128,6 +129,8 @@ double Vector3D::getSw()
 {
 	return sw;
 }
+*/
+#pragma endregion
 
 Vector3D Vector3D::operator=(Vector3D vector)
 {
@@ -157,18 +160,8 @@ Vector3D ^ Vector3D::operator=(Vector3D ^ vector)
 
 Vector3D ^ Vector3D::add(double x, double y, double z)
 {
-	return gcnew Vector3D(this->/*s*/x + x, this->/*s*/y + y, this->/*s*/z + z);
+	return gcnew Vector3D(this->sx + x, this->sy + y, this->sz + z);
 }
-
-/*Vector3D ^ Vector3D::add(double x)
-{
-	return add(x, x, x);
-}
-
-Vector3D ^ Vector3D::add(Vector3D ^ vector)
-{
-	return add(vector->sx, vector->sy, vector->sz);
-}*/
 
 Vector3D ^ Vector3D::operator+(double x)
 {
@@ -177,23 +170,13 @@ Vector3D ^ Vector3D::operator+(double x)
 
 Vector3D  ^ Vector3D::operator+(Vector3D ^ vector)
 {
-	return add(vector->/*s*/x, vector->/*s*/y, vector->/*s*/z);
+	return add(vector->sx, vector->sy, vector->sz);
 }
 
 Vector3D ^ Vector3D::subtract(double x, double y, double z)
 {
 	return add(-x, -y, -z);
 }
-
-/*Vector3D ^ Vector3D::subtract(double x)
-{
-	return subtract(x, x, x);
-}
-
-Vector3D ^ Vector3D::subtract(Vector3D ^ vector)
-{
-	return subtract(vector->x, vector->y, vector->z);
-}*/
 
 Vector3D ^ Vector3D::operator-(double x)
 {
@@ -202,28 +185,18 @@ Vector3D ^ Vector3D::operator-(double x)
 
 Vector3D ^ Vector3D::operator-(Vector3D ^ vector)
 {
-	return subtract(vector->/*s*/x, vector->/*s*/y, vector->/*s*/z);
+	return subtract(vector->sx, vector->sy, vector->sz);
 }
 
 Vector3D ^ Vector3D::operator-()
 {
-	return gcnew Vector3D(-this->/*s*/x, -this->/*s*/y, -this->/*s*/z + z);
+	return gcnew Vector3D(-this->sx, -this->sy, -this->sz + z);
 }
 
 Vector3D ^ Vector3D::multiply(double x, double y, double z)
 {
-	return gcnew Vector3D(this->/*s*/x * x, this->/*s*/y * y, this->/*s*/z * z);
+	return gcnew Vector3D(this->sx * x, this->sy * y, this->sz * z);
 }
-
-/*Vector3D ^ Vector3D::multiply(double x)
-{
-	return multiply(x, x, x);
-}
-
-Vector3D ^ Vector3D::multiply(Vector3D ^ vector)
-{
-	return multiply(vector->sx, vector->sy, vector->sz);
-}*/
 
 Vector3D ^ Vector3D::operator*(double x)
 {
@@ -232,23 +205,13 @@ Vector3D ^ Vector3D::operator*(double x)
 
 Vector3D ^ Vector3D::operator*(Vector3D ^ vector)
 {
-	return multiply(vector->/*s*/x, vector->/*s*/y, vector->/*s*/z);
+	return multiply(vector->sx, vector->sy, vector->sz);
 }
 
 Vector3D ^ Vector3D::divide(double x, double y, double z)
 {
 	return multiply(1.0 / x, 1.0 / y, 1.0 / z);
 }
-
-/*Vector3D ^ Vector3D::divide(double x)
-{
-	return divide(x, x, x);
-}
-
-Vector3D ^ Vector3D::divide(Vector3D ^ vector)
-{
-	return divide(vector->sx, vector->sy, vector->sz);
-}*/
 
 Vector3D ^ Vector3D::operator/(double x)
 {
@@ -257,10 +220,5 @@ Vector3D ^ Vector3D::operator/(double x)
 
 Vector3D ^ Vector3D::operator/(Vector3D ^ vector)
 {
-	return divide(vector->/*s*/x, vector->/*s*/y, vector->/*s*/z);
+	return divide(vector->sx, vector->sy, vector->sz);
 }
-
-/*void toString()
-{
-	return "Vector3D(" + x + ", " + y + ", " + z + ")";
-}*/

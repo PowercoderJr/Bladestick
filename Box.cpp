@@ -3,7 +3,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color)
+Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
 	this->width = width;
 	this->length = length;
@@ -12,10 +12,11 @@ Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, Sy
 
 	this->corner1 = gcnew Vector3D(bottomCenter->sx - width / 2, bottomCenter->sy - length / 2, bottomCenter->sz);
 	this->corner2 = gcnew Vector3D(bottomCenter->sx + width / 2, bottomCenter->sy + length / 2, bottomCenter->sz + height);
+	this->origin = (corner1 + corner2) / 2;
 	update();
 }
 
-Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color)
+Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
 	this->width = corner2->sx - corner1->sx;
 	this->length = corner2->sy - corner1->sy;
@@ -23,6 +24,7 @@ Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color)
 	this->corner1 = corner1;
 	this->corner2 = corner2;
 	this->color = color;
+	this->origin = (corner1 + corner2) / 2;
 	update();
 }
 

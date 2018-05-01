@@ -133,6 +133,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractTransformable.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Facet.cpp" />
@@ -148,7 +149,7 @@
     <ClInclude Include="Facet.h" />
     <ClInclude Include="HollowCylinder.h" />
     <ClInclude Include="IDrawable.h" />
-    <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="AbstractTransformable.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>

@@ -10,21 +10,21 @@ Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, Sy
 	this->height = height;
 	this->color = color;
 
-	this->corner1 = gcnew Vector3D(bottomCenter->sx - width / 2, bottomCenter->sy - length / 2, bottomCenter->sz);
-	this->corner2 = gcnew Vector3D(bottomCenter->sx + width / 2, bottomCenter->sy + length / 2, bottomCenter->sz + height);
-	this->origin = (corner1 + corner2) / 2;
+	this->corner1 = gcnew Vector3D(bottomCenter->x - width / 2, bottomCenter->y - length / 2, bottomCenter->z);
+	this->corner2 = gcnew Vector3D(bottomCenter->x + width / 2, bottomCenter->y + length / 2, bottomCenter->z + height);
+	this->setOrigin((corner1 + corner2) / 2);
 	update();
 }
 
 Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
-	this->width = corner2->sx - corner1->sx;
-	this->length = corner2->sy - corner1->sy;
-	this->height = corner2->sz - corner1->sz;
+	this->width = corner2->x - corner1->x;
+	this->length = corner2->y - corner1->y;
+	this->height = corner2->z - corner1->z;
 	this->corner1 = corner1;
 	this->corner2 = corner2;
 	this->color = color;
-	this->origin = (corner1 + corner2) / 2;
+	this->setOrigin((corner1 + corner2) / 2);
 	update();
 }
 
@@ -46,33 +46,34 @@ void Box::updatePoints()
 {
 	vertices = gcnew array<Vector3D^>(N_VERTICES)
 	{
-		gcnew Vector3D(corner1->sx, corner1->sy, corner1->sz),		//0 - левый ближний нижний
-			gcnew Vector3D(corner1->sx, corner2->sy, corner1->sz), //1 - левый дальний нижний
-			gcnew Vector3D(corner2->sx, corner1->sy, corner1->sz), //2 - правый ближний нижний
-			gcnew Vector3D(corner2->sx, corner2->sy, corner1->sz), //3 - правый дальний нижний
-			gcnew Vector3D(corner1->sx, corner1->sy, corner2->sz), //4 - левый ближний верхний
-			gcnew Vector3D(corner1->sx, corner2->sy, corner2->sz), //5 - левый дальний верхний
-			gcnew Vector3D(corner2->sx, corner1->sy, corner2->sz), //6 - правый ближний верхний
-			gcnew Vector3D(corner2->sx, corner2->sy, corner2->sz)	//7 - правый дальний верхний
+		gcnew Vector3D(corner1->x, corner1->y, corner1->z),		//0 - левый ближний нижний
+			gcnew Vector3D(corner1->x, corner2->y, corner1->z), //1 - левый дальний нижний
+			gcnew Vector3D(corner2->x, corner1->y, corner1->z), //2 - правый ближний нижний
+			gcnew Vector3D(corner2->x, corner2->y, corner1->z), //3 - правый дальний нижний
+			gcnew Vector3D(corner1->x, corner1->y, corner2->z), //4 - левый ближний верхний
+			gcnew Vector3D(corner1->x, corner2->y, corner2->z), //5 - левый дальний верхний
+			gcnew Vector3D(corner2->x, corner1->y, corner2->z), //6 - правый ближний верхний
+			gcnew Vector3D(corner2->x, corner2->y, corner2->z)	//7 - правый дальний верхний
 	};
 }
 
 void Box::updateFacets()
 {
+	System::Random ^ rnd = gcnew System::Random();
 	facets = gcnew array<Facet^>(N_FACETS)
 	{
-		gcnew Facet(vertices[0], vertices[1], vertices[2], color),
-			gcnew Facet(vertices[1], vertices[2], vertices[3], color),
-			gcnew Facet(vertices[0], vertices[1], vertices[4], color),
-			gcnew Facet(vertices[1], vertices[4], vertices[5], color),
-			gcnew Facet(vertices[1], vertices[3], vertices[5], color),
-			gcnew Facet(vertices[3], vertices[5], vertices[7], color),
-			gcnew Facet(vertices[2], vertices[3], vertices[6], color),
-			gcnew Facet(vertices[3], vertices[6], vertices[7], color),
-			gcnew Facet(vertices[0], vertices[2], vertices[4], color),
-			gcnew Facet(vertices[2], vertices[4], vertices[6], color),
-			gcnew Facet(vertices[4], vertices[5], vertices[6], color),
-			gcnew Facet(vertices[5], vertices[6], vertices[7], color)
+		gcnew Facet(vertices[0], vertices[1], vertices[2], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[1], vertices[2], vertices[3], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[0], vertices[1], vertices[4], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[1], vertices[4], vertices[5], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[1], vertices[3], vertices[5], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[3], vertices[5], vertices[7], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[2], vertices[3], vertices[6], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[3], vertices[6], vertices[7], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[0], vertices[2], vertices[4], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[2], vertices[4], vertices[6], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[4], vertices[5], vertices[6], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))),
+			gcnew Facet(vertices[5], vertices[6], vertices[7], System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)))
 	};
 }
 

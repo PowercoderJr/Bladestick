@@ -52,7 +52,7 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	//box = gcnew Geometry::Box(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Lime);
 	box->update();
 	static int angle = 0;
-	box->rotate(++angle, 0, 0);
+	box->rotate(0, angle++, 0);
 	zb->drawToBuffer(box);
 	/*clock_t start, stop;
 	start = clock();

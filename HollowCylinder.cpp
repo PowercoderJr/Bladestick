@@ -24,10 +24,10 @@ void HollowCylinder::updatePoints()
 	double alpha = 0;
 	for (int i = 0; i < N_CIRCLE_POINTS; ++i)
 	{
-		double x = bottomCenter->sx + inRadius * System::Math::Cos(alpha);
-		double y = bottomCenter->sy + inRadius * System::Math::Sin(alpha);
-		inBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->sz);
-		inTopPoints[i] = gcnew Vector3D(x, y, topCenter->sz);
+		double x = bottomCenter->x + inRadius * System::Math::Cos(alpha);
+		double y = bottomCenter->y + inRadius * System::Math::Sin(alpha);
+		inBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->z);
+		inTopPoints[i] = gcnew Vector3D(x, y, topCenter->z);
 		alpha += dAlpha;
 	}
 }

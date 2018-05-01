@@ -107,7 +107,7 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 
 void ZBuffer::drawLine(Color ^ color, Geometry::Vector3D ^ p1, Geometry::Vector3D ^ p2)
 {
-	ZBuffer::drawLine(color, p1->x, p1->y, p1->z, p2->x, p2->y, p2->z);
+	ZBuffer::drawLine(color, p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz);
 }
 
 Color ^ ZBuffer::getBgColor()

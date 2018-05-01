@@ -26,10 +26,10 @@ void Cylinder::updatePoints()
 	double alpha = 0;
 	for (int i = 0; i < N_CIRCLE_POINTS; ++i)
 	{
-		double x = bottomCenter->sx + exRadius * System::Math::Cos(alpha);
-		double y = bottomCenter->sy + exRadius * System::Math::Sin(alpha);
-		exBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->sz);
-		exTopPoints[i] = gcnew Vector3D(x, y, topCenter->sz);
+		double x = bottomCenter->x + exRadius * System::Math::Cos(alpha);
+		double y = bottomCenter->y + exRadius * System::Math::Sin(alpha);
+		exBottomPoints[i] = gcnew Vector3D(x, y, bottomCenter->z);
+		exTopPoints[i] = gcnew Vector3D(x, y, topCenter->z);
 		alpha += dAlpha;
 	}
 }

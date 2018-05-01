@@ -29,18 +29,19 @@ Facet::Facet() : Facet::Facet(gcnew Vector3D(), gcnew Vector3D(), gcnew Vector3D
 
 void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 {
-	System::Random ^ rnd = gcnew System::Random();
-	System::Drawing::Color color = System::Drawing::Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));
-	if (cmpDoubles(vertices[0]->y, vertices[1]->y) == 0 && cmpDoubles(vertices[1]->y, vertices[2]->y) == 0) return;
+	if (cmpDoubles(vertices[0]->my, vertices[1]->my) == 0 && cmpDoubles(vertices[1]->my, vertices[2]->my) == 0) return;
 
-	if (vertices[0]->y > vertices[1]->y) swap(vertices, 0, 1);
-	if (vertices[0]->y > vertices[2]->y) swap(vertices, 0, 2);
-	if (vertices[1]->y > vertices[2]->y) swap(vertices, 1, 2);
+	if (vertices[0]->my > vertices[1]->my) swap(vertices, 0, 1);
+	if (vertices[0]->my > vertices[2]->my) swap(vertices, 0, 2);
+	if (vertices[1]->my > vertices[2]->my) swap(vertices, 1, 2);
 
-	if (cmpDoubles(vertices[0]->y, vertices[1]->y) != 0 && cmpDoubles(vertices[1]->y, vertices[2]->y) != 0)
+	if (cmpDoubles(vertices[0]->my, vertices[1]->my) != 0 && cmpDoubles(vertices[1]->my, vertices[2]->my) != 0)
 	{
-		double yRatio = (vertices[2]->y - vertices[0]->y) / (vertices[1]->y - vertices[0]->y);
-		Vector3D ^ breakPoint = vertices[0] + (vertices[2] - vertices[0]) / yRatio;
+		double yRatio = (vertices[2]->my - vertices[0]->my) / (vertices[1]->my - vertices[0]->my);
+		Vector3D ^ breakPoint = gcnew Vector3D();
+		breakPoint->mx = vertices[0]->mx + (vertices[2]->mx - vertices[0]->mx) / yRatio;
+		breakPoint->my = vertices[0]->my + (vertices[2]->my - vertices[0]->my) / yRatio;
+		breakPoint->mz = vertices[0]->mz + (vertices[2]->mz - vertices[0]->mz) / yRatio;
 		(gcnew Facet(vertices[0], vertices[1], breakPoint, color))->draw(buffer);
 		(gcnew Facet(breakPoint, vertices[1], vertices[2], color))->draw(buffer);
 	}
@@ -52,13 +53,13 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 		buffer->drawLine(edgeColor, vertices[1], vertices[2]);
 		buffer->drawLine(edgeColor, vertices[2], vertices[0]);*/
 
-		int height = vertices[2]->y - vertices[0]->y;
+		int height = vertices[2]->my - vertices[0]->my;
 		Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
 #pragma region Узнаю кто левый-правый-верхний-нижний
-		if (cmpDoubles(vertices[0]->y, vertices[1]->y) == 0)
+		if (cmpDoubles(vertices[0]->my, vertices[1]->my) == 0)
 		{
 			leftBigger = rightBigger = vertices[2];
-			if (vertices[0]->x < vertices[1]->x)
+			if (vertices[0]->mx < vertices[1]->mx)
 			{
 				leftSmaller = vertices[0];
 				rightSmaller = vertices[1];
@@ -72,7 +73,7 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 		else
 		{
 			leftSmaller = rightSmaller = vertices[0];
-			if (vertices[1]->x < vertices[2]->x)
+			if (vertices[1]->mx < vertices[2]->mx)
 			{
 				leftBigger = vertices[1];
 				rightBigger = vertices[2];
@@ -88,16 +89,16 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 		for (int i = 0; i <= height; i++)
 		{
 			double k = (double)i / height;
-			int leftX = leftSmaller->x + (leftBigger->x - leftSmaller->x) * k;
-			int rightX = rightSmaller->x + (rightBigger->x - rightSmaller->x) * k;
-			int leftZ = leftSmaller->z + (leftBigger->z - leftSmaller->z) * k;
-			int rightZ = rightSmaller->z + (rightBigger->z - rightSmaller->z) * k;
+			int leftX = leftSmaller->mx + (leftBigger->mx - leftSmaller->mx) * k;
+			int rightX = rightSmaller->mx + (rightBigger->mx - rightSmaller->mx) * k;
+			int leftZ = leftSmaller->mz + (leftBigger->mz - leftSmaller->mz) * k;
+			int rightZ = rightSmaller->mz + (rightBigger->mz - rightSmaller->mz) * k;
 			int length = rightX - leftX;
 			for (int j = 0; j <= length; j++)
 			{
 				double k2 = (double)j / length;
-				double z = leftZ + (rightZ - leftZ) * k2;
-				buffer->setPixel(leftX + j, vertices[0]->y + i, z, color);
+				double mz = leftZ + (rightZ - leftZ) * k2;
+				buffer->setPixel(leftX + j, vertices[0]->my + i, mz, color);
 			}
 		}
 	}

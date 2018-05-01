@@ -15,10 +15,10 @@ namespace Bladestick
 				double y;
 				double z;
 				double w;
-				double sx;
-				double sy;
-				double sz;
-				double sw;
+				double mx;
+				double my;
+				double mz;
+				double mw;
 
 			public:
 				Vector3D(double x, double y, double z, double w, double sx, double sy, double sz, double sw);

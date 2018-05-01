@@ -11,10 +11,18 @@ namespace Bladestick
 			public ref class AbstractTransformable abstract
 			{
 			internal:
-				Vector3D ^ origin;
-				Vector3D ^ offset;
-				Vector3D ^ scaling;
-				Vector3D ^ rotationDeg;
+				double xOrigin;
+				double yOrigin;
+				double zOrigin;
+				double xOffset;
+				double yOffset;
+				double zOffset;
+				double xScaling;
+				double yScaling;
+				double zScaling;
+				double xRotationDeg;
+				double yRotationDeg;
+				double zRotationDeg;
 
 			public:
 				AbstractTransformable();
@@ -26,6 +34,7 @@ namespace Bladestick
 				void scale(double a, double b, double c);
 				void scale(Vector3D ^ koefs);
 				void rotate(double alpha, double beta, double gamma);*/
+				void setOrigin(Vector3D ^ origin);
 			};
 		}
 	}

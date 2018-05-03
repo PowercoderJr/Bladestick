@@ -34,7 +34,26 @@ void Vector3D::move(double x, double y, double z)
 	this->z += z;
 }
 
-void Vector3D::scale(double a, double b, double c)
+void Vector3D::transform()
+{
+	double alpha = degToRad(xRotationDeg);
+	double beta = degToRad(yRotationDeg);
+	double gamma = degToRad(zRotationDeg);
+
+	using namespace System;
+#define sin Math::Sin
+#define cos Math::Cos
+	/*mx = x * cos(beta) * cos(gamma) + z * sin(beta) - y * cos(beta) * sin(gamma);
+	my = cos(alpha) * (y * cos(gamma) + x * sin(gamma)) - sin(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));
+	mz = sin(alpha) * (y * cos(gamma) + x * sin(gamma)) + cos(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));*/
+	mx = xOrigin + cos(gamma) * ((x - xOrigin) * cos(beta) + ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) * sin(beta)) - ((y - yOrigin) * cos(alpha) - (z - zOrigin) * sin(alpha)) * sin(gamma);
+	my = yOrigin + cos(gamma) * ((y - yOrigin) * cos(alpha) - (z - zOrigin) * sin(alpha)) + ((x - xOrigin) * cos(beta) + ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) * sin(beta)) * sin(gamma);
+	mz = zOrigin + cos(beta) * ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) - (x - xOrigin) * sin(beta);
+#undef sin
+#undef cos
+}
+
+/*void Vector3D::scale(double a, double b, double c)
 {
 	throw gcnew System::NotImplementedException();
 }
@@ -77,13 +96,13 @@ void Vector3D::rotate(double alphaDeg, double betaDeg, double gammaDeg)
 	vector = vector * xRot * yRot * zRot;
 	mx = vector(0, 0);
 	my = vector(0, 1);
-	mz = vector(0, 2);*/
+	mz = vector(0, 2);
 	mx = x * cos(beta) * cos(gamma) + z * sin(beta) - y * cos(beta) * sin(gamma);
 	my = cos(alpha) * (y * cos(gamma) + x * sin(gamma)) - sin(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));
 	mz = sin(alpha) * (y * cos(gamma) + x * sin(gamma)) + cos(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));
 #undef sin
 #undef cos
-}
+}*/
 
 #pragma region Accessors
 /*

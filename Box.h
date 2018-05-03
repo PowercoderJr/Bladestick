@@ -30,10 +30,14 @@ namespace Bladestick
 				Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color);
 				Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color);
 				virtual void update();
-				virtual void draw(Bladestick::Drawing::ZBuffer ^ buffer);
+				virtual void draw(/*Bladestick::Drawing::*/ZBuffer ^ buffer);
+				virtual void transform() override;
 				virtual void move(double x, double y, double z) override;
-				virtual void scale(double a, double b, double c) override;
-				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;
+				virtual void setOrigin(double x, double y, double z) override;
+				virtual void setScalingFactors(double a, double b, double c) override;
+				virtual void setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg) override;
+				/*virtual void scale(double a, double b, double c) override;
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;*/
 				void updatePoints();
 				void updateFacets();
 				double getWidth();

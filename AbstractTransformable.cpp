@@ -19,9 +19,38 @@ AbstractTransformable::AbstractTransformable()
 	this->zRotationDeg = 0.0;
 }
 
-void Bladestick::Drawing::Geometry::AbstractTransformable::setOrigin(Vector3D ^ origin)
+void AbstractTransformable::setScalingFactors(double a, double b, double c)
 {
-	this->xOrigin = origin->x;
-	this->yOrigin = origin->y;
-	this->zOrigin = origin->z;
+	this->xScaling = a;
+	this->yScaling = b;
+	this->zScaling = c;
+}
+
+void AbstractTransformable::setScalingFactors(Vector3D ^ factors)
+{
+	setScalingFactors(factors->x, factors->y, factors->z);
+}
+
+void AbstractTransformable::setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg)
+{
+	this->xRotationDeg = alphaDeg;
+	this->yRotationDeg = betaDeg;
+	this->zRotationDeg = gammaDeg;
+}
+
+void AbstractTransformable::setRotationAngles(Vector3D ^ angles)
+{
+	setScalingFactors(angles->x, angles->y, angles->z);
+}
+
+void AbstractTransformable::setOrigin(double x, double y, double z)
+{
+	this->xOrigin = x;
+	this->yOrigin = y;
+	this->zOrigin = z;
+}
+
+void AbstractTransformable::setOrigin(Vector3D ^ origin)
+{
+	setOrigin(origin->x, origin->y, origin->z);
 }

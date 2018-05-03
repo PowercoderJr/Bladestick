@@ -30,55 +30,53 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(i, 0, 0);
+		box->setRotationAngles(i, 0, 0);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(0, i, 0);
+		box->setRotationAngles(0, i, 0);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(0, 0, i);
+		box->setRotationAngles(0, 0, i);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(i, 0, i);
+		box->setRotationAngles(i, 0, i);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(0, i, i);
+		box->setRotationAngles(0, i, i);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(i, i, 0);
+		box->setRotationAngles(i, i, 0);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->rotate(i, i, i);
+		box->setRotationAngles(i, i, i);
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
 
-	zb->drawToBuffer(box);
-	zb->render(g);
 	/*for (int i = 0; i < 100000; ++i)
 	{
 		Geometry::Facet ^ facet = gcnew Geometry::Facet(gcnew Geometry::Vector3D(50, 50, 50), gcnew Geometry::Vector3D(100, 300, 50), gcnew Geometry::Vector3D(200, 100, 50), Color::Red);

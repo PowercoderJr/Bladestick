@@ -24,8 +24,12 @@ namespace Bladestick
 				Facet();
 				virtual void draw(ZBuffer ^ buffer);
 				virtual void move(double x, double y, double z) override;
-				virtual void scale(double a, double b, double c) override;
-				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;
+				virtual void setOrigin(double x, double y, double z) override;
+				virtual void setScalingFactors(double a, double b, double c) override;
+				virtual void setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg) override;
+				virtual void transform() override;
+				/*virtual void scale(double a, double b, double c) override;
+				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;*/
 				array<Vector3D^> ^ getVertices();
 				void setVertices(array<Vector3D^> ^ vertices);
 				System::Drawing::Color ^ getColor();

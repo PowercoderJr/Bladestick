@@ -35,12 +35,14 @@ int ZBuffer::getHeight()
 
 void ZBuffer::clear()
 {
+	int index = 0;
+	double ninf = System::Double::NegativeInfinity;
 	for (int i = 0; i < width; ++i)
 		for (int j = 0; j < height; ++j)
-		{
-			zbuffer[i * height + j] = System::Double::NegativeInfinity;
-			bitmap->SetPixel(i, j, *bgColor);
-		}
+			zbuffer[index++] = ninf;
+		Graphics ^ g = Graphics::FromImage(bitmap);
+		g->Clear(*bgColor);
+		delete g;
 }
 
 void ZBuffer::drawToBuffer(IDrawable ^ drawable)

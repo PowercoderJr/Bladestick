@@ -27,8 +27,9 @@ namespace Bladestick
 
 			public:
 				AbstractTransformable();
-				virtual void move(double x, double y, double z) abstract;
 				virtual void transform() abstract;
+				virtual void setPosition(double x, double y, double z) abstract;
+				void setPosition(Vector3D ^ position);
 				/*virtual void setOffsets(double x, double y, double z) abstract;
 				void setOffsets(Vector3D ^ offsets);*/
 				//virtual void setScalingFactors(double a, double b, double c, double xOrigin, double yOrigin, double zOrigin) abstract;
@@ -41,6 +42,7 @@ namespace Bladestick
 				void setRotationAngles(Vector3D ^ angles);
 				virtual void setOrigin(double x, double y, double z);
 				void setOrigin(Vector3D ^ origin);
+				Vector3D ^ getOrigin();
 			};
 		}
 	}

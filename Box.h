@@ -32,7 +32,7 @@ namespace Bladestick
 				virtual void update();
 				virtual void draw(/*Bladestick::Drawing::*/ZBuffer ^ buffer);
 				virtual void transform() override;
-				virtual void move(double x, double y, double z) override;
+				virtual void setPosition(double x, double y, double z) override;
 				virtual void setOrigin(double x, double y, double z) override;
 				virtual void setScalingFactors(double a, double b, double c) override;
 				virtual void setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg) override;

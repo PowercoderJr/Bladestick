@@ -6,12 +6,12 @@ using namespace Bladestick::Drawing::Geometry;
 Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
 	this->width = width;
-	this->length = length;
 	this->height = height;
+	this->length = length;
 	this->color = color;
 
-	this->corner1 = gcnew Vector3D(bottomCenter->x - width / 2, bottomCenter->y - length / 2, bottomCenter->z);
-	this->corner2 = gcnew Vector3D(bottomCenter->x + width / 2, bottomCenter->y + length / 2, bottomCenter->z + height);
+	this->corner1 = gcnew Vector3D(bottomCenter->x - width / 2, bottomCenter->y - height / 2, bottomCenter->z);
+	this->corner2 = gcnew Vector3D(bottomCenter->x + width / 2, bottomCenter->y + height / 2, bottomCenter->z + length);
 	update();
 	this->setOrigin((corner1 + corner2) / 2);
 }
@@ -19,19 +19,19 @@ Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, Sy
 Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
 {
 	this->width = corner2->x - corner1->x;
-	this->length = corner2->y - corner1->y;
-	this->height = corner2->z - corner1->z;
+	this->height = corner2->y - corner1->y;
+	this->length = corner2->z - corner1->z;
 	this->corner1 = corner1;
 	this->corner2 = corner2;
 	this->color = color;
 	update();
-	this->setOrigin((corner1 + corner2) / 2);
 }
 
 void Box::update()
 {
 	updatePoints();
 	updateFacets();
+	setOrigin((corner1 + corner2) / 2);
 }
 
 void Box::draw(Bladestick::Drawing::ZBuffer ^ buffer)
@@ -91,31 +91,31 @@ void Box::updateFacets()
 		facet->setOrigin(this->xOrigin, this->yOrigin, this->zOrigin);*/
 }
 
-void Box::move(double x, double y, double z)
+void Box::setPosition(double x, double y, double z)
 {
 	for each (Facet ^ facet in facets)
-		facet->move(x, y, z);
+		facet->setPosition(x, y, z);
 }
 
 void Box::setOrigin(double x, double y, double z)
 {
 	AbstractTransformable::setOrigin(x, y, z);
 	for each (Facet ^ facet in facets)
-		facet->setOrigin(this->xOrigin, this->yOrigin, this->zOrigin);
+		facet->setOrigin(x, y, z);
 }
 
 void Box::setScalingFactors(double a, double b, double c)
 {
 	AbstractTransformable::setScalingFactors(a, b, c);
 	for each (Facet ^ facet in facets)
-		facet->setScalingFactors(this->xScaling, this->yScaling, this->zScaling);
+		facet->setScalingFactors(a, b, c);
 }
 
 void Box::setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg)
 {
 	AbstractTransformable::setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 	for each (Facet ^ facet in facets)
-		facet->setRotationAngles(this->xRotationDeg, this->yRotationDeg, this->zRotationDeg);
+		facet->setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 }
 
 /*void Box::scale(double a, double b, double c)

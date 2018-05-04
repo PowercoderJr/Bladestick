@@ -26,11 +26,16 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	zb->clear();
 	Random ^ rnd = gcnew Random();
 	Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(300, 400, 0), gcnew Geometry::Vector3D(600, 500, 100), Color::Lime);
-	box->update();
+	Geometry::Vector3D ^ offset = box->getOrigin();
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
 		box->setRotationAngles(i, 0, 0);
+
+		offset = offset->add(2, 0, 0);
+		box->setPosition(offset);
+		box->setOrigin(offset);
+
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
@@ -38,6 +43,11 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	{
 		zb->clear();
 		box->setRotationAngles(0, i, 0);
+
+		offset = offset->add(-2, 2, 0);
+		box->setPosition(offset);
+		box->setOrigin(offset);
+
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}
@@ -45,6 +55,11 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	{
 		zb->clear();
 		box->setRotationAngles(0, 0, i);
+
+		offset = offset->add(0, -2, 0);
+		box->setPosition(offset);
+		box->setOrigin(offset);
+
 		zb->drawToBuffer(box);
 		zb->render(g);
 	}

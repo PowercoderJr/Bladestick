@@ -104,31 +104,31 @@ void Facet::draw(Bladestick::Drawing::ZBuffer ^ buffer)
 	}
 }
 
-void Facet::move(double x, double y, double z)
+void Facet::setPosition(double x, double y, double z)
 {
 	for each (Vector3D ^ vertex in vertices)
-		vertex->move(x, y, z);
+		vertex->setPosition(x, y, z);
 }
 
 void Facet::setOrigin(double x, double y, double z)
 {
 	AbstractTransformable::setOrigin(x, y, z);
 	for each (Vector3D ^ vertex in vertices)
-		vertex->setOrigin(this->xOrigin, this->yOrigin, this->zOrigin);
+		vertex->setOrigin(x, y, z);
 }
 
 void Facet::setScalingFactors(double a, double b, double c)
 {
 	AbstractTransformable::setScalingFactors(a, b, c);
 	for each (Vector3D ^ vertex in vertices)
-		vertex->setScalingFactors(this->xScaling, this->yScaling, this->zScaling);
+		vertex->setScalingFactors(a, b, c);
 }
 
 void Facet::setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg)
 {
 	AbstractTransformable::setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 	for each (Vector3D ^ vertex in vertices)
-		vertex->setRotationAngles(this->xRotationDeg, this->yRotationDeg, this->zRotationDeg);
+		vertex->setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 }
 
 void Facet::transform()

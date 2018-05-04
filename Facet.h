@@ -23,7 +23,7 @@ namespace Bladestick
 				Facet(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3);
 				Facet();
 				virtual void draw(ZBuffer ^ buffer);
-				virtual void move(double x, double y, double z) override;
+				virtual void setPosition(double x, double y, double z) override;
 				virtual void setOrigin(double x, double y, double z) override;
 				virtual void setScalingFactors(double a, double b, double c) override;
 				virtual void setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg) override;

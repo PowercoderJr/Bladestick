@@ -27,11 +27,11 @@ Vector3D::Vector3D(const Vector3D % vector) :
 
 Vector3D::Vector3D() : Vector3D::Vector3D(0, 0, 0) {}
 
-void Vector3D::move(double x, double y, double z)
+void Vector3D::setPosition(double x, double y, double z)
 {
-	this->x += x;
-	this->y += y;
-	this->z += z;
+	this->x = x - (xOrigin - this->x);
+	this->y = y - (yOrigin - this->y);
+	this->z = z - (zOrigin - this->z);
 }
 
 void Vector3D::transform()
@@ -168,6 +168,7 @@ double Vector3D::getSw()
 */
 #pragma endregion
 
+#pragma region Operators
 Vector3D Vector3D::operator=(Vector3D vector)
 {
 	this->x = x;
@@ -258,3 +259,4 @@ Vector3D ^ Vector3D::operator/(Vector3D ^ vector)
 {
 	return divide(vector->x, vector->y, vector->z);
 }
+#pragma endregion

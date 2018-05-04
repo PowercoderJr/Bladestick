@@ -26,7 +26,7 @@ namespace Bladestick
 				Vector3D(double x, double y, double z);
 				Vector3D(const Vector3D %vector);
 				Vector3D();
-				virtual void move(double x, double y, double z) override;
+				virtual void setPosition(double x, double y, double z) override;
 				virtual void transform() override;
 				/*virtual void scale(double a, double b, double c) override;
 				virtual void rotate(double alphaDeg, double betaDeg, double gammaDeg) override;*/

@@ -19,6 +19,11 @@ AbstractTransformable::AbstractTransformable()
 	this->zRotationDeg = 0.0;
 }
 
+void AbstractTransformable::setPosition(Vector3D ^ position)
+{
+	setPosition(position->x, position->y, position->z);
+}
+
 void AbstractTransformable::setScalingFactors(double a, double b, double c)
 {
 	this->xScaling = a;
@@ -53,4 +58,9 @@ void AbstractTransformable::setOrigin(double x, double y, double z)
 void AbstractTransformable::setOrigin(Vector3D ^ origin)
 {
 	setOrigin(origin->x, origin->y, origin->z);
+}
+
+Vector3D ^ AbstractTransformable::getOrigin()
+{
+	return gcnew Vector3D(xOrigin, yOrigin, zOrigin);
 }

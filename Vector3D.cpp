@@ -4,9 +4,9 @@
 #include "Utils.h"
 #include "Matrix.h"
 
-using namespace Bladestick::Drawing::Geometry;
+using namespace Bladestick::Drawing;
 
-Vector3D::Vector3D(double x, double y, double z, double w, double mx, double my, double mz, double mw) : AbstractTransformable::AbstractTransformable()
+Vector3D::Vector3D(double x, double y, double z, double w, double mx, double my, double mz, double mw)
 {
 	this->x = x;
 	this->y = y;
@@ -27,14 +27,7 @@ Vector3D::Vector3D(const Vector3D % vector) :
 
 Vector3D::Vector3D() : Vector3D::Vector3D(0, 0, 0) {}
 
-void Vector3D::setPosition(double x, double y, double z)
-{
-	this->x = x - (xOrigin - this->x);
-	this->y = y - (yOrigin - this->y);
-	this->z = z - (zOrigin - this->z);
-}
-
-void Vector3D::transform()
+/*void Vector3D::transform()
 {
 	double alpha = degToRad(xRotationDeg);
 	double beta = degToRad(yRotationDeg);
@@ -45,13 +38,13 @@ void Vector3D::transform()
 #define cos Math::Cos
 	/*mx = x * cos(beta) * cos(gamma) + z * sin(beta) - y * cos(beta) * sin(gamma);
 	my = cos(alpha) * (y * cos(gamma) + x * sin(gamma)) - sin(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));
-	mz = sin(alpha) * (y * cos(gamma) + x * sin(gamma)) + cos(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));*/
+	mz = sin(alpha) * (y * cos(gamma) + x * sin(gamma)) + cos(alpha) * (z * cos(beta) - x * cos(gamma) * sin(beta) + y * sin(beta) * sin(gamma));*
 	mx = xOrigin + cos(gamma) * ((x - xOrigin) * cos(beta) + ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) * sin(beta)) - ((y - yOrigin) * cos(alpha) - (z - zOrigin) * sin(alpha)) * sin(gamma);
 	my = yOrigin + cos(gamma) * ((y - yOrigin) * cos(alpha) - (z - zOrigin) * sin(alpha)) + ((x - xOrigin) * cos(beta) + ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) * sin(beta)) * sin(gamma);
 	mz = zOrigin + cos(beta) * ((z - zOrigin) * cos(alpha) + (y - yOrigin) * sin(alpha)) - (x - xOrigin) * sin(beta);
 #undef sin
 #undef cos
-}
+}*/
 
 /*void Vector3D::scale(double a, double b, double c)
 {

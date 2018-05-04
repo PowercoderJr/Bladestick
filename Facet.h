@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3D.h"
-#include "IDrawable.h"
 
 namespace Bladestick
 {
@@ -9,7 +8,7 @@ namespace Bladestick
 	{
 		namespace Geometry
 		{
-			public ref class Facet : public AbstractTransformable, public IDrawable
+			public ref class Facet : public SceneObject, public IDrawable
 			{
 			internal:
 				array<Vector3D^> ^ vertices;  //3 вершины

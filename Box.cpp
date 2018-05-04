@@ -3,7 +3,7 @@
 
 using namespace Bladestick::Drawing::Geometry;
 
-Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
+Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, System::Drawing::Color ^ color) : SceneObject::SceneObject()
 {
 	this->width = width;
 	this->height = height;
@@ -16,7 +16,7 @@ Box::Box(Vector3D ^ bottomCenter, double width, double length, double height, Sy
 	this->setOrigin((corner1 + corner2) / 2);
 }
 
-Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color) : AbstractTransformable::AbstractTransformable()
+Box::Box(Vector3D ^ corner1, Vector3D ^ corner2, System::Drawing::Color ^ color) : SceneObject::SceneObject()
 {
 	this->width = corner2->x - corner1->x;
 	this->height = corner2->y - corner1->y;
@@ -99,21 +99,21 @@ void Box::setPosition(double x, double y, double z)
 
 void Box::setOrigin(double x, double y, double z)
 {
-	AbstractTransformable::setOrigin(x, y, z);
+	SceneObject::setOrigin(x, y, z);
 	for each (Facet ^ facet in facets)
 		facet->setOrigin(x, y, z);
 }
 
 void Box::setScalingFactors(double a, double b, double c)
 {
-	AbstractTransformable::setScalingFactors(a, b, c);
+	SceneObject::setScalingFactors(a, b, c);
 	for each (Facet ^ facet in facets)
 		facet->setScalingFactors(a, b, c);
 }
 
 void Box::setRotationAngles(double alphaDeg, double betaDeg, double gammaDeg)
 {
-	AbstractTransformable::setRotationAngles(alphaDeg, betaDeg, gammaDeg);
+	SceneObject::setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 	for each (Facet ^ facet in facets)
 		facet->setRotationAngles(alphaDeg, betaDeg, gammaDeg);
 }

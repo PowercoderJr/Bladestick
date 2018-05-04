@@ -1,6 +1,5 @@
 #include "ZBuffer.h"
 #include "Utils.h"
-#include "IDrawable.h"
 
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
@@ -45,16 +44,6 @@ void ZBuffer::clear()
 		delete g;
 }
 
-void ZBuffer::drawToBuffer(IDrawable ^ drawable)
-{
-	drawable->draw(this);
-}
-
-void ZBuffer::render(System::Drawing::Graphics ^ g)
-{
-	g->DrawImage(bitmap, 0, 0, width, height);
-}
-
 void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 {
 	//if (x < 0 || x >= MAX_WIDTH || y < 0 || y >= MAX_HEIGHT) return;
@@ -68,7 +57,7 @@ void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
 	}
 }
 
-void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1, double y1, double z1)
+void ZBuffer::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color ^ color)
 {
 	bool steep = false;
 	if (System::Math::Abs(x0 - x1) < System::Math::Abs(y0 - y1))
@@ -107,9 +96,96 @@ void ZBuffer::drawLine(Color ^ color, double x0, double y0, double z0, double x1
 	}
 }
 
-void ZBuffer::drawLine(Color ^ color, Geometry::Vector3D ^ p1, Geometry::Vector3D ^ p2)
+void ZBuffer::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color ^ color)
 {
-	ZBuffer::drawLine(color, p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz);
+	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color);
+}
+
+void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color ^ color)
+{
+	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
+
+	if (p1->my > p2->my) swap(&p1, &p2);
+	if (p1->my > p3->my) swap(&p1, &p3);
+	if (p2->my > p3->my) swap(&p2, &p3);
+
+	if (cmpDoubles(p1->my, p2->my) != 0 && cmpDoubles(p2->my, p3->my) != 0)
+	{
+		double yRatio = (p3->my - p1->my) / (p2->my - p1->my);
+		Vector3D ^ breakPoint = gcnew Vector3D();
+		breakPoint->mx = p1->mx + (p3->mx - p1->mx) / yRatio;
+		breakPoint->my = p1->my + (p3->my - p1->my) / yRatio;
+		breakPoint->mz = p1->mz + (p3->mz - p1->mz) / yRatio;
+		drawTriangle(p1, p2, breakPoint, color);
+		drawTriangle(breakPoint, p2, p3, color);
+	}
+	else
+	{
+		//Контур
+		/*System::Drawing::Color ^ edgeColor = System::Drawing::Color::White;
+		drawLine(edgeColor, p1, p2);
+		drawLine(edgeColor, p2, p3);
+		drawLine(edgeColor, p3, p1);*/
+
+		int height = p3->my - p1->my;
+		Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
+#pragma region Узнаю кто левый-правый-верхний-нижний
+		if (cmpDoubles(p1->my, p2->my) == 0)
+		{
+			leftBigger = rightBigger = p3;
+			if (p1->mx < p2->mx)
+			{
+				leftSmaller = p1;
+				rightSmaller = p2;
+			}
+			else
+			{
+				leftSmaller = p2;
+				rightSmaller = p1;
+			}
+		}
+		else
+		{
+			leftSmaller = rightSmaller = p1;
+			if (p2->mx < p3->mx)
+			{
+				leftBigger = p2;
+				rightBigger = p3;
+			}
+			else
+			{
+				leftBigger = p3;
+				rightBigger = p2;
+			}
+		}
+#pragma endregion
+
+		for (int i = 0; i <= height; i++)
+		{
+			double k = (double)i / height;
+			int leftX = leftSmaller->mx + (leftBigger->mx - leftSmaller->mx) * k;
+			int rightX = rightSmaller->mx + (rightBigger->mx - rightSmaller->mx) * k;
+			int leftZ = leftSmaller->mz + (leftBigger->mz - leftSmaller->mz) * k;
+			int rightZ = rightSmaller->mz + (rightBigger->mz - rightSmaller->mz) * k;
+			int length = rightX - leftX;
+			for (int j = 0; j <= length; j++)
+			{
+				double k2 = (double)j / length;
+				double mz = leftZ + (rightZ - leftZ) * k2;
+				setPixel(leftX + j, p1->my + i, mz, color);
+			}
+		}
+	}
+}
+
+void ZBuffer::drawToBuffer(SceneObject ^ obj)
+{
+	;
+}
+
+void ZBuffer::render(System::Drawing::Graphics ^ g)
+{
+	g->DrawImage(bitmap, 0, 0, width, height);
 }
 
 Color ^ ZBuffer::getBgColor()

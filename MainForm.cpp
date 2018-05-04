@@ -1,7 +1,5 @@
 #include "MainForm.h"
-#include "Box.h"
 #include "Utils.h"
-#include "IDrawable.h"
 #include "Matrix.h"
 
 #include <time.h>
@@ -22,9 +20,20 @@ void Main(array<String^> ^ args)
 System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	//Some debugging here	
-	zb->setSize(canvas->Width, canvas->Height);
+	SceneObject ^ so = gcnew SceneObject();
+	IO::FileStream ^ stream;
+	try
+	{
+		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
+		so->loadFromStream(stream);
+	}
+	finally
+	{
+		stream->Close();
+	}
+	/*zb->setSize(canvas->Width, canvas->Height);
 	zb->clear();
-	Random ^ rnd = gcnew Random();
+	static Random ^ rnd = gcnew Random();
 	Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(300, 400, 0), gcnew Geometry::Vector3D(600, 500, 100), Color::Lime);
 	Geometry::Vector3D ^ offset = box->getOrigin();
 	for (int i = 0; i <= 360; i += 5)

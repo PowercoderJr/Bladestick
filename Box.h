@@ -3,7 +3,6 @@
 #include "Facet.h"
 #include "IUpdatable.h"
 #include "ZBuffer.h"
-#include "IDrawable.h"
 
 namespace Bladestick
 {
@@ -11,7 +10,7 @@ namespace Bladestick
 	{
 		namespace Geometry
 		{
-			public ref class Box : public AbstractTransformable, public IUpdatable, public IDrawable
+			public ref class Box : public SceneObject, public IUpdatable, public IDrawable
 			{
 			internal:
 				Vector3D ^ corner1;

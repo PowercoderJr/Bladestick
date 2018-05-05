@@ -4,13 +4,14 @@
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
 
-ZBuffer::ZBuffer(int width, int height, Color ^ bgColor)
+ZBuffer::ZBuffer(int width, int height, Color ^ bgColor, System::Drawing::Color ^ edgeColor)
 {
 	setSize(width, height);
 	this->bgColor = bgColor;
+	this->edgeColor = edgeColor;
 }
 
-ZBuffer::ZBuffer(int width, int height) : ZBuffer::ZBuffer(width, height, Color::Black) {}
+ZBuffer::ZBuffer(int width, int height) : ZBuffer::ZBuffer(width, height, Color::Black, Color::White) {}
 
 ZBuffer::ZBuffer() : ZBuffer::ZBuffer(600, 400) {}
 
@@ -101,7 +102,7 @@ void ZBuffer::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color ^ color)
 	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color);
 }
 
-void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color ^ color)
+void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color ^ color, bool drawEdges)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
 
@@ -116,16 +117,18 @@ void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::
 		breakPoint->mx = p1->mx + (p3->mx - p1->mx) / yRatio;
 		breakPoint->my = p1->my + (p3->my - p1->my) / yRatio;
 		breakPoint->mz = p1->mz + (p3->mz - p1->mz) / yRatio;
-		drawTriangle(p1, p2, breakPoint, color);
-		drawTriangle(breakPoint, p2, p3, color);
+		drawTriangle(p1, p2, breakPoint, color, drawEdges);
+		drawTriangle(breakPoint, p2, p3, color, drawEdges);
 	}
 	else
 	{
 		//Контур
-		/*System::Drawing::Color ^ edgeColor = System::Drawing::Color::White;
-		drawLine(edgeColor, p1, p2);
-		drawLine(edgeColor, p2, p3);
-		drawLine(edgeColor, p3, p1);*/
+		if (drawEdges)
+		{
+			drawLine(p1, p2, edgeColor);
+			drawLine(p2, p3, edgeColor);
+			drawLine(p3, p1, edgeColor);
+		}
 
 		int height = p3->my - p1->my;
 		Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
@@ -178,12 +181,20 @@ void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::
 	}
 }
 
-void ZBuffer::drawToBuffer(SceneObject ^ obj)
+void ZBuffer::drawToBuffer(SceneObject ^ obj, bool drawEdges)
 {
-	;
+	for (int i = 0; i < obj->indices->Length; i += 3)
+	{
+		drawTriangle(obj->vertices[obj->indices[i] - 1], obj->vertices[obj->indices[i + 1] - 1], obj->vertices[obj->indices[i + 2] - 1], obj->colors[i / 3], drawEdges);
+	}
 }
 
-void ZBuffer::render(System::Drawing::Graphics ^ g)
+void ZBuffer::drawToBuffer(SceneObject ^ obj)
+{
+	drawToBuffer(obj, false);
+}
+
+void ZBuffer::render(Graphics ^ g)
 {
 	g->DrawImage(bitmap, 0, 0, width, height);
 }

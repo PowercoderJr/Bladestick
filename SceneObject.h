@@ -15,11 +15,11 @@ namespace Bladestick
 			Vector3D ^ rotation; //Углы поворотов в градусах
 			array<Vector3D ^> ^ vertices; //Вершины
 			array<int> ^ indices; //Индексы вершин, образующие треугольники
-			array<System::Drawing::Color ^> ^ colors; //Цвета треугольников
+			array<System::Drawing::Color> ^ colors; //Цвета треугольников
 
 		public:
 			SceneObject();
-			//void transform();
+			void transform();
 			void setOffset(double x, double y, double z);
 			void setOffset(Vector3D ^ offset);
 			void setScaling(double a, double b, double c);

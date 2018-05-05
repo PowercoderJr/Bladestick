@@ -31,73 +31,65 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 	{
 		stream->Close();
 	}
-	/*zb->setSize(canvas->Width, canvas->Height);
-	zb->clear();
-	static Random ^ rnd = gcnew Random();
-	Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(300, 400, 0), gcnew Geometry::Vector3D(600, 500, 100), Color::Lime);
-	Geometry::Vector3D ^ offset = box->getOrigin();
+	zb->setSize(canvas->Width, canvas->Height);
+	so->setScaling(1, 2, 1.5);
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(i, 0, 0);
-
-		offset = offset->add(2, 0, 0);
-		box->setPosition(offset);
-		box->setOrigin(offset);
-
-		zb->drawToBuffer(box);
+		so->setRotation(i, 0, 0);
+		so->setOffset(400 + i, 400, 0);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(0, i, 0);
-
-		offset = offset->add(-2, 2, 0);
-		box->setPosition(offset);
-		box->setOrigin(offset);
-
-		zb->drawToBuffer(box);
+		so->setRotation(0, i, 0);
+		so->setOffset(760 - i, 400 + i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(0, 0, i);
-
-		offset = offset->add(0, -2, 0);
-		box->setPosition(offset);
-		box->setOrigin(offset);
-
-		zb->drawToBuffer(box);
+		so->setRotation(0, 0, i);
+		so->setOffset(400, 760 - i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(i, 0, i);
-		zb->drawToBuffer(box);
+		so->setRotation(i, 0, i);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(0, i, i);
-		zb->drawToBuffer(box);
+		so->setRotation(0, i, i);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(i, i, 0);
-		zb->drawToBuffer(box);
+		so->setRotation(i, i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 	for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		box->setRotationAngles(i, i, i);
-		zb->drawToBuffer(box);
+		so->setRotation(i, i, i);
+		so->transform();
+		zb->drawToBuffer(so);
 		zb->render(g);
 	}
 

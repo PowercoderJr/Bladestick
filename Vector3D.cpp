@@ -198,7 +198,7 @@ Vector3D ^ Vector3D::operator+(double x)
 	return add(x, x, x);
 }
 
-Vector3D  ^ Vector3D::operator+(Vector3D ^ vector)
+Vector3D ^ Vector3D::operator+(Vector3D ^ vector)
 {
 	return add(vector->x, vector->y, vector->z);
 }

@@ -20,24 +20,57 @@ void Main(array<String^> ^ args)
 System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	//Some debugging here	
-	SceneObject ^ so = gcnew SceneObject();
+	const int N = 5;
+	Random ^ rnd = gcnew Random();
+	array<SceneObject ^> ^ objects = gcnew array<SceneObject^>(N);
 	IO::FileStream ^ stream;
 	try
 	{
-		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
-		so->loadFromStream(stream);
+		for (int i = 0; i < N; ++i)
+		{
+			stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
+			objects[i] = gcnew SceneObject();
+			objects[i]->loadFromStream(stream);
+			//objects[i]->setScaling(0.5, 0.5, 0.5);
+			stream->Close();
+		}
 	}
 	finally
 	{
 		stream->Close();
 	}
 	zb->setSize(canvas->Width, canvas->Height);
-	so->setScaling(1, 2, 1.5);
-	for (int i = 0; i <= 360; i += 5)
+	array<Vector3D ^> ^ dirs = gcnew array<Vector3D ^>(N);
+	array<Vector3D ^> ^ rots = gcnew array<Vector3D ^>(N);
+	for (int i = 0; i < 10; ++i)
+	{
+		for (int k = 0; k < N; ++k)
+		{
+			objects[k]->setScaling(rnd->NextDouble() * 2, rnd->NextDouble() * 2, rnd->NextDouble() * 2);
+			objects[k]->setOffset(canvas->Width / 2, canvas->Height / 2, rnd->NextDouble() * 1000 - 500);
+			dirs[k] = gcnew Vector3D(rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25);
+			rots[k] = gcnew Vector3D(rnd->NextDouble() * 8 - 4, rnd->NextDouble() * 8 - 4, rnd->NextDouble() * 8 - 4);
+		}
+
+		for (int j = 0; j < 50; ++j)
+		{
+			zb->clear();
+			for (int k = 0; k < N; ++k)
+			{
+				objects[k]->setRotation(objects[k]->rotation + rots[k]);
+				objects[k]->setOffset(objects[k]->offset + dirs[k]);
+				objects[k]->transform();
+				zb->drawToBuffer(objects[k]);
+			}
+			zb->render(g);
+		}
+	}
+
+	/*for (int i = 0; i <= 360; i += 5)
 	{
 		zb->clear();
-		so->setRotation(i, 0, 0);
-		so->setOffset(400 + i, 400, 0);
+		so->setRotation(i, 0, i * 2);
+		so->setOffset(-100 + i * 3, -100 + i * 2.5, 0);
 		so->transform();
 		zb->drawToBuffer(so);
 		zb->render(g);
@@ -91,12 +124,6 @@ System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System
 		so->transform();
 		zb->drawToBuffer(so);
 		zb->render(g);
-	}
-
-	/*for (int i = 0; i < 100000; ++i)
-	{
-		Geometry::Facet ^ facet = gcnew Geometry::Facet(gcnew Geometry::Vector3D(50, 50, 50), gcnew Geometry::Vector3D(100, 300, 50), gcnew Geometry::Vector3D(200, 100, 50), Color::Red);
-		zb->drawToBuffer(facet);
 	}*/
 	return System::Void();
 }

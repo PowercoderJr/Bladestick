@@ -79,38 +79,38 @@ void SceneObject::setRotation(Vector3D ^ angles)
 
 void SceneObject::loadFromStream(Stream ^ stream)
 {
-	//this->vertices = gcnew array<Vector3D ^>(N);
 	List<Vector3D ^> ^ vertices = gcnew List<Vector3D ^>(N);
 	List<int> ^ indices = gcnew List<int>(3 * N);
 	List<Color> ^ colors = gcnew List<Color>(N);
-	StreamReader ^ reader = gcnew StreamReader(stream);
-	String ^ line, ^ line2;
-	//array<String ^> ^ codes = gcnew array<String^>(2){"v ", "f "}; //Пробелы для исключения "vn" итп, когда ищется "v"
-	while ((line = reader->ReadLine()) != nullptr && (line->Length < 2 || !line->Substring(0, 2)->Equals("v "))) {}
-	while ((line2 = reader->ReadLine()) != nullptr && line->Length >= 2 && line->Substring(0, 2)->Equals("v "))
-	{
-		array<String ^> ^ data = line->Split(' ');
-		array<double> ^ coords = gcnew array<double>(3);
-		for (int i = 0; i < 3; ++i)
-			coords[i] = Double::Parse(data[i + 1]->Split('/')[0]->Replace('.', ','));
-		vertices->Add(gcnew Vector3D(coords[0], coords[1], coords[2]));
-		line = line2;
-	}
-
+	String ^ line;
 	Random ^ rnd = gcnew Random();
-	while ((line = reader->ReadLine()) != nullptr && (line->Length < 2 || !line->Substring(0, 2)->Equals("f "))) {}
-	while ((line2 = reader->ReadLine()) != nullptr && line->Length >= 2 && line->Substring(0, 2)->Equals("f "))
+	StreamReader ^ reader = gcnew StreamReader(stream);
+
+	while ((line = reader->ReadLine()) != nullptr)
 	{
-		array<String ^> ^ data = line->Split(' ');
-		array<int> ^ colorValues = gcnew array<int>(3);
-		for (int i = 0; i < 3; ++i)
+		if (line->Length == 0)
+			continue;
+
+		if (line->Length >= 2 && line->Substring(0, 2)->Equals("v "))
 		{
-			array<String ^> ^ splitted = data[i + 1]->Split('/');
-			indices->Add(int::Parse(splitted[0]));
-			colorValues[i] = splitted->Length >= 4 ? int::Parse(splitted[3]) : rnd->Next(256);
+			array<String ^> ^ data = line->Split(' ');
+			array<double> ^ coords = gcnew array<double>(3);
+			for (int i = 0; i < 3; ++i)
+				coords[i] = Double::Parse(data[i + 1]->Split('/')[0]->Replace('.', ','));
+			vertices->Add(gcnew Vector3D(coords[0], coords[1], coords[2]));
 		}
-		colors->Add(Color::FromArgb(colorValues[0], colorValues[1], colorValues[2]));
-		line = line2;
+		else if (line->Length >= 2 && line->Substring(0, 2)->Equals("f "))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			array<int> ^ colorValues = gcnew array<int>(3);
+			for (int i = 0; i < 3; ++i)
+			{
+				array<String ^> ^ splitted = data[i + 1]->Split('/');
+				indices->Add(int::Parse(splitted[0]));
+				colorValues[i] = splitted->Length >= 4 ? int::Parse(splitted[3]) : rnd->Next(256);
+			}
+			colors->Add(Color::FromArgb(colorValues[0], colorValues[1], colorValues[2]));
+		}
 	}
 	this->vertices = vertices->ToArray();
 	this->indices = indices->ToArray();

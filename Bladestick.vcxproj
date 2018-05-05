@@ -133,25 +133,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Box.cpp" />
-    <ClCompile Include="Cylinder.cpp" />
-    <ClCompile Include="Facet.cpp" />
-    <ClCompile Include="HollowCylinder.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Vector3D.cpp" />
     <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Box.h" />
-    <ClInclude Include="Cylinder.h" />
-    <ClInclude Include="Facet.h" />
-    <ClInclude Include="HollowCylinder.h" />
-    <ClInclude Include="IDrawable.h" />
-    <ClInclude Include="ITransformable.h" />
-    <ClInclude Include="IUpdatable.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="ZBuffer.h" />

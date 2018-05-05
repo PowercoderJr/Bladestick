@@ -1,7 +1,6 @@
 #include "MainForm.h"
-#include "Box.h"
 #include "Utils.h"
-#include "IDrawable.h"
+#include "Matrix.h"
 
 #include <time.h>
 
@@ -20,29 +19,84 @@ void Main(array<String^> ^ args)
 
 System::Void Bladestick::MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
-	//Some debugging here
+	//Some debugging here	
+	SceneObject ^ so = gcnew SceneObject();
+	IO::FileStream ^ stream;
+	try
+	{
+		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
+		so->loadFromStream(stream);
+	}
+	finally
+	{
+		stream->Close();
+	}
 	zb->setSize(canvas->Width, canvas->Height);
-	zb->clear();
-	Random ^ rnd = gcnew Random();
-	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Orange);
-	//Geometry::Box ^ box = gcnew Geometry::Box(gcnew Geometry::Vector3D(0, 0, 0), gcnew Geometry::Vector3D(100, 200, 100), Color::Orange);
-	//box->update();	
-	/*zb->drawLine(Color::Red, 100, 0, 0, 300, 200, 0);
-	zb->drawLine(Color::Green, 100, 0, -50, 300, 200, 50);*/
-	for (int i = 0; i < 10; ++i)
-		zb->drawToBuffer(gcnew Geometry::Facet(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, -100 + rnd->Next(200)), Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256))));
-	//box = gcnew Geometry::Box(gcnew Geometry::Vector3D(300, 400, 0), gcnew Geometry::Vector3D(600, 500, 100), Color::Lime);
-	//box = gcnew Geometry::Box(gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), gcnew Geometry::Vector3D(rnd->NextDouble() * canvas->Width, rnd->NextDouble() * canvas->Height, 0), Color::Lime);
-	//box->update();
-	//zb->drawToBuffer(box);
-	/*clock_t start, stop;
-	start = clock();
-	for (int i = 0; i < 100000; ++i)
+	so->setScaling(1, 2, 1.5);
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(i, 0, 0);
+		so->setOffset(400 + i, 400, 0);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(0, i, 0);
+		so->setOffset(760 - i, 400 + i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(0, 0, i);
+		so->setOffset(400, 760 - i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(i, 0, i);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(0, i, i);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(i, i, 0);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+	for (int i = 0; i <= 360; i += 5)
+	{
+		zb->clear();
+		so->setRotation(i, i, i);
+		so->transform();
+		zb->drawToBuffer(so);
+		zb->render(g);
+	}
+
+	/*for (int i = 0; i < 100000; ++i)
 	{
 		Geometry::Facet ^ facet = gcnew Geometry::Facet(gcnew Geometry::Vector3D(50, 50, 50), gcnew Geometry::Vector3D(100, 300, 50), gcnew Geometry::Vector3D(200, 100, 50), Color::Red);
 		zb->drawToBuffer(facet);
-	}
-	stop = clock();*/
-	zb->render(g);
+	}*/
 	return System::Void();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ZBuffer.h"
+#include "Scene.h"
 
 namespace Bladestick {
 
@@ -18,17 +18,19 @@ namespace Bladestick {
 	{
 	private: 
 		System::Drawing::Graphics ^ g;
-	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
-	private: System::Windows::Forms::Panel^  panel1;
-	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::Panel^  panel2;
-	private: System::Windows::Forms::PictureBox^  canvas;
-			 Bladestick::Drawing::ZBuffer ^ zb;
+		System::ComponentModel::BackgroundWorker ^ backgroundWorker1;
+		System::Windows::Forms::Panel ^ panel1;
+		System::Windows::Forms::Button ^ button1;
+		System::Windows::Forms::Panel ^ panel2;
+		System::Windows::Forms::PictureBox ^ canvas;
+		Bladestick::Drawing::Scene ^ scene;
+		System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+		
 	public:
 		MainForm(void)
 		{
 			InitializeComponent();
-			zb = gcnew Bladestick::Drawing::ZBuffer();
+			scene = gcnew Bladestick::Drawing::Scene();
 			g = canvas->CreateGraphics();
 		}
 
@@ -43,11 +45,6 @@ namespace Bladestick {
 				delete components;
 			}
 		}
-
-
-
-
-	protected:
 
 	private:
 		/// <summary>
@@ -127,10 +124,7 @@ namespace Bladestick {
 			this->panel2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->canvas))->EndInit();
 			this->ResumeLayout(false);
-
 		}
 #pragma endregion
-	private:
-		System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
-};
+	};
 }

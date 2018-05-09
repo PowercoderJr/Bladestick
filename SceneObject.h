@@ -8,6 +8,12 @@ namespace Bladestick
 
 		public ref class SceneObject
 		{
+		private:
+			static void generateHandle(Drawing::Vector3D ^ bottomCenter, double radius,
+				double height, int nEdges, array<Drawing::Vector3D ^> ^* vertices, array<int> ^* indices);
+			static void generateBladeRing(Drawing::Vector3D ^ nearCenter,
+				double inRadius, double exRadius, double height, int nEdges,
+				array<Drawing::Vector3D ^> ^* vertices, array<int> ^* indices);
 		internal:
 			//Vector3D ^ origin; //Центральная точка
 			Vector3D ^ offset; //Смещение в МСК
@@ -18,7 +24,13 @@ namespace Bladestick
 			array<System::Drawing::Color> ^ colors; //Цвета треугольников
 
 		public:
+			static Drawing::SceneObject ^ buildBladestick(double handleLength, double inBladeRadius,
+					double exBladeRadius, double bladeThickness, double primarySpikeLength,
+					double secondarySpikeLength, double primarySpikeAngle, double secondarySpikeAngle,
+					int secondarySpikesCount, int ringsCount);
+
 			SceneObject();
+			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors);
 			void transform();
 			void setOffset(double x, double y, double z);
 			void setOffset(Vector3D ^ offset);

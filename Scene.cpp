@@ -1,21 +1,22 @@
-#include "ZBuffer.h"
+#include "Scene.h"
 #include "Utils.h"
 
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
 
-ZBuffer::ZBuffer(int width, int height, Color ^ bgColor, System::Drawing::Color ^ edgeColor)
+Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 {
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
+	this->camera = {gcnew Vector3D(0, 0, 0), gcnew Vector3D(0, 0, 0), -5000, 5000};
 }
 
-ZBuffer::ZBuffer(int width, int height) : ZBuffer::ZBuffer(width, height, Color::Black, Color::White) {}
+Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
 
-ZBuffer::ZBuffer() : ZBuffer::ZBuffer(600, 400) {}
+Scene::Scene() : Scene::Scene(600, 400) {}
 
-void ZBuffer::setSize(int width, int height)
+void Scene::setSize(int width, int height)
 {
 	this->width = width < 1 ? 1 : width;
 	this->height = height < 1 ? 1 : height;
@@ -23,42 +24,41 @@ void ZBuffer::setSize(int width, int height)
 	this->zbuffer = gcnew array<double>(this->width * this->height);
 }
 
-int ZBuffer::getWidth()
+int Scene::getWidth()
 {
 	return width;
 }
 
-int ZBuffer::getHeight()
+int Scene::getHeight()
 {
 	return height;
 }
 
-void ZBuffer::clear()
+void Scene::clear()
 {
 	int index = 0;
-	double ninf = System::Double::NegativeInfinity;
+	double ninf = System::Double::PositiveInfinity;
 	for (int i = 0; i < width; ++i)
 		for (int j = 0; j < height; ++j)
 			zbuffer[index++] = ninf;
 		Graphics ^ g = Graphics::FromImage(bitmap);
-		g->Clear(*bgColor);
+		g->Clear(bgColor);
 		delete g;
 }
 
-void ZBuffer::setPixel(int x, int y, double z, Color ^ color)
+void Scene::setPixel(int x, int y, double z, Color color)
 {
-	//if (x < 0 || x >= MAX_WIDTH || y < 0 || y >= MAX_HEIGHT) return;
 	if (x < 0 || x >= width || y < 0 || y >= height) return;
 
 	int index = x * height + y;
-	if (z > zbuffer[index])
+	if (z < zbuffer[index])
 	{
 		zbuffer[index] = z;
-		bitmap->SetPixel(x, y, *color);
+		bitmap->SetPixel(x, y, color);
 	}
 }
 
-void ZBuffer::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color ^ color)
+void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color color)
 {
 	bool steep = false;
 	if (System::Math::Abs(x0 - x1) < System::Math::Abs(y0 - y1))
@@ -76,7 +76,7 @@ void ZBuffer::drawLine(double x0, double y0, double z0, double x1, double y1, do
 	int dy = y1 - y0;
 	int y = y0;
 	double z = z0;
-	double zStep = (z1 - z0) / dx;//System::Math::Sqrt(dx * dx + dy * dy);
+	double zStep = (z1 - z0) / dx;
 	int derror2 = System::Math::Abs(dy) * 2;
 	int error2 = 0;
 	int diry = y1 > y0 ? 1 : -1;
@@ -97,14 +97,17 @@ void ZBuffer::drawLine(double x0, double y0, double z0, double x1, double y1, do
 	}
 }
 
-void ZBuffer::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color ^ color)
+void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color)
 {
 	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color);
 }
 
-void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color ^ color, bool drawEdges)
+void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, bool drawEdges)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
+	if (p1->mz < camera.near || p1->mz > camera.far) return;
+	if (p2->mz < camera.near || p2->mz > camera.far) return;
+	if (p3->mz < camera.near || p3->mz > camera.far) return;
 
 	if (p1->my > p2->my) swap(&p1, &p2);
 	if (p1->my > p3->my) swap(&p1, &p3);
@@ -181,7 +184,7 @@ void ZBuffer::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::
 	}
 }
 
-void ZBuffer::drawToBuffer(SceneObject ^ obj, bool drawEdges)
+void Scene::drawToBuffer(SceneObject ^ obj, bool drawEdges)
 {
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
@@ -189,22 +192,22 @@ void ZBuffer::drawToBuffer(SceneObject ^ obj, bool drawEdges)
 	}
 }
 
-void ZBuffer::drawToBuffer(SceneObject ^ obj)
+void Scene::drawToBuffer(SceneObject ^ obj)
 {
 	drawToBuffer(obj, false);
 }
 
-void ZBuffer::render(Graphics ^ g)
+void Scene::render(Graphics ^ g)
 {
 	g->DrawImage(bitmap, 0, 0, width, height);
 }
 
-Color ^ ZBuffer::getBgColor()
+Color Scene::getBgColor()
 {
 	return this->bgColor;
 }
 
-void ZBuffer::setBgColor(Color ^ color)
+void Scene::setBgColor(Color color)
 {
 	this->bgColor = color;
 }

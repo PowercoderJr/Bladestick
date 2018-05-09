@@ -24,9 +24,6 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ZBuffer.cpp">
-      <Filter>Исходные файлы\Drawing</Filter>
-    </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -34,6 +31,9 @@
       <Filter>Исходные файлы\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="SceneObject.cpp">
+      <Filter>Исходные файлы\Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
       <Filter>Исходные файлы\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,9 +44,6 @@
     <ClInclude Include="Utils.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ZBuffer.h">
-      <Filter>Файлы заголовков\Drawing</Filter>
-    </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -54,6 +51,9 @@
       <Filter>Файлы заголовков\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="SceneObject.h">
+      <Filter>Файлы заголовков\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>Файлы заголовков\Drawing</Filter>
     </ClInclude>
   </ItemGroup>

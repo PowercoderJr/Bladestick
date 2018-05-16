@@ -15,11 +15,12 @@ namespace Bladestick
 			Vector3D ^ rotation;
 			int near;
 			int far;
+			bool perspective;
 		};
 
 		public ref class Scene
 		{
-		private:
+		internal:
 			System::Drawing::Bitmap ^ bitmap;
 			array<double> ^ zbuffer;
 			System::Drawing::Color bgColor;
@@ -39,12 +40,12 @@ namespace Bladestick
 			int getWidth();
 			int getHeight();
 			void clear();
-			void setPixel(int x, int y, double z, System::Drawing::Color color);
-			void drawLine(double x0, double y0, double z0, double x1, double y1, double z1, System::Drawing::Color color);
-			void drawLine(Vector3D ^ p1, Vector3D ^ p2, System::Drawing::Color color);
-			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, bool drawEdges);
-			void drawToBuffer(SceneObject ^ obj, bool drawEdges);
-			void drawToBuffer(SceneObject ^ obj);
+			void setPixel(int x, int y, double z, System::Drawing::Color color, bool flipVertical);
+			void drawLine(double x0, double y0, double z0, double x1, double y1, double z1, System::Drawing::Color color, bool flipVertical);
+			void drawLine(Vector3D ^ p1, Vector3D ^ p2, System::Drawing::Color color, bool flipVertical);
+			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, bool flipVertical, bool drawEdges);
+			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawEdges);
+			void drawToBuffer(SceneObject ^ obj, bool flipVertical);
 			void render(System::Drawing::Graphics ^ g);
 			System::Drawing::Color getBgColor();
 			void setBgColor(System::Drawing::Color color);

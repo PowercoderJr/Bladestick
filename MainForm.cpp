@@ -21,10 +21,13 @@ void Main(array<String^> ^ args)
 Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	//Some debugging here	
-	const int N = 1;
+	bool flipVertical = true;
+	scene->setSize(canvas->Width, canvas->Height);
+
+	/*const int N = 1;
 	Random ^ rnd = gcnew Random();
 	array<SceneObject ^> ^ objects = gcnew array<SceneObject^>(N);
-	/*IO::FileStream ^ stream;
+	IO::FileStream ^ stream;
 	try
 	{
 		for (int i = 0; i < N; ++i)
@@ -43,6 +46,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	array<Vector3D ^> ^ rots = gcnew array<Vector3D ^>(N);
 	for (int k = 0; k < N; ++k)
 	{
+		objects[k]->setScaling(3, 3, 3);
 		objects[k]->setScaling(rnd->NextDouble() * 2, rnd->NextDouble() * 2, rnd->NextDouble() * 2);
 		objects[k]->setOffset(canvas->Width / 2, canvas->Height / 2, rnd->NextDouble() * 100 - 50);
 		dirs[k] = gcnew Vector3D(rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25);
@@ -54,8 +58,63 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 			{
 				objects[k]->setRotation(objects[k]->rotation + rots[k]);
 				objects[k]->setOffset(objects[k]->offset + dirs[k]);
-				objects[k]->transform();
-				scene->drawToBuffer(objects[k]);
+				objects[k]->transform(scene->camera);
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(i, 0, 0);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(0, i, 0);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(0, 0, i);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(i, i, 0);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(i, 0, i);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(0, i, i);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
+				for (int i = 0; i <= 360; i += 3)
+				{
+					scene->clear();
+					objects[k]->setRotation(i, i, i);
+					objects[k]->transform(scene->camera);
+					scene->drawToBuffer(objects[k], flipVertical);
+					scene->render(g);
+				}
 			}
 			scene->render(g);
 		}
@@ -65,60 +124,60 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	so->setOffset(400, 300, 0);
 	scene->setSize(canvas->Width, canvas->Height);
 
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, 0, 0);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, 0);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, 0, i);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, i, 0);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, 0, i);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, i);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 1)
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, i, i);
-		so->transform();
-		scene->drawToBuffer(so);
+		so->transform(scene->camera);
+		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
 	return Void();

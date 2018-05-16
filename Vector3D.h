@@ -31,12 +31,7 @@ namespace Bladestick
 			Vector3D ^ operator- (double x);
 			Vector3D ^ operator- (Vector3D ^ vector);
 			Vector3D ^ operator- ();
-			Vector3D ^ multiply(double x, double y, double z);
-			Vector3D ^ operator* (double x);
-			Vector3D ^ operator* (Vector3D ^ vector);
-			Vector3D ^ divide(double x, double y, double z);
-			Vector3D ^ operator/ (double x);
-			Vector3D ^ operator/ (Vector3D ^ vector);
+			Vector3D ^ scale(double x, double y, double z);
 		};
 	}
 }

@@ -152,34 +152,9 @@ Vector3D ^ Vector3D::operator-()
 {
 	return gcnew Vector3D(-this->x, -this->y, -this->z);
 }
+#pragma endregion
 
-Vector3D ^ Vector3D::multiply(double x, double y, double z)
+Vector3D ^ Vector3D::scale(double x, double y, double z)
 {
 	return gcnew Vector3D(this->x * x, this->y * y, this->z * z);
 }
-
-Vector3D ^ Vector3D::operator*(double x)
-{
-	return multiply(x, x, x);
-}
-
-Vector3D ^ Vector3D::operator*(Vector3D ^ vector)
-{
-	return multiply(vector->x, vector->y, vector->z);
-}
-
-Vector3D ^ Vector3D::divide(double x, double y, double z)
-{
-	return multiply(1.0 / x, 1.0 / y, 1.0 / z);
-}
-
-Vector3D ^ Vector3D::operator/(double x)
-{
-	return divide(x, x, x);
-}
-
-Vector3D ^ Vector3D::operator/(Vector3D ^ vector)
-{
-	return divide(vector->x, vector->y, vector->z);
-}
-#pragma endregion

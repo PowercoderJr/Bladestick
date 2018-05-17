@@ -15,8 +15,9 @@ namespace Bladestick
 			static Drawing::SceneObject ^ buildBladeRing(Drawing::Vector3D ^ nearCenter,
 				double inRadius, double exRadius, double height, int nEdges);
 			static Drawing::SceneObject ^ buildCross(double pLength, double pWidth, double pThickness);
+			static Drawing::SceneObject ^ buildSpike(double distance, double alphaDeg, double betaDeg,
+				double thickness, double exLength, double inLength);
 		internal:
-			//Vector3D ^ origin; //Центральная точка
 			Vector3D ^ offset; //Смещение в МСК
 			Vector3D ^ scaling; //Коэффициенты масштабирования
 			Vector3D ^ rotation; //Углы поворотов в градусах

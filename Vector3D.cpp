@@ -158,3 +158,19 @@ Vector3D ^ Vector3D::scale(double x, double y, double z)
 {
 	return gcnew Vector3D(this->x * x, this->y * y, this->z * z);
 }
+
+Vector3D ^ Vector3D::scale(double x)
+{
+	return scale(x, x, x);
+}
+
+double Vector3D::getMagnitude()
+{
+	return System::Math::Sqrt(x * x + y * y + z * z);
+}
+
+Vector3D ^ Vector3D::normalized()
+{
+	double m = getMagnitude();
+	return gcnew Vector3D(x / m, y / m, z / m);
+}

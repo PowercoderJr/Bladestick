@@ -154,23 +154,29 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, double inBladeRa
 	int secondarySpikesCount, int ringsCount)
 {
 	Random ^ rnd = gcnew Random();
-	
+
 	SceneObject ^ handle = buildHandle(gcnew Vector3D(0, -150, 0), 10, 200, 10);
 	SceneObject ^ bladeRing = buildBladeRing(gcnew Vector3D(0, 0, -10), 40, 75, 20, 10);
 	SceneObject ^ cross = buildCross(250, 50, 40);
 
-	SceneObject ^ result = Unite(gcnew array<SceneObject ^>(3){ handle, bladeRing, cross });
+	//SceneObject ^ result = Unite(gcnew array<SceneObject ^>(3){ handle, bladeRing, cross });
+	const int N_SPIKES = 8;
+	array<SceneObject ^> ^ spikes = gcnew array<SceneObject ^>(N_SPIKES);
+	double alpha = 0;
+	double dAlpha = 360.0 / N_SPIKES;
+	for (int i = 0; i < N_SPIKES; ++i)
+	{
+		spikes[i] = buildSpike(100, alpha, 40, 25, 60, 30);
+		alpha += dAlpha;
+	}
+	SceneObject ^ result = Unite(spikes);
 	//DEBUG
 	int colorsCount = result->indices->Length / 3;
-	/*result->colors = gcnew array<Color>(colorsCount);
+	result->colors = gcnew array<Color>(colorsCount);
 	for (int i = 0; i < colorsCount; ++i)
-		result->colors[i] = Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));*/
+		result->colors[i] = Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));
 
-	colorsCount = cross->indices->Length / 3;
-	cross->colors = gcnew array<Color>(colorsCount);
-	for (int i = 0; i < colorsCount; ++i)
-		cross->colors[i] = Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));
-	return cross;
+	return result;
 }
 
 SceneObject ^ SceneObject::Unite(array<SceneObject^>^ components)
@@ -532,6 +538,57 @@ SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThi
 	iArr[106] = 24;
 	iArr[107] = 23;
 #pragma endregion
+
+	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
+}
+
+//vertices: 6
+//indices: 24
+SceneObject ^ SceneObject::buildSpike(double distance, double alphaDeg, double betaDeg, double thickness, double exLength, double inLength)
+{
+	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(6);
+	array<int> ^ iArr = gcnew array<int>(24);
+
+	double alpha = degToRad(alphaDeg);
+	double beta = degToRad(betaDeg);
+	Vector3D ^ center = gcnew Vector3D(distance * Math::Cos(alpha), distance * Math::Sin(alpha), 0);
+	Vector3D ^ inV = gcnew Vector3D((distance - inLength) * Math::Cos(alpha), (distance - inLength) * Math::Sin(alpha), 0);
+	Vector3D ^ exV = gcnew Vector3D((distance + exLength) * Math::Cos(alpha), (distance + exLength) * Math::Sin(alpha), 0);
+	double sideDist = exLength * Math::Tan(beta / 2);
+	Vector3D ^ dir = (exV - center)->normalized();
+	Vector3D ^ sideVec = (gcnew Vector3D(-dir->y, dir->x, 0))->scale(sideDist);
+	
+	vArr[0] = inV;
+	vArr[1] = center - sideVec;
+	vArr[2] = center->subtract(0, 0, thickness / 2);
+	vArr[3] = center + sideVec;
+	vArr[4] = center->add(0, 0, thickness / 2);
+	vArr[5] = exV;
+
+	iArr[0] = 1;
+	iArr[1] = 2;
+	iArr[2] = 3;
+	iArr[3] = 1;
+	iArr[4] = 3;
+	iArr[5] = 4;
+	iArr[6] = 1;
+	iArr[7] = 4;
+	iArr[8] = 5;
+	iArr[9] = 1;
+	iArr[10] = 5;
+	iArr[11] = 2;
+	iArr[12] = 6;
+	iArr[13] = 2;
+	iArr[14] = 3;
+	iArr[15] = 6;
+	iArr[16] = 3;
+	iArr[17] = 4;
+	iArr[18] = 6;
+	iArr[19] = 4;
+	iArr[20] = 5;
+	iArr[21] = 6;
+	iArr[22] = 5;
+	iArr[23] = 2;
 
 	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
 }

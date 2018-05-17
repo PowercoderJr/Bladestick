@@ -32,6 +32,9 @@ namespace Bladestick
 			Vector3D ^ operator- (Vector3D ^ vector);
 			Vector3D ^ operator- ();
 			Vector3D ^ scale(double x, double y, double z);
+			Vector3D ^ scale(double x);
+			double getMagnitude();
+			Vector3D ^ normalized();
 		};
 	}
 }

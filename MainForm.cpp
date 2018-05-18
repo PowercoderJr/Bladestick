@@ -120,7 +120,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		}
 	}*/
 
-	SceneObject ^ so = SceneObject::buildBladestick(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	SceneObject ^ so = SceneObject::buildBladestick(400, 10, 16, 100, 150, 64, 30, 60, 40, 50, 50, 4);
 	so->setOffset(400, 300, 0);
 	scene->setSize(canvas->Width, canvas->Height);
 

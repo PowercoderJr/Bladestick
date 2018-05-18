@@ -10,13 +10,12 @@ namespace Bladestick
 		public ref class SceneObject
 		{
 		private:
-			static Drawing::SceneObject ^ buildHandle(Drawing::Vector3D ^ bottomCenter,
-				double radius, double height, int nEdges);
-			static Drawing::SceneObject ^ buildBladeRing(Drawing::Vector3D ^ nearCenter,
-				double inRadius, double exRadius, double height, int nEdges);
+			static Drawing::SceneObject ^ buildHandle(double radius, double height, int nEdges);
+			static Drawing::SceneObject ^ buildBladeRing(double inRadius, double bevelRadius,
+				double exRadius, double thickness, int nEdges);
 			static Drawing::SceneObject ^ buildCross(double pLength, double pWidth, double pThickness);
-			static Drawing::SceneObject ^ buildSpike(double distance, double alphaDeg, double betaDeg,
-				double thickness, double exLength, double inLength);
+			static Drawing::SceneObject ^ buildSpike(double inDistance, double exDistance, double alphaDeg,
+				double betaDeg, double thickness, double inLength, double bevelStartPoint, double exLength);
 		internal:
 			Vector3D ^ offset; //Смещение в МСК
 			Vector3D ^ scaling; //Коэффициенты масштабирования
@@ -26,11 +25,12 @@ namespace Bladestick
 			array<System::Drawing::Color> ^ colors; //Цвета треугольников
 
 		public:
-			static Drawing::SceneObject ^ buildBladestick(double handleLength, double inBladeRadius,
-					double exBladeRadius, double bladeThickness, double primarySpikeLength,
-					double secondarySpikeLength, double primarySpikeAngle, double secondarySpikeAngle,
-					int secondarySpikesCount, int ringsCount);
-			static Drawing::SceneObject ^ Unite(array<Drawing::SceneObject ^> ^ components);
+			static Drawing::SceneObject ^ buildBladestick(double handleLength, int handleRingsCount,
+				double handleEdgesCount, double inBladeRadius, double exBladeRadius,
+				double bladeEdgesCount, double bladeThickness,
+				double primarySpikeLength, double secondarySpikeLength,
+				double primarySpikeAngle, double secondarySpikeAngle, int secondarySpikesCount);
+			static Drawing::SceneObject ^ unite(array<Drawing::SceneObject ^> ^ components);
 
 			SceneObject();
 			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors);

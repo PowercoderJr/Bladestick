@@ -9,7 +9,7 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
-	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, true};
+	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, false};
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
@@ -48,10 +48,10 @@ void Scene::clear()
 
 void Scene::setPixel(int x, int y, double z, Color color, bool flipVertical)
 {
-	if (x < 0 || x >= width || y < 0 || y >= height) return;
+	if (x < 1 || x >= width || y < 1 || y >= height) return;
 
 	int index = x * height + y;
-	if (z < zbuffer[index])
+	if (z <= zbuffer[index])
 	{
 		zbuffer[index] = z;
 		bitmap->SetPixel(x, flipVertical ? height - y : y, color);
@@ -102,7 +102,7 @@ void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color, bool flipVertica
 	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color, flipVertical);
 }
 
-void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, bool flipVertical, bool drawEdges)
+void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, bool flipVertical, bool drawFill, bool drawEdges)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
 	if (p1->mz < camera.near || p1->mz > camera.far) return;
@@ -120,11 +120,64 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 		breakPoint->mx = p1->mx + (p3->mx - p1->mx) / yRatio;
 		breakPoint->my = p1->my + (p3->my - p1->my) / yRatio;
 		breakPoint->mz = p1->mz + (p3->mz - p1->mz) / yRatio;
-		drawTriangle(p1, p2, breakPoint, color, flipVertical, drawEdges);
-		drawTriangle(breakPoint, p2, p3, color, flipVertical, drawEdges);
+		drawTriangle(p1, p2, breakPoint, color, flipVertical, drawFill, drawEdges);
+		drawTriangle(breakPoint, p2, p3, color, flipVertical, drawFill, drawEdges);
 	}
 	else
 	{
+		//Заливка
+		if (drawFill)
+		{
+			int height = p3->my - p1->my;
+			Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
+#pragma region Узнаю кто левый-правый-верхний-нижний
+			if (cmpDoubles(p1->my, p2->my) == 0)
+			{
+				leftBigger = rightBigger = p3;
+				if (p1->mx < p2->mx)
+				{
+					leftSmaller = p1;
+					rightSmaller = p2;
+				}
+				else
+				{
+					leftSmaller = p2;
+					rightSmaller = p1;
+				}
+			}
+			else
+			{
+				leftSmaller = rightSmaller = p1;
+				if (p2->mx < p3->mx)
+				{
+					leftBigger = p2;
+					rightBigger = p3;
+				}
+				else
+				{
+					leftBigger = p3;
+					rightBigger = p2;
+				}
+			}
+#pragma endregion
+
+			for (int i = 0; i <= height; i++)
+			{
+				double k = (double)i / height;
+				int leftX = leftSmaller->mx + (leftBigger->mx - leftSmaller->mx) * k;
+				int rightX = rightSmaller->mx + (rightBigger->mx - rightSmaller->mx) * k;
+				int leftZ = leftSmaller->mz + (leftBigger->mz - leftSmaller->mz) * k;
+				int rightZ = rightSmaller->mz + (rightBigger->mz - rightSmaller->mz) * k;
+				int length = rightX - leftX;
+				for (int j = 0; j <= length; j++)
+				{
+					double k2 = (double)j / length;
+					double mz = leftZ + (rightZ - leftZ) * k2;
+					setPixel(leftX + j, p1->my + i, mz, color, flipVertical);
+				}
+			}
+		}
+
 		//Контур
 		if (drawEdges)
 		{
@@ -132,72 +185,23 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 			drawLine(p2, p3, edgeColor, flipVertical);
 			drawLine(p3, p1, edgeColor, flipVertical);
 		}
-
-		int height = p3->my - p1->my;
-		Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
-#pragma region Узнаю кто левый-правый-верхний-нижний
-		if (cmpDoubles(p1->my, p2->my) == 0)
-		{
-			leftBigger = rightBigger = p3;
-			if (p1->mx < p2->mx)
-			{
-				leftSmaller = p1;
-				rightSmaller = p2;
-			}
-			else
-			{
-				leftSmaller = p2;
-				rightSmaller = p1;
-			}
-		}
-		else
-		{
-			leftSmaller = rightSmaller = p1;
-			if (p2->mx < p3->mx)
-			{
-				leftBigger = p2;
-				rightBigger = p3;
-			}
-			else
-			{
-				leftBigger = p3;
-				rightBigger = p2;
-			}
-		}
-#pragma endregion
-
-		for (int i = 0; i <= height; i++)
-		{
-			double k = (double)i / height;
-			int leftX = leftSmaller->mx + (leftBigger->mx - leftSmaller->mx) * k;
-			int rightX = rightSmaller->mx + (rightBigger->mx - rightSmaller->mx) * k;
-			int leftZ = leftSmaller->mz + (leftBigger->mz - leftSmaller->mz) * k;
-			int rightZ = rightSmaller->mz + (rightBigger->mz - rightSmaller->mz) * k;
-			int length = rightX - leftX;
-			for (int j = 0; j <= length; j++)
-			{
-				double k2 = (double)j / length;
-				double mz = leftZ + (rightZ - leftZ) * k2;
-				setPixel(leftX + j, p1->my + i, mz, color, flipVertical);
-			}
-		}
 	}
 }
 
-void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawEdges)
+void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges)
 {
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
 		drawTriangle(obj->vertices[obj->indices[i] - 1],
 			obj->vertices[obj->indices[i + 1] - 1],
 			obj->vertices[obj->indices[i + 2] - 1],
-			obj->colors[i / 3], flipVertical, drawEdges);
+			obj->colors[i / 3], flipVertical, drawFill, drawEdges);
 	}
 }
 
 void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical)
 {
-	drawToBuffer(obj, flipVertical, false);
+	drawToBuffer(obj, flipVertical, true, false);
 }
 
 void Scene::render(Graphics ^ g)

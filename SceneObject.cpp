@@ -22,7 +22,7 @@ SceneObject::SceneObject()
 	this->colors = gcnew array<Color>(N);
 }
 
-SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<System::Drawing::Color>^ colors)
+SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors)
 {
 	this->offset = gcnew Vector3D(0, 0, 0);
 	this->scaling = gcnew Vector3D(1, 1, 1);
@@ -152,17 +152,18 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	double handleEdgesCount, double inBladeRadius, double exBladeRadius,
 	double bladeEdgesCount, double bladeThickness,
 	double primarySpikeLength, double secondarySpikeLength,
-	double primarySpikeAngle, double secondarySpikeAngle, int secondarySpikesCount)
+	double primarySpikeAngle, double secondarySpikeAngle,
+	int secondarySpikesCount, array<Color> ^ palette)
 {
 	Random ^ rnd = gcnew Random();
 
 	const double bevelBladeRadius = inBladeRadius + (exBladeRadius - inBladeRadius) * 0.6;
-	SceneObject ^ bladeRing = buildBladeRing(inBladeRadius, bevelBladeRadius, exBladeRadius, bladeThickness, bladeEdgesCount);
+	SceneObject ^ bladeRing = buildBladeRing(inBladeRadius, bevelBladeRadius, exBladeRadius, bladeThickness, bladeEdgesCount, gcnew array<Color>(2) { palette[1], palette[2] });
 
 	const double crossPartLength = inBladeRadius;
 	const double crossPartWidth = inBladeRadius * 0.25;
 	const double crossPartThickness = bladeThickness * 0.8;
-	SceneObject ^ cross = buildCross(crossPartLength, crossPartWidth, crossPartThickness);
+	SceneObject ^ cross = buildCross(crossPartLength, crossPartWidth, crossPartThickness, gcnew array<Color>(1) { palette[1] });
 
 	const int spikesCount = secondarySpikesCount + 4;
 	const double primarySpikeBevelStartPoint = primarySpikeLength * 0.5;
@@ -170,16 +171,16 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	const double inPrimarySpikeLength = bevelBladeRadius * 0.4;
 	const double inSecondarySpikeLength = bevelBladeRadius * 0.15;
 	array<SceneObject ^> ^ spikes = gcnew array<SceneObject ^>(spikesCount);
-	double alpha = -90;
-	const double dAlpha = 360.0 / spikesCount;
+	double alphaDeg = -90;
+	const double dAlphaDeg = 360.0 / spikesCount;
 	for (int i = 0; i < spikesCount; ++i)
 	{
-		int tmp = Math::Floor(alpha);
-		if (!cmpDoubles(alpha, tmp) && tmp % 90 == 0)
-			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alpha, primarySpikeAngle, bladeThickness, inPrimarySpikeLength, primarySpikeBevelStartPoint, primarySpikeLength);
+		int tmp = Math::Floor(alphaDeg);
+		if (!cmpDoubles(alphaDeg, tmp) && tmp % 90 == 0)
+			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alphaDeg, primarySpikeAngle, bladeThickness, inPrimarySpikeLength, primarySpikeBevelStartPoint, primarySpikeLength, gcnew array<Color>(2) { palette[1], cmpDoubles(alphaDeg, -90) ? palette[2] : palette[1] });
 		else
-			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alpha, secondarySpikeAngle, bladeThickness, inSecondarySpikeLength, secondarySpikeBevelStartPoint, secondarySpikeLength);
-		alpha += dAlpha;
+			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alphaDeg, secondarySpikeAngle, bladeThickness, inSecondarySpikeLength, secondarySpikeBevelStartPoint, secondarySpikeLength, gcnew array<Color>(2) { palette[1], palette[2] });
+		alphaDeg += dAlphaDeg;
 	}
 	
 	SceneObject ^ result = unite(spikes);
@@ -192,12 +193,12 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	const double handleRingRadius = handleRadius + 3;
 	const double handleRingHeight = 3;
 	const double handleRingInterval = handleLength / 3 / (handleRingsCount + 1);
-	SceneObject ^ handle = buildHandle(handleRadius, handleLength, handleEdgesCount);
+	SceneObject ^ handle = buildHandle(handleRadius, handleLength, handleEdgesCount, gcnew array<Color>(1) { palette[0] });
 	handle->moveOriginal(0, -handleLength / 2, 0);
 
 	for (int i = 0; i < handleRingsCount; ++i)
 	{
-		handleRings[i] = buildHandle(handleRingRadius, handleRingHeight, handleEdgesCount);
+		handleRings[i] = buildHandle(handleRingRadius, handleRingHeight, handleEdgesCount, gcnew array<Color>(1) { palette[1] });
 		handleRings[i]->moveOriginal(0, (i + 1) * handleRingInterval, 0);
 	}
 	SceneObject ^ unitedRings = unite(handleRings);
@@ -206,10 +207,11 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	result = unite(gcnew array<SceneObject ^>(3) { result, handle, unitedRings });
 
 	//DEBUG
-	int colorsCount = result->indices->Length / 3;
+	/*int colorsCount = result->indices->Length / 3;
 	result->colors = gcnew array<Color>(colorsCount);
 	for (int i = 0; i < colorsCount; ++i)
-		result->colors[i] = Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));
+		//result->colors[i] = Color::RosyBrown;
+		result->colors[i] = Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256));*/
 
 	return result;
 }
@@ -223,6 +225,7 @@ SceneObject ^ SceneObject::unite(array<SceneObject^>^ components)
 		totalICount += components[i]->indices->Length;
 	}
 
+	Random ^ rnd = gcnew Random();
 	List<Vector3D ^> ^ vTotal = gcnew List<Vector3D ^>(totalVCount);
 	List<int> ^ iTotal = gcnew List<int>(totalICount);
 	List<Color> ^ cTotal = gcnew List<Color>(totalICount / 3);
@@ -242,21 +245,23 @@ SceneObject ^ SceneObject::unite(array<SceneObject^>^ components)
 
 //vertices: nEdges * 2 + 2
 //indices: nEdges * 12
-SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges)
+SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges, array<Color> ^ palette)
 {
 	const int INDICES_MUL = 12;
 	Vector3D ^ bottomCenter = gcnew Vector3D(0, -height / 2, 0);
 	Vector3D ^ topCenter = bottomCenter->add(0, height, 0);
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(nEdges * 2 + 2);
 	array<int> ^ iArr = gcnew array<int>(nEdges * INDICES_MUL);
+	array<Color> ^ cArr = gcnew array<Color>(nEdges * INDICES_MUL / 3);
 
 	Vector3D bc = *bottomCenter;
 	vArr[0] = %bc;
 	Vector3D tc = *topCenter;
 	vArr[nEdges + 1] = %tc;
 
+	const double FACETS_PER_ITERATION = INDICES_MUL / 3;
 	double dAlpha = degToRad(360.0 / nEdges);
-	double alpha = 0;
+	double alpha = degToRad(-90);
 	for (int i = 1; i <= nEdges; ++i)
 	{
 		double x = bottomCenter->x + radius * Math::Cos(alpha);
@@ -279,8 +284,11 @@ SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges)
 		iArr[mi + 9] = iArr[mi + 3];
 		iArr[mi + 10] = iArr[mi + 4];
 		iArr[mi + 11] = iArr[mi + 1];
-	}
 
+		for (int j = FACETS_PER_ITERATION * (i - 1); j < FACETS_PER_ITERATION * i; ++j)
+			cArr[j] = palette[0];
+	}
+	
 	int closing = (nEdges - 1) * INDICES_MUL;
 	iArr[closing] = nEdges + 1;
 	iArr[closing + 1] = 2;
@@ -295,21 +303,23 @@ SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges)
 	iArr[closing + 10] = iArr[closing + 4];
 	iArr[closing + 11] = iArr[closing + 1];
 
-	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
+	return gcnew SceneObject(vArr, iArr, cArr);
 }
 
 //vertices: nEdges * 5
 //indices: nEdges * 30
-SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, double exRadius, double thickness, int nEdges)
+SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, double exRadius, double thickness, int nEdges, array<Color> ^ palette)
 {
 	const int INDICES_MUL = 30;
 	Vector3D ^ nearCenter = gcnew Vector3D(0, 0, -thickness / 2);
 	Vector3D ^ farCenter = nearCenter->add(0, 0, thickness);
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(nEdges * 5);
 	array<int> ^ iArr = gcnew array<int>(nEdges * INDICES_MUL);
+	array<Color> ^ cArr = gcnew array<Color>(nEdges * INDICES_MUL / 3);
 
+	double const FACETS_PER_ITERATION = INDICES_MUL / 3;
 	double dAlpha = degToRad(360.0 / nEdges);
-	double alpha = 0;
+	double alpha = degToRad(-90);
 	for (int i = 0; i < nEdges; ++i)
 	{
 		double sin = Math::Sin(alpha);
@@ -328,47 +338,53 @@ SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, d
 		int nIn = nEdges * 2 + i;
 		int fIn = nEdges * 3 + i;
 		int fBv = nEdges * 4 + i;
-		vArr[ex ] = gcnew Vector3D(exx, exy, exz);
+		vArr[ex] = gcnew Vector3D(exx, exy, exz);
 		vArr[nBv] = gcnew Vector3D(bvx, bvy, nearCenter->z);
 		vArr[nIn] = gcnew Vector3D(inx, iny, nearCenter->z);
 		vArr[fIn] = gcnew Vector3D(inx, iny, farCenter->z);
 		vArr[fBv] = gcnew Vector3D(bvx, bvy, farCenter->z);
 
-		int mi = i * INDICES_MUL;
-		iArr[mi] = nBv + 1;
-		iArr[mi + 1] = nBv + 2;
-		iArr[mi + 2] = ex + 1;
-		iArr[mi + 3] = nBv + 2;
-		iArr[mi + 4] = ex + 1;
-		iArr[mi + 5] = ex + 2;
+		int mii = i * INDICES_MUL;
+		int mci = i * FACETS_PER_ITERATION;
+		iArr[mii] = nBv + 1;
+		iArr[mii + 1] = nBv + 2;
+		iArr[mii + 2] = ex + 1;
+		iArr[mii + 3] = nBv + 2;
+		iArr[mii + 4] = ex + 1;
+		iArr[mii + 5] = ex + 2;
+		cArr[mci] = cArr[mci + 1] = palette[1];
 
-		iArr[mi + 6] = nIn + 1;
-		iArr[mi + 7] = nIn + 2;
-		iArr[mi + 8] = nBv + 1;
-		iArr[mi + 9] = nIn + 2;
-		iArr[mi + 10] = nBv + 1;
-		iArr[mi + 11] = nBv + 2;
+		iArr[mii + 6] = nIn + 1;
+		iArr[mii + 7] = nIn + 2;
+		iArr[mii + 8] = nBv + 1;
+		iArr[mii + 9] = nIn + 2;
+		iArr[mii + 10] = nBv + 1;
+		iArr[mii + 11] = nBv + 2;
+		cArr[mci + 2] = cArr[mci + 3] = palette[0];
 
-		iArr[mi + 12] = nIn + 1;
-		iArr[mi + 13] = nIn + 2;
-		iArr[mi + 14] = fIn + 1;
-		iArr[mi + 15] = nIn + 2;
-		iArr[mi + 16] = fIn + 1;
-		iArr[mi + 17] = fIn + 2;
+		iArr[mii + 12] = nIn + 1;
+		iArr[mii + 13] = nIn + 2;
+		iArr[mii + 14] = fIn + 1;
+		iArr[mii + 15] = nIn + 2;
+		iArr[mii + 16] = fIn + 1;
+		iArr[mii + 17] = fIn + 2;
+		cArr[mci + 4] = cArr[mci + 5] = palette[0];
 
-		iArr[mi + 18] = fIn + 1;
-		iArr[mi + 19] = fIn + 2;
-		iArr[mi + 20] = fBv + 1;
-		iArr[mi + 21] = fIn + 2;
-		iArr[mi + 22] = fBv + 1;
-		iArr[mi + 23] = fBv + 2;
+		iArr[mii + 18] = fIn + 1;
+		iArr[mii + 19] = fIn + 2;
+		iArr[mii + 20] = fBv + 1;
+		iArr[mii + 21] = fIn + 2;
+		iArr[mii + 22] = fBv + 1;
+		iArr[mii + 23] = fBv + 2;
+		cArr[mci + 6] = cArr[mci + 7] = palette[0];
 
-		iArr[mi + 24] = ex + 1;
-		iArr[mi + 25] = ex + 2;
-		iArr[mi + 26] = fBv + 1;
-		iArr[mi + 27] = ex + 2;
-		iArr[mi + 28] = fBv + 1;
-		iArr[mi + 29] = fBv + 2;
+		iArr[mii + 24] = ex + 1;
+		iArr[mii + 25] = ex + 2;
+		iArr[mii + 26] = fBv + 1;
+		iArr[mii + 27] = ex + 2;
+		iArr[mii + 28] = fBv + 1;
+		iArr[mii + 29] = fBv + 2;
+		cArr[mci + 8] = cArr[mci + 9] = palette[1];
 	}
 
 	int closing = (nEdges - 1) * INDICES_MUL;
@@ -407,15 +423,17 @@ SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, d
 	iArr[closing + 28] = nEdges * 5;
 	iArr[closing + 29] = nEdges * 4 + 1;
 
-	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
+	return gcnew SceneObject(vArr, iArr, cArr);
 }
 
 //vertices: 24
 //indices: 108
-SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThickness)
+SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThickness, array<Color> ^ palette)
 {
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(24);
-	array<int> ^ iArr = gcnew array<int>(108); //(8 * 4 + 4) * 3
+	const int N_FACETS = 36;
+	array<int> ^ iArr = gcnew array<int>(N_FACETS * 3);
+	array<Color> ^ cArr = gcnew array<Color>(N_FACETS);
 
 	double hWidth = pWidth / 2;
 	double hThickness = pThickness / 2;
@@ -573,15 +591,20 @@ SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThi
 	iArr[107] = 23;
 #pragma endregion
 
-	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
+	for (int i = 0; i < N_FACETS; ++i)
+		cArr[i] = palette[0];
+
+	return gcnew SceneObject(vArr, iArr, cArr);
 }
 
 //vertices: 14
 //indices: 42
-SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, double alphaDeg, double betaDeg, double thickness, double inLength, double bevelStartPoint, double exLength)
+SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, double alphaDeg, double betaDeg, double thickness, double inLength, double bevelStartPoint, double exLength, array<Color> ^ palette)
 {
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(14);
-	array<int> ^ iArr = gcnew array<int>(42);
+	const double N_FACETS = 14;
+	array<int> ^ iArr = gcnew array<int>(N_FACETS * 3);
+	array<Color> ^ cArr = gcnew array<Color>(N_FACETS);
 
 	const double alpha = degToRad(alphaDeg);
 	const double beta = degToRad(betaDeg);
@@ -623,47 +646,74 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	iArr[0] = 1;
 	iArr[1] = 2;
 	iArr[2] = 8;
+	cArr[0] = palette[1];
+
 	iArr[3] = 1;
 	iArr[4] = 2;
 	iArr[5] = 9;
+	cArr[1] = palette[1];
+
 	iArr[6] = 2;
 	iArr[7] = 8;
 	iArr[8] = 4;
+	cArr[2] = palette[1];
+
 	iArr[9] = 2;
 	iArr[10] = 9;
 	iArr[11] = 5;
+	cArr[3] = palette[1];
+
 	iArr[12] = 1;
 	iArr[13] = 3;
 	iArr[14] = 8;
+	cArr[4] = palette[1];
+
 	iArr[15] = 1;
 	iArr[16] = 3;
 	iArr[17] = 9;
+	cArr[5] = palette[1];
+
 	iArr[18] = 3;
 	iArr[19] = 8;
 	iArr[20] = 6;
+	cArr[6] = palette[1];
+
 	iArr[21] = 3;
 	iArr[22] = 9;
 	iArr[23] = 7;
+	cArr[7] = palette[1];
+	
 	iArr[24] = 4;
 	iArr[25] = 8;
 	iArr[26] = 6;
+	cArr[8] = palette[0];
+
 	iArr[27] = 5;
 	iArr[28] = 9;
 	iArr[29] = 7;
+	cArr[9] = palette[0];
 
 	//Внутренняя часть
 	iArr[30] = 14;
 	iArr[31] = 10;
 	iArr[32] = 11;
+	cArr[10] = palette[1];
+
 	iArr[33] = 14;
 	iArr[34] = 11;
 	iArr[35] = 12;
+	cArr[11] = palette[0];
+	
 	iArr[36] = 14;
 	iArr[37] = 12;
 	iArr[38] = 13;
+	cArr[12] = palette[0];
+
 	iArr[39] = 14;
 	iArr[40] = 13;
 	iArr[41] = 10;
+	cArr[13] = palette[0];
+
 
 	//Старый вариант
 	/*vArr[0] = inV;
@@ -702,5 +752,5 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	iArr[22] = 9;
 	iArr[23] = 6;*/
 
-	return gcnew SceneObject(vArr, iArr, gcnew array<Color>(0));
+	return gcnew SceneObject(vArr, iArr, cArr);
 }

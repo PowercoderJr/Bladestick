@@ -24,7 +24,7 @@ namespace Bladestick {
 		System::Windows::Forms::Panel ^ panel2;
 		System::Windows::Forms::PictureBox ^ canvas;
 		Bladestick::Drawing::Scene ^ scene;
-		System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 		
 	public:
 		MainForm(void)

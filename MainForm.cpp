@@ -23,9 +23,9 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	//Some debugging here	
 	bool flipVertical = true;
 	scene->setSize(canvas->Width, canvas->Height);
+	Random ^ rnd = gcnew Random();
 
 	/*const int N = 1;
-	Random ^ rnd = gcnew Random();
 	array<SceneObject ^> ^ objects = gcnew array<SceneObject^>(N);
 	IO::FileStream ^ stream;
 	try
@@ -120,7 +120,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		}
 	}*/
 
-	SceneObject ^ so = SceneObject::buildBladestick(400, 10, 16, 100, 150, 64, 30, 60, 40, 50, 50, 4);
+	SceneObject ^ so = SceneObject::buildBladestick(400, 10, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) {Color::SaddleBrown, Color::DarkGray, Color::LightGray});
 	so->setOffset(400, 300, 0);
 	scene->setSize(canvas->Width, canvas->Height);
 

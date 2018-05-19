@@ -3,6 +3,7 @@
 
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
+using namespace System;
 
 Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 {
@@ -37,7 +38,7 @@ int Scene::getHeight()
 void Scene::clear()
 {
 	int index = 0;
-	double ninf = System::Double::PositiveInfinity;
+	double ninf = Double::PositiveInfinity;
 	for (int i = 0; i < width; ++i)
 		for (int j = 0; j < height; ++j)
 			zbuffer[index++] = ninf;
@@ -61,7 +62,7 @@ void Scene::setPixel(int x, int y, double z, Color color, bool flipVertical)
 void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color color, bool flipVertical)
 {
 	bool steep = false;
-	if (System::Math::Abs(x0 - x1) < System::Math::Abs(y0 - y1))
+	if (Math::Abs(x0 - x1) < Math::Abs(y0 - y1))
 	{
 		swap(&x0, &y0);
 		swap(&x1, &y1);
@@ -77,7 +78,7 @@ void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, doub
 	int y = y0;
 	double z = z0;
 	double zStep = (z1 - z0) / dx;
-	int derror2 = System::Math::Abs(dy) * 2;
+	int derror2 = Math::Abs(dy) * 2;
 	int error2 = 0;
 	int diry = y1 > y0 ? 1 : -1;
 	for (int x = x0; x <= x1; x++)
@@ -188,15 +189,22 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 	}
 }
 
-void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges)
+void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges, bool useRandomPalette)
 {
+	Random ^ rnd = gcnew Random();
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
 		drawTriangle(obj->vertices[obj->indices[i] - 1],
 			obj->vertices[obj->indices[i + 1] - 1],
 			obj->vertices[obj->indices[i + 2] - 1],
-			obj->colors[i / 3], flipVertical, drawFill, drawEdges);
+			useRandomPalette ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3],
+			flipVertical, drawFill, drawEdges);
 	}
+}
+
+void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges)
+{
+	drawToBuffer(obj, flipVertical, drawFill, drawEdges, false);
 }
 
 void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical)

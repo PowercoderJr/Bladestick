@@ -44,6 +44,7 @@ namespace Bladestick
 			void drawLine(double x0, double y0, double z0, double x1, double y1, double z1, System::Drawing::Color color, bool flipVertical);
 			void drawLine(Vector3D ^ p1, Vector3D ^ p2, System::Drawing::Color color, bool flipVertical);
 			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, bool flipVertical, bool drawFill, bool drawEdges);
+			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges, bool useRandomPalette);
 			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges);
 			void drawToBuffer(SceneObject ^ obj, bool flipVertical);
 			void render(System::Drawing::Graphics ^ g);

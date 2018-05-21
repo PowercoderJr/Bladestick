@@ -33,7 +33,7 @@ SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<
 	this->colors = colors;
 }
 
-void SceneObject::transform(Camera camera)
+void SceneObject::transform()
 {
 	double alpha = degToRad(rotation->x);
 	double beta = degToRad(rotation->y);
@@ -54,14 +54,6 @@ void SceneObject::transform(Camera camera)
 				sin(beta)) * sin(gamma);
 		v->mz = offset->z + cos(beta) * (v->z* scaling->z * cos(alpha) + v->y *
 				scaling->y * sin(alpha)) - v->x * scaling->x * sin(beta);
-
-		if (camera.perspective)
-		{
-			double persp = -v->mz / camera.position->z + 1;
-			v->mx /= persp;
-			v->my /= persp;
-			v->mz /= persp;
-		}
 	}
 #undef sin
 #undef cos
@@ -697,7 +689,7 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	iArr[30] = 14;
 	iArr[31] = 10;
 	iArr[32] = 11;
-	cArr[10] = palette[1];
+	cArr[10] = palette[0];
 
 	iArr[33] = 14;
 	iArr[34] = 11;

@@ -110,3 +110,28 @@ Vector3D ^ Vector3D::normalized()
 	double m = getMagnitude();
 	return gcnew Vector3D(x / m, y / m, z / m);
 }
+
+double Vector3D::scalarProduct(double x, double y, double z)
+{
+	return this->x * x + this->y * y + this->z * z;
+}
+
+double Vector3D::scalarProduct(Vector3D ^ v)
+{
+	return scalarProduct(v->x, v->y, v->z);
+}
+
+Vector3D ^ Vector3D::vectorProduct(double x, double y, double z)
+{
+	return gcnew Vector3D(this->y * z - this->z * y, this->z * x - this->x * z, this->x * y - this->y * x);
+}
+
+Vector3D ^ Vector3D::vectorProduct(Vector3D ^ v)
+{
+	return vectorProduct(v->x, v->y, v->z);
+}
+
+Vector3D ^ Vector3D::clone()
+{
+	return gcnew Vector3D(x, y, z, w, mx, my, mz, mw);
+}

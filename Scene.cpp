@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Utils.h"
+#include "Matrix.h"
 
 using namespace Bladestick::Drawing;
 using namespace System::Drawing;
@@ -10,7 +11,7 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
-	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, false};
+	this->camera = gcnew Camera(gcnew Vector3D(0, 0, -500), gcnew Vector3D(0, 0, 0), -5000, 5000, true);
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
@@ -106,9 +107,9 @@ void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color, bool flipVertica
 void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, bool flipVertical, bool drawFill, bool drawEdges)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
-	if (p1->mz < camera.near || p1->mz > camera.far) return;
-	if (p2->mz < camera.near || p2->mz > camera.far) return;
-	if (p3->mz < camera.near || p3->mz > camera.far) return;
+	if (p1->mz < camera->near || p1->mz > camera->far) return;
+	if (p2->mz < camera->near || p2->mz > camera->far) return;
+	if (p3->mz < camera->near || p3->mz > camera->far) return;
 
 	if (p1->my > p2->my) swap(&p1, &p2);
 	if (p1->my > p3->my) swap(&p1, &p3);
@@ -191,12 +192,32 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 
 void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges, bool useRandomPalette)
 {
+	int vCount = obj->vertices->Length;
+	array<Vector3D ^> ^ vertices = gcnew array<Vector3D ^>(vCount);
+	for (int i = 0; i < vCount; ++i)
+		vertices[i] = obj->vertices[i]->clone();
+	for each (Vector3D ^ v in vertices)
+	{
+		v->mx = camera->rightDir->x * (-camera->position->x + v->mx) + camera->rightDir->y * (-camera->position->y + v->my) + camera->rightDir->z * (-camera->position->z + v->mz);
+		v->my = camera->upDir->x * (-camera->position->x + v->mx) + camera->upDir->y * (-camera->position->y + v->my) + camera->upDir->z * (-camera->position->z + v->mz);
+		v->mz = camera->backDir->x * (-camera->position->x + v->mx) + camera->backDir->y * (-camera->position->y + v->my) + camera->backDir->z * (-camera->position->z + v->mz);
+		/*if (camera->perspective)
+		{
+			double persp = 1 - v->mz / camera->position->z;
+			v->mx /= persp;
+			v->my /= persp;
+			v->mz /= persp;
+		}*/
+		v->mx += width / 2;
+		v->my += height / 2;
+	}
+
 	Random ^ rnd = gcnew Random();
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
-		drawTriangle(obj->vertices[obj->indices[i] - 1],
-			obj->vertices[obj->indices[i + 1] - 1],
-			obj->vertices[obj->indices[i + 2] - 1],
+		drawTriangle(vertices[obj->indices[i] - 1],
+			vertices[obj->indices[i + 1] - 1],
+			vertices[obj->indices[i + 2] - 1],
 			useRandomPalette ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3],
 			flipVertical, drawFill, drawEdges);
 	}

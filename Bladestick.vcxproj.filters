@@ -36,6 +36,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Исходные файлы\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Исходные файлы\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -54,6 +57,9 @@
       <Filter>Файлы заголовков\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>Файлы заголовков\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Файлы заголовков\Drawing</Filter>
     </ClInclude>
   </ItemGroup>

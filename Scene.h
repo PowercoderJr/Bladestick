@@ -2,22 +2,12 @@
 
 #include "Vector3D.h"
 #include "SceneObject.h"
+#include "Camera.h"
 
 namespace Bladestick
 {
 	namespace Drawing
 	{
-		public value class Camera
-		{
-		internal:
-			Vector3D ^ position;
-			//Vector3D ^ target;
-			Vector3D ^ rotation;
-			int near;
-			int far;
-			bool perspective;
-		};
-
 		public ref class Scene
 		{
 		internal:
@@ -27,7 +17,7 @@ namespace Bladestick
 			System::Drawing::Color edgeColor;
 			int width;
 			int height;
-			Camera camera;
+			Camera ^ camera;
 
 		public:
 			/*static const int MAX_WIDTH = 1920;

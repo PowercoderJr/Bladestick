@@ -17,7 +17,7 @@ namespace Bladestick
 			double mw;
 
 		public:
-			Vector3D(double x, double y, double z, double w, double sx, double sy, double sz, double sw);
+			Vector3D(double x, double y, double z, double w, double mx, double my, double mz, double mw);
 			Vector3D(double x, double y, double z, double w);
 			Vector3D(double x, double y, double z);
 			Vector3D(const Vector3D %vector);
@@ -35,6 +35,11 @@ namespace Bladestick
 			Vector3D ^ scale(double x);
 			double getMagnitude();
 			Vector3D ^ normalized();
+			double scalarProduct(double x, double y, double z);
+			double scalarProduct(Vector3D ^ v);
+			Vector3D ^ vectorProduct(double x, double y, double z);
+			Vector3D ^ vectorProduct(Vector3D ^ v);
+			Vector3D ^ clone();
 		};
 	}
 }

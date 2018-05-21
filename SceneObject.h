@@ -5,7 +5,6 @@ namespace Bladestick
 	namespace Drawing
 	{
 		ref class Vector3D;
-		value class Camera;
 
 		public ref class SceneObject
 		{
@@ -91,7 +90,7 @@ namespace Bladestick
 
 			SceneObject();
 			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors);
-			void transform(Camera camera);
+			void transform();
 			void setOffset(double x, double y, double z);
 			void setOffset(Vector3D ^ offset);
 			void setScaling(double a, double b, double c);

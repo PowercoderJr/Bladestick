@@ -1,6 +1,7 @@
 #include "MainForm.h"
 #include "Utils.h"
 #include "Matrix.h"
+#include "Scene.h"
 
 #include <time.h>
 
@@ -21,7 +22,6 @@ void Main(array<String^> ^ args)
 Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	//Some debugging here	
-	bool flipVertical = true;
 	scene->setSize(canvas->Width, canvas->Height);
 	Random ^ rnd = gcnew Random();
 
@@ -120,20 +120,43 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		}
 	}*/
 
-	SceneObject ^ so = SceneObject::buildBladestick(400, 5, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) {Color::SaddleBrown, Color::DarkGray, Color::LightGray});
-	//so->setOffset(0, 0, 0);
+	SceneObject ^ so;
+	//so = SceneObject::buildBladestick(400, 5, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
+	IO::FileStream ^ stream;
+	try
+	{
+		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
+		so = gcnew SceneObject();
+		so->loadFromStream(stream);
+		stream->Close();
+	}
+	finally
+	{
+		stream->Close();
+	}
 	so->transform();
 	scene->setSize(canvas->Width, canvas->Height);
-
-	const double distance = 500;
-	for (int i = 0; i <= 360; ++i)
+	scene->camera->perspective = true;
+	/*for (int i = 0; i <= 360; i += 5)
 	{
-		double x = Math::Cos(degToRad(i)) * distance;
-		double z = Math::Sin(degToRad(i)) * distance;
-		scene->camera->setPosition(x, 0, z);
-		scene->camera->updateDirs();
 		scene->clear();
-		scene->drawToBuffer(so, flipVertical);
+		so->setOffset(0, 0, i*4);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
+		scene->render(g);
+		//scene->camera->perspective = i % 10 < 5;
+	}*/
+	const double distance = 300;
+	for (int i = 90; i <= 450; i += 3)
+	{
+		double a = Math::Cos(degToRad(i)) * distance;
+		double b = Math::Sin(degToRad(i)) * distance;
+		scene->camera->setPosition(a, 0, b);
+		scene->camera->updateDirs();
+		/*so->setRotation(i, 0, 0);
+		so->transform();*/
+		scene->clear();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	/*for (int i = 0; i <= 360; i += 3)
@@ -141,15 +164,15 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->clear();
 		so->setRotation(i, 0, 0);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
-	}/*
+	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, 0);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
@@ -157,14 +180,14 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->clear();
 		so->setRotation(0, 0, i);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, i, 0);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
@@ -172,7 +195,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->clear();
 		so->setRotation(i, 0, i);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
@@ -180,7 +203,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->clear();
 		so->setRotation(0, i, i);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
@@ -188,7 +211,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->clear();
 		so->setRotation(i, i, i);
 		so->transform();
-		scene->drawToBuffer(so, flipVertical);
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}*/
 	return Void();

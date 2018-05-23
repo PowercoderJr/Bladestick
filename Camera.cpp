@@ -3,13 +3,14 @@
 
 using namespace Bladestick::Drawing;
 
-Camera::Camera(Vector3D ^ position, Vector3D ^ target, int near, int far, bool perspective)
+Camera::Camera(Vector3D ^ position, Vector3D ^ target, double near, double far, double fov, bool perspective)
 {
 	setPosition(position);
 	setTarget(target);
 	updateDirs();
 	this->near = near;
 	this->far = far;
+	this->fov = fov;
 	this->perspective = perspective;
 }
 

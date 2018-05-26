@@ -29,6 +29,7 @@ namespace Bladestick
 			int height;
 			Camera camera;
 			System::ComponentModel::BindingList<SceneObject ^> ^ objects;
+			int objCount;
 
 		public:
 			/*static const int MAX_WIDTH = 1920;
@@ -49,6 +50,7 @@ namespace Bladestick
 			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges);
 			void drawToBuffer(SceneObject ^ obj, bool flipVertical);
 			void render(System::Drawing::Graphics ^ g);
+			void drawObjectsToBuffer();
 			System::Drawing::Color getBgColor();
 			void setBgColor(System::Drawing::Color color);
 		};

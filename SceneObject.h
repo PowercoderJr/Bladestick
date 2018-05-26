@@ -83,16 +83,15 @@ namespace Bladestick
 			/// <param name="secondarySpikesCount">Количество вторичных шипов</param>
 			/// <param name="palette">Палитра (3 цвета: 1 - цвет рукояти, 2 - цвет металла сбоку, 3 - цвет наточенного металла)</param>
 			static Drawing::SceneObject ^ buildBladestick(double handleLength, int handleRingsCount,
-				double handleEdgesCount, double inBladeRadius, double exBladeRadius,
-				double bladeEdgesCount, double bladeThickness,
+				int handleEdgesCount, double inBladeRadius, double exBladeRadius,
+				int bladeEdgesCount, double bladeThickness,
 				double primarySpikeLength, double primarySpikeAngle, 
 				double secondarySpikeLength, double secondarySpikeAngle,
 				int secondarySpikesCount, array<System::Drawing::Color> ^ palette);
 			static Drawing::SceneObject ^ unite(array<Drawing::SceneObject ^> ^ components);
 
-//SceneObject ^ so = SceneObject::buildBladestick(400, 10, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
 			static double DEFAULT_HANDLE_LENGTH = 400;
-			static int DEFAULT_HANDLE_RINGS_COUNT = 4;
+			static int    DEFAULT_HANDLE_RINGS_COUNT = 4;
 			static double DEFAULT_HANDLE_EDGES_COUNT = 8;
 			static double DEFAULT_IN_BLADE_RADIUS = 100;
 			static double DEFAULT_EX_BLADE_RADIUS = 150;
@@ -102,7 +101,7 @@ namespace Bladestick
 			static double DEFAULT_PRIMARY_SPIKE_ANGLE = 50;
 			static double DEFAULT_SECONDARY_SPIKE_LENGTH = 40;
 			static double DEFAULT_SECONDARY_SPIKE_ANGLE = 50;
-			static int DEFAULT_SECONDARY_SPIKES_COUNT = 4;
+			static int    DEFAULT_SECONDARY_SPIKES_COUNT = 4;
 			static System::Drawing::Color DEFAULT_COLOR_1 = System::Drawing::Color::SaddleBrown;
 			static System::Drawing::Color DEFAULT_COLOR_2 = System::Drawing::Color::DarkGray;
 			static System::Drawing::Color DEFAULT_COLOR_3 = System::Drawing::Color::LightGray;

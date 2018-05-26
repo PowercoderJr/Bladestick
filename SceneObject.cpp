@@ -160,10 +160,10 @@ String ^ SceneObject::ToString()
 }
 
 SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsCount,
-	double handleEdgesCount, double inBladeRadius, double exBladeRadius,
-	double bladeEdgesCount, double bladeThickness,
-	double primarySpikeLength, double secondarySpikeLength,
-	double primarySpikeAngle, double secondarySpikeAngle,
+	int handleEdgesCount, double inBladeRadius, double exBladeRadius,
+	int bladeEdgesCount, double bladeThickness,
+	double primarySpikeLength, double primarySpikeAngle,
+	double secondarySpikeLength, double secondarySpikeAngle,
 	int secondarySpikesCount, array<Color> ^ palette)
 {
 	Random ^ rnd = gcnew Random();

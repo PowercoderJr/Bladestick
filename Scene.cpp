@@ -13,6 +13,7 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	this->edgeColor = edgeColor;
 	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, false};
 	this->objects = gcnew BindingList<SceneObject ^>();
+	this->objCount = 0;
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
@@ -217,6 +218,13 @@ void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical)
 void Scene::render(Graphics ^ g)
 {
 	g->DrawImage(bitmap, 0, 0, width, height);
+}
+
+void Scene::drawObjectsToBuffer()
+{
+	for each (SceneObject ^ so in objects)
+		//TODO: изменить список передаваемых аргументов после слияния
+		drawToBuffer(so, true);
 }
 
 Color Scene::getBgColor()

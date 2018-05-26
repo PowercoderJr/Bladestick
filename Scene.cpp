@@ -2,6 +2,7 @@
 #include "Utils.h"
 
 using namespace Bladestick::Drawing;
+using namespace System::ComponentModel;
 using namespace System::Drawing;
 using namespace System;
 
@@ -11,6 +12,7 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
 	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, false};
+	this->objects = gcnew BindingList<SceneObject ^>();
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}

@@ -28,6 +28,7 @@ namespace Bladestick
 			int width;
 			int height;
 			Camera camera;
+			System::ComponentModel::BindingList<SceneObject ^> ^ objects;
 
 		public:
 			/*static const int MAX_WIDTH = 1920;

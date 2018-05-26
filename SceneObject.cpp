@@ -22,7 +22,7 @@ SceneObject::SceneObject()
 	this->colors = gcnew array<Color>(N);
 }
 
-SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors)
+SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors, String ^ name)
 {
 	this->offset = gcnew Vector3D(0, 0, 0);
 	this->scaling = gcnew Vector3D(1, 1, 1);
@@ -31,6 +31,12 @@ SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<
 	this->vertices = vertices;
 	this->indices = indices;
 	this->colors = colors;
+
+	this->name = gcnew String(name);
+}
+
+SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors) : SceneObject::SceneObject(vertices, indices, colors, "Îáúåêò")
+{
 }
 
 void SceneObject::transform(Camera camera)
@@ -146,6 +152,11 @@ void SceneObject::loadFromStream(Stream ^ stream)
 	this->vertices = vertices->ToArray();
 	this->indices = indices->ToArray();
 	this->colors = colors->ToArray();
+}
+
+String ^ SceneObject::ToString()
+{
+	return gcnew String(name);
 }
 
 SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsCount,

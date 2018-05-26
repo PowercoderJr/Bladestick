@@ -119,8 +119,13 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 			scene->render(g);
 		}
 	}*/
-
+	objectsListBox->DataSource = scene->objects;
+	static int num = 1;
 	SceneObject ^ so = SceneObject::buildBladestick(400, 10, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) {Color::SaddleBrown, Color::DarkGray, Color::LightGray});
+	so->name = "Aza #" + num++;
+	scene->objects->Add(so);
+	so = (SceneObject ^) objectsListBox->SelectedItem;
+	//objectsListBox->Refresh();
 	so->setOffset(400, 300, 0);
 	scene->setSize(canvas->Width, canvas->Height);
 
@@ -132,7 +137,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
 	}
-	for (int i = 0; i <= 360; i += 3)
+	/*for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, 0);
@@ -179,6 +184,12 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		so->transform(scene->camera);
 		scene->drawToBuffer(so, flipVertical);
 		scene->render(g);
-	}
+	}*/
+	return Void();
+}
+
+Void MainForm::secondarySpikesCountInput_ValueChanged(System::Object ^ sender, System::EventArgs ^ e)
+{
+	secondarySpikesCountLabel->Text = "" + (secondarySpikesCountInput->Value * 4);
 	return Void();
 }

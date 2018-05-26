@@ -19,12 +19,72 @@ namespace Bladestick {
 	private: 
 		System::Drawing::Graphics ^ g;
 		System::ComponentModel::BackgroundWorker ^ backgroundWorker1;
-		System::Windows::Forms::Panel ^ panel1;
-		System::Windows::Forms::Button ^ button1;
-		System::Windows::Forms::Panel ^ panel2;
-		System::Windows::Forms::PictureBox ^ canvas;
-		Bladestick::Drawing::Scene ^ scene;
+		System::Windows::Forms::MenuStrip^  menuStrip1;
+		System::Windows::Forms::Panel^  objPanel;
+		System::Windows::Forms::Button^  clearObjBtn;
+		System::Windows::Forms::Button^  deleteObjBtn;
+		System::Windows::Forms::Button^  createObjBtn;
+		System::Windows::Forms::Label^  label1;
+		System::Windows::Forms::ListBox^  objectsListBox;
+		System::Windows::Forms::Button^  button1;
+		System::Windows::Forms::PictureBox^  canvas;
+		System::Windows::Forms::GroupBox^  groupBox1;
+		System::Windows::Forms::Label^  label3;
+		System::Windows::Forms::Label^  label2;
+
+
+
+		System::Windows::Forms::Label^  label4;
+
+
+
+
+
+
+		System::Windows::Forms::GroupBox^  groupBox2;
+		System::Windows::Forms::Label^  label16;
+		System::Windows::Forms::NumericUpDown^  secondarySpikeAngleInput;
+		System::Windows::Forms::Label^  label14;
+		System::Windows::Forms::NumericUpDown^  primarySpikeAngleInput;
+		System::Windows::Forms::Label^  label15;
+		System::Windows::Forms::NumericUpDown^  secondarySpikeLengthInput;
+		System::Windows::Forms::Label^  label13;
+		System::Windows::Forms::NumericUpDown^  primarySpikeLengthInput;
+		System::Windows::Forms::Label^  label12;
+		System::Windows::Forms::NumericUpDown^  bladeThicknessInput;
+		System::Windows::Forms::Label^  label11;
+		System::Windows::Forms::NumericUpDown^  bladeEdgesCountInput;
+		System::Windows::Forms::Label^  label10;
+		System::Windows::Forms::NumericUpDown^  exBladeRadiusInput;
+		System::Windows::Forms::Label^  label9;
+		System::Windows::Forms::NumericUpDown^  inBladeRadiusInput;
+		System::Windows::Forms::Label^  label8;
+		System::Windows::Forms::NumericUpDown^  handleEdgesCountInput;
+		System::Windows::Forms::Label^  label7;
+		System::Windows::Forms::NumericUpDown^  handleRingsCountInput;
+		System::Windows::Forms::Label^  label6;
+		System::Windows::Forms::NumericUpDown^  handleLengthInput;
+		System::Windows::Forms::Label^  label5;
+		System::Windows::Forms::TrackBar^  secondarySpikesCountInput;
+		System::Windows::Forms::Button^  color3Btn;
+		System::Windows::Forms::Button^  color2Btn;
+		System::Windows::Forms::Button^  color1Btn;
+		System::Windows::Forms::Label^  label17;
+		System::Windows::Forms::ColorDialog^  colorDialog1;
+		System::Windows::Forms::Button^  defaultParamsBtn;
+		System::Windows::Forms::Label^  secondarySpikesCountLabel;
+	private: System::Windows::Forms::NumericUpDown^  objScaleZ;
+	private: System::Windows::Forms::NumericUpDown^  objScaleY;
+	private: System::Windows::Forms::NumericUpDown^  objScaleX;
+	private: System::Windows::Forms::NumericUpDown^  objRotZ;
+	private: System::Windows::Forms::NumericUpDown^  objRotY;
+	private: System::Windows::Forms::NumericUpDown^  objRotX;
+	private: System::Windows::Forms::NumericUpDown^  objPosZ;
+	private: System::Windows::Forms::NumericUpDown^  objPosY;
+	private: System::Windows::Forms::NumericUpDown^  objPosX;
+			 Bladestick::Drawing::Scene ^ scene;
 		System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+		System::Void secondarySpikesCountInput_ValueChanged(System::Object^  sender, System::EventArgs^  e);
 		
 	public:
 		MainForm(void)
@@ -60,71 +120,675 @@ namespace Bladestick {
 		void InitializeComponent(void)
 		{
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->objPanel = (gcnew System::Windows::Forms::Panel());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->secondarySpikesCountLabel = (gcnew System::Windows::Forms::Label());
+			this->defaultParamsBtn = (gcnew System::Windows::Forms::Button());
+			this->color3Btn = (gcnew System::Windows::Forms::Button());
+			this->color2Btn = (gcnew System::Windows::Forms::Button());
+			this->color1Btn = (gcnew System::Windows::Forms::Button());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->secondarySpikesCountInput = (gcnew System::Windows::Forms::TrackBar());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->secondarySpikeAngleInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->primarySpikeAngleInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label15 = (gcnew System::Windows::Forms::Label());
+			this->secondarySpikeLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->primarySpikeLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->bladeThicknessInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->bladeEdgesCountInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->exBladeRadiusInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->inBladeRadiusInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->handleEdgesCountInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->handleRingsCountInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->handleLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->clearObjBtn = (gcnew System::Windows::Forms::Button());
+			this->deleteObjBtn = (gcnew System::Windows::Forms::Button());
+			this->createObjBtn = (gcnew System::Windows::Forms::Button());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->objectsListBox = (gcnew System::Windows::Forms::ListBox());
 			this->canvas = (gcnew System::Windows::Forms::PictureBox());
-			this->panel1->SuspendLayout();
-			this->panel2->SuspendLayout();
+			this->colorDialog1 = (gcnew System::Windows::Forms::ColorDialog());
+			this->objPosX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objPosY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objPosZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objRotX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objRotY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objRotZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objScaleX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objScaleY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objScaleZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->objPanel->SuspendLayout();
+			this->groupBox2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikesCountInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeAngleInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeAngleInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeLengthInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeLengthInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bladeThicknessInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bladeEdgesCountInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->exBladeRadiusInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->inBladeRadiusInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleEdgesCountInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleRingsCountInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleLengthInput))->BeginInit();
+			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->canvas))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosX))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosZ))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotX))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotZ))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleX))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleZ))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// panel1
+			// menuStrip1
 			// 
-			this->panel1->Controls->Add(this->button1);
-			this->panel1->Dock = System::Windows::Forms::DockStyle::Right;
-			this->panel1->Location = System::Drawing::Point(964, 0);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(300, 682);
-			this->panel1->TabIndex = 0;
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Size = System::Drawing::Size(1264, 24);
+			this->menuStrip1->TabIndex = 3;
+			this->menuStrip1->Text = L"menuStrip1";
+			// 
+			// objPanel
+			// 
+			this->objPanel->AutoScroll = true;
+			this->objPanel->Controls->Add(this->groupBox2);
+			this->objPanel->Controls->Add(this->groupBox1);
+			this->objPanel->Controls->Add(this->clearObjBtn);
+			this->objPanel->Controls->Add(this->deleteObjBtn);
+			this->objPanel->Controls->Add(this->createObjBtn);
+			this->objPanel->Controls->Add(this->label1);
+			this->objPanel->Controls->Add(this->objectsListBox);
+			this->objPanel->Dock = System::Windows::Forms::DockStyle::Left;
+			this->objPanel->Location = System::Drawing::Point(0, 24);
+			this->objPanel->Name = L"objPanel";
+			this->objPanel->Size = System::Drawing::Size(310, 740);
+			this->objPanel->TabIndex = 4;
+			// 
+			// groupBox2
+			// 
+			this->groupBox2->Controls->Add(this->secondarySpikesCountLabel);
+			this->groupBox2->Controls->Add(this->defaultParamsBtn);
+			this->groupBox2->Controls->Add(this->color3Btn);
+			this->groupBox2->Controls->Add(this->color2Btn);
+			this->groupBox2->Controls->Add(this->color1Btn);
+			this->groupBox2->Controls->Add(this->label17);
+			this->groupBox2->Controls->Add(this->secondarySpikesCountInput);
+			this->groupBox2->Controls->Add(this->label16);
+			this->groupBox2->Controls->Add(this->secondarySpikeAngleInput);
+			this->groupBox2->Controls->Add(this->label14);
+			this->groupBox2->Controls->Add(this->primarySpikeAngleInput);
+			this->groupBox2->Controls->Add(this->label15);
+			this->groupBox2->Controls->Add(this->secondarySpikeLengthInput);
+			this->groupBox2->Controls->Add(this->button1);
+			this->groupBox2->Controls->Add(this->label13);
+			this->groupBox2->Controls->Add(this->primarySpikeLengthInput);
+			this->groupBox2->Controls->Add(this->label12);
+			this->groupBox2->Controls->Add(this->bladeThicknessInput);
+			this->groupBox2->Controls->Add(this->label11);
+			this->groupBox2->Controls->Add(this->bladeEdgesCountInput);
+			this->groupBox2->Controls->Add(this->label10);
+			this->groupBox2->Controls->Add(this->exBladeRadiusInput);
+			this->groupBox2->Controls->Add(this->label9);
+			this->groupBox2->Controls->Add(this->inBladeRadiusInput);
+			this->groupBox2->Controls->Add(this->label8);
+			this->groupBox2->Controls->Add(this->handleEdgesCountInput);
+			this->groupBox2->Controls->Add(this->label7);
+			this->groupBox2->Controls->Add(this->handleRingsCountInput);
+			this->groupBox2->Controls->Add(this->label6);
+			this->groupBox2->Controls->Add(this->handleLengthInput);
+			this->groupBox2->Controls->Add(this->label5);
+			this->groupBox2->Location = System::Drawing::Point(7, 286);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(281, 450);
+			this->groupBox2->TabIndex = 7;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"Параметры";
+			// 
+			// secondarySpikesCountLabel
+			// 
+			this->secondarySpikesCountLabel->AutoSize = true;
+			this->secondarySpikesCountLabel->Location = System::Drawing::Point(172, 306);
+			this->secondarySpikesCountLabel->Name = L"secondarySpikesCountLabel";
+			this->secondarySpikesCountLabel->Size = System::Drawing::Size(13, 13);
+			this->secondarySpikesCountLabel->TabIndex = 29;
+			this->secondarySpikesCountLabel->Text = L"4";
+			// 
+			// defaultParamsBtn
+			// 
+			this->defaultParamsBtn->Enabled = false;
+			this->defaultParamsBtn->Location = System::Drawing::Point(5, 403);
+			this->defaultParamsBtn->Name = L"defaultParamsBtn";
+			this->defaultParamsBtn->Size = System::Drawing::Size(270, 40);
+			this->defaultParamsBtn->TabIndex = 28;
+			this->defaultParamsBtn->Text = L"Установить все параметры по умолчанию";
+			this->defaultParamsBtn->UseVisualStyleBackColor = true;
+			// 
+			// color3Btn
+			// 
+			this->color3Btn->BackColor = System::Drawing::Color::White;
+			this->color3Btn->Enabled = false;
+			this->color3Btn->Location = System::Drawing::Point(208, 365);
+			this->color3Btn->Name = L"color3Btn";
+			this->color3Btn->Size = System::Drawing::Size(67, 23);
+			this->color3Btn->TabIndex = 27;
+			this->color3Btn->UseVisualStyleBackColor = false;
+			// 
+			// color2Btn
+			// 
+			this->color2Btn->BackColor = System::Drawing::Color::White;
+			this->color2Btn->Enabled = false;
+			this->color2Btn->Location = System::Drawing::Point(136, 365);
+			this->color2Btn->Name = L"color2Btn";
+			this->color2Btn->Size = System::Drawing::Size(67, 23);
+			this->color2Btn->TabIndex = 26;
+			this->color2Btn->UseVisualStyleBackColor = false;
+			// 
+			// color1Btn
+			// 
+			this->color1Btn->BackColor = System::Drawing::Color::White;
+			this->color1Btn->Enabled = false;
+			this->color1Btn->Location = System::Drawing::Point(64, 365);
+			this->color1Btn->Name = L"color1Btn";
+			this->color1Btn->Size = System::Drawing::Size(67, 23);
+			this->color1Btn->TabIndex = 25;
+			this->color1Btn->UseVisualStyleBackColor = false;
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->Location = System::Drawing::Point(5, 370);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(53, 13);
+			this->label17->TabIndex = 24;
+			this->label17->Text = L"Палитра:";
+			// 
+			// secondarySpikesCountInput
+			// 
+			this->secondarySpikesCountInput->Enabled = false;
+			this->secondarySpikesCountInput->LargeChange = 4;
+			this->secondarySpikesCountInput->Location = System::Drawing::Point(5, 322);
+			this->secondarySpikesCountInput->Maximum = 15;
+			this->secondarySpikesCountInput->Minimum = 1;
+			this->secondarySpikesCountInput->Name = L"secondarySpikesCountInput";
+			this->secondarySpikesCountInput->Size = System::Drawing::Size(270, 45);
+			this->secondarySpikesCountInput->TabIndex = 23;
+			this->secondarySpikesCountInput->TickFrequency = 4;
+			this->secondarySpikesCountInput->Value = 1;
+			this->secondarySpikesCountInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::secondarySpikesCountInput_ValueChanged);
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Location = System::Drawing::Point(6, 306);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(160, 13);
+			this->label16->TabIndex = 22;
+			this->label16->Text = L"Количество вторичных шипов:";
+			// 
+			// secondarySpikeAngleInput
+			// 
+			this->secondarySpikeAngleInput->Enabled = false;
+			this->secondarySpikeAngleInput->Location = System::Drawing::Point(211, 278);
+			this->secondarySpikeAngleInput->Name = L"secondarySpikeAngleInput";
+			this->secondarySpikeAngleInput->Size = System::Drawing::Size(64, 20);
+			this->secondarySpikeAngleInput->TabIndex = 21;
+			// 
+			// label14
+			// 
+			this->label14->AutoSize = true;
+			this->label14->Location = System::Drawing::Point(79, 280);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(126, 13);
+			this->label14->TabIndex = 20;
+			this->label14->Text = L"Угол вторичных шипов:";
+			// 
+			// primarySpikeAngleInput
+			// 
+			this->primarySpikeAngleInput->Enabled = false;
+			this->primarySpikeAngleInput->Location = System::Drawing::Point(211, 226);
+			this->primarySpikeAngleInput->Name = L"primarySpikeAngleInput";
+			this->primarySpikeAngleInput->Size = System::Drawing::Size(64, 20);
+			this->primarySpikeAngleInput->TabIndex = 19;
+			// 
+			// label15
+			// 
+			this->label15->AutoSize = true;
+			this->label15->Location = System::Drawing::Point(78, 228);
+			this->label15->Name = L"label15";
+			this->label15->Size = System::Drawing::Size(127, 13);
+			this->label15->TabIndex = 18;
+			this->label15->Text = L"Угол первичных шипов:";
+			// 
+			// secondarySpikeLengthInput
+			// 
+			this->secondarySpikeLengthInput->Enabled = false;
+			this->secondarySpikeLengthInput->Location = System::Drawing::Point(211, 252);
+			this->secondarySpikeLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->secondarySpikeLengthInput->Name = L"secondarySpikeLengthInput";
+			this->secondarySpikeLengthInput->Size = System::Drawing::Size(64, 20);
+			this->secondarySpikeLengthInput->TabIndex = 17;
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(6, 3);
+			this->button1->Location = System::Drawing::Point(200, -11);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 0;
-			this->button1->Text = L"button1";
+			this->button1->Text = L"TEST";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
 			// 
-			// panel2
+			// label13
 			// 
-			this->panel2->BackColor = System::Drawing::SystemColors::Control;
-			this->panel2->Controls->Add(this->canvas);
-			this->panel2->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->panel2->Location = System::Drawing::Point(0, 0);
-			this->panel2->Name = L"panel2";
-			this->panel2->Size = System::Drawing::Size(964, 682);
-			this->panel2->TabIndex = 1;
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(71, 254);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(134, 13);
+			this->label13->TabIndex = 16;
+			this->label13->Text = L"Длина вторичных шипов:";
+			// 
+			// primarySpikeLengthInput
+			// 
+			this->primarySpikeLengthInput->Enabled = false;
+			this->primarySpikeLengthInput->Location = System::Drawing::Point(211, 200);
+			this->primarySpikeLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->primarySpikeLengthInput->Name = L"primarySpikeLengthInput";
+			this->primarySpikeLengthInput->Size = System::Drawing::Size(64, 20);
+			this->primarySpikeLengthInput->TabIndex = 15;
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(70, 202);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(135, 13);
+			this->label12->TabIndex = 14;
+			this->label12->Text = L"Длина первичных шипов:";
+			// 
+			// bladeThicknessInput
+			// 
+			this->bladeThicknessInput->Enabled = false;
+			this->bladeThicknessInput->Location = System::Drawing::Point(211, 174);
+			this->bladeThicknessInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->bladeThicknessInput->Name = L"bladeThicknessInput";
+			this->bladeThicknessInput->Size = System::Drawing::Size(64, 20);
+			this->bladeThicknessInput->TabIndex = 13;
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(110, 176);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(95, 13);
+			this->label11->TabIndex = 12;
+			this->label11->Text = L"Толщина лезвия:";
+			// 
+			// bladeEdgesCountInput
+			// 
+			this->bladeEdgesCountInput->Enabled = false;
+			this->bladeEdgesCountInput->Location = System::Drawing::Point(211, 148);
+			this->bladeEdgesCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1024, 0, 0, 0 });
+			this->bladeEdgesCountInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
+			this->bladeEdgesCountInput->Name = L"bladeEdgesCountInput";
+			this->bladeEdgesCountInput->Size = System::Drawing::Size(64, 20);
+			this->bladeEdgesCountInput->TabIndex = 11;
+			this->bladeEdgesCountInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(31, 150);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(174, 13);
+			this->label10->TabIndex = 10;
+			this->label10->Text = L"Количество образующих лезвия:";
+			// 
+			// exBladeRadiusInput
+			// 
+			this->exBladeRadiusInput->Enabled = false;
+			this->exBladeRadiusInput->Location = System::Drawing::Point(211, 122);
+			this->exBladeRadiusInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->exBladeRadiusInput->Name = L"exBladeRadiusInput";
+			this->exBladeRadiusInput->Size = System::Drawing::Size(64, 20);
+			this->exBladeRadiusInput->TabIndex = 9;
+			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Location = System::Drawing::Point(73, 124);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(132, 13);
+			this->label9->TabIndex = 8;
+			this->label9->Text = L"Внешний радиус лезвия:";
+			// 
+			// inBladeRadiusInput
+			// 
+			this->inBladeRadiusInput->Enabled = false;
+			this->inBladeRadiusInput->Location = System::Drawing::Point(211, 96);
+			this->inBladeRadiusInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->inBladeRadiusInput->Name = L"inBladeRadiusInput";
+			this->inBladeRadiusInput->Size = System::Drawing::Size(64, 20);
+			this->inBladeRadiusInput->TabIndex = 7;
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(59, 98);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(146, 13);
+			this->label8->TabIndex = 6;
+			this->label8->Text = L"Внутренний радиус лезвия:";
+			// 
+			// handleEdgesCountInput
+			// 
+			this->handleEdgesCountInput->Enabled = false;
+			this->handleEdgesCountInput->Location = System::Drawing::Point(211, 70);
+			this->handleEdgesCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1024, 0, 0, 0 });
+			this->handleEdgesCountInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3, 0, 0, 0 });
+			this->handleEdgesCountInput->Name = L"handleEdgesCountInput";
+			this->handleEdgesCountInput->Size = System::Drawing::Size(64, 20);
+			this->handleEdgesCountInput->TabIndex = 5;
+			this->handleEdgesCountInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3, 0, 0, 0 });
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(27, 72);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(178, 13);
+			this->label7->TabIndex = 4;
+			this->label7->Text = L"Количество образующих рукояти:";
+			// 
+			// handleRingsCountInput
+			// 
+			this->handleRingsCountInput->Enabled = false;
+			this->handleRingsCountInput->Location = System::Drawing::Point(211, 44);
+			this->handleRingsCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, 0 });
+			this->handleRingsCountInput->Name = L"handleRingsCountInput";
+			this->handleRingsCountInput->Size = System::Drawing::Size(64, 20);
+			this->handleRingsCountInput->TabIndex = 3;
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(12, 46);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(193, 13);
+			this->label6->TabIndex = 2;
+			this->label6->Text = L"Количество колец на конце рукояти:";
+			// 
+			// handleLengthInput
+			// 
+			this->handleLengthInput->Enabled = false;
+			this->handleLengthInput->Location = System::Drawing::Point(211, 18);
+			this->handleLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->handleLengthInput->Name = L"handleLengthInput";
+			this->handleLengthInput->Size = System::Drawing::Size(64, 20);
+			this->handleLengthInput->TabIndex = 1;
+			// 
+			// label5
+			// 
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(119, 20);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(86, 13);
+			this->label5->TabIndex = 0;
+			this->label5->Text = L"Длина рукояти:";
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->objScaleZ);
+			this->groupBox1->Controls->Add(this->objScaleY);
+			this->groupBox1->Controls->Add(this->objScaleX);
+			this->groupBox1->Controls->Add(this->objRotZ);
+			this->groupBox1->Controls->Add(this->objRotY);
+			this->groupBox1->Controls->Add(this->objRotX);
+			this->groupBox1->Controls->Add(this->objPosZ);
+			this->groupBox1->Controls->Add(this->objPosY);
+			this->groupBox1->Controls->Add(this->objPosX);
+			this->groupBox1->Controls->Add(this->label4);
+			this->groupBox1->Controls->Add(this->label3);
+			this->groupBox1->Controls->Add(this->label2);
+			this->groupBox1->Location = System::Drawing::Point(6, 179);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(282, 100);
+			this->groupBox1->TabIndex = 6;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Преобразования";
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Location = System::Drawing::Point(6, 73);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(56, 13);
+			this->label4->TabIndex = 2;
+			this->label4->Text = L"Масштаб:";
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(6, 48);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(53, 13);
+			this->label3->TabIndex = 1;
+			this->label3->Text = L"Поворот:";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(6, 25);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(54, 13);
+			this->label2->TabIndex = 0;
+			this->label2->Text = L"Позиция:";
+			// 
+			// clearObjBtn
+			// 
+			this->clearObjBtn->Location = System::Drawing::Point(198, 140);
+			this->clearObjBtn->Name = L"clearObjBtn";
+			this->clearObjBtn->Size = System::Drawing::Size(90, 23);
+			this->clearObjBtn->TabIndex = 5;
+			this->clearObjBtn->Text = L"Очистить";
+			this->clearObjBtn->UseVisualStyleBackColor = true;
+			// 
+			// deleteObjBtn
+			// 
+			this->deleteObjBtn->Location = System::Drawing::Point(102, 140);
+			this->deleteObjBtn->Name = L"deleteObjBtn";
+			this->deleteObjBtn->Size = System::Drawing::Size(90, 23);
+			this->deleteObjBtn->TabIndex = 4;
+			this->deleteObjBtn->Text = L"Удалить";
+			this->deleteObjBtn->UseVisualStyleBackColor = true;
+			// 
+			// createObjBtn
+			// 
+			this->createObjBtn->Location = System::Drawing::Point(6, 140);
+			this->createObjBtn->Name = L"createObjBtn";
+			this->createObjBtn->Size = System::Drawing::Size(90, 23);
+			this->createObjBtn->TabIndex = 3;
+			this->createObjBtn->Text = L"Создать";
+			this->createObjBtn->UseVisualStyleBackColor = true;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(3, 9);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(98, 13);
+			this->label1->TabIndex = 2;
+			this->label1->Text = L"Список объектов:";
+			// 
+			// objectsListBox
+			// 
+			this->objectsListBox->FormattingEnabled = true;
+			this->objectsListBox->Location = System::Drawing::Point(6, 25);
+			this->objectsListBox->Name = L"objectsListBox";
+			this->objectsListBox->Size = System::Drawing::Size(282, 108);
+			this->objectsListBox->TabIndex = 1;
 			// 
 			// canvas
 			// 
-			this->canvas->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->canvas->BackColor = System::Drawing::SystemColors::Control;
-			this->canvas->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->canvas->Location = System::Drawing::Point(0, 0);
+			this->canvas->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->canvas->Location = System::Drawing::Point(310, 24);
 			this->canvas->Name = L"canvas";
-			this->canvas->Size = System::Drawing::Size(964, 682);
-			this->canvas->TabIndex = 0;
+			this->canvas->Size = System::Drawing::Size(954, 740);
+			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
+			// 
+			// objPosX
+			// 
+			this->objPosX->Enabled = false;
+			this->objPosX->Location = System::Drawing::Point(68, 23);
+			this->objPosX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->objPosX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->objPosX->Name = L"objPosX";
+			this->objPosX->Size = System::Drawing::Size(64, 20);
+			this->objPosX->TabIndex = 12;
+			// 
+			// objPosY
+			// 
+			this->objPosY->Enabled = false;
+			this->objPosY->Location = System::Drawing::Point(140, 23);
+			this->objPosY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->objPosY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->objPosY->Name = L"objPosY";
+			this->objPosY->Size = System::Drawing::Size(64, 20);
+			this->objPosY->TabIndex = 13;
+			// 
+			// objPosZ
+			// 
+			this->objPosZ->Enabled = false;
+			this->objPosZ->Location = System::Drawing::Point(212, 23);
+			this->objPosZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->objPosZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->objPosZ->Name = L"objPosZ";
+			this->objPosZ->Size = System::Drawing::Size(64, 20);
+			this->objPosZ->TabIndex = 14;
+			// 
+			// objRotX
+			// 
+			this->objRotX->Enabled = false;
+			this->objRotX->Location = System::Drawing::Point(68, 46);
+			this->objRotX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
+			this->objRotX->Name = L"objRotX";
+			this->objRotX->Size = System::Drawing::Size(64, 20);
+			this->objRotX->TabIndex = 15;
+			// 
+			// objRotY
+			// 
+			this->objRotY->Enabled = false;
+			this->objRotY->Location = System::Drawing::Point(140, 46);
+			this->objRotY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
+			this->objRotY->Name = L"objRotY";
+			this->objRotY->Size = System::Drawing::Size(64, 20);
+			this->objRotY->TabIndex = 16;
+			// 
+			// objRotZ
+			// 
+			this->objRotZ->Enabled = false;
+			this->objRotZ->Location = System::Drawing::Point(212, 46);
+			this->objRotZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
+			this->objRotZ->Name = L"objRotZ";
+			this->objRotZ->Size = System::Drawing::Size(64, 20);
+			this->objRotZ->TabIndex = 17;
+			// 
+			// objScaleX
+			// 
+			this->objScaleX->Enabled = false;
+			this->objScaleX->Location = System::Drawing::Point(68, 71);
+			this->objScaleX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->objScaleX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, System::Int32::MinValue });
+			this->objScaleX->Name = L"objScaleX";
+			this->objScaleX->Size = System::Drawing::Size(64, 20);
+			this->objScaleX->TabIndex = 18;
+			this->objScaleX->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
+			// 
+			// objScaleY
+			// 
+			this->objScaleY->Enabled = false;
+			this->objScaleY->Location = System::Drawing::Point(140, 71);
+			this->objScaleY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->objScaleY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, System::Int32::MinValue });
+			this->objScaleY->Name = L"objScaleY";
+			this->objScaleY->Size = System::Drawing::Size(64, 20);
+			this->objScaleY->TabIndex = 19;
+			this->objScaleY->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
+			// 
+			// objScaleZ
+			// 
+			this->objScaleZ->Enabled = false;
+			this->objScaleZ->Location = System::Drawing::Point(212, 71);
+			this->objScaleZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
+			this->objScaleZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, System::Int32::MinValue });
+			this->objScaleZ->Name = L"objScaleZ";
+			this->objScaleZ->Size = System::Drawing::Size(64, 20);
+			this->objScaleZ->TabIndex = 20;
+			this->objScaleZ->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
 			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1264, 682);
-			this->Controls->Add(this->panel2);
-			this->Controls->Add(this->panel1);
+			this->ClientSize = System::Drawing::Size(1264, 764);
+			this->Controls->Add(this->canvas);
+			this->Controls->Add(this->objPanel);
+			this->Controls->Add(this->menuStrip1);
 			this->Name = L"MainForm";
 			this->Text = L"MainForm";
-			this->panel1->ResumeLayout(false);
-			this->panel2->ResumeLayout(false);
+			this->objPanel->ResumeLayout(false);
+			this->objPanel->PerformLayout();
+			this->groupBox2->ResumeLayout(false);
+			this->groupBox2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikesCountInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeAngleInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeAngleInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeLengthInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeLengthInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bladeThicknessInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->bladeEdgesCountInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->exBladeRadiusInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->inBladeRadiusInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleEdgesCountInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleRingsCountInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleLengthInput))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->canvas))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosX))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosZ))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotX))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objRotZ))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleX))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleZ))->EndInit();
 			this->ResumeLayout(false);
+			this->PerformLayout();
+
 		}
 #pragma endregion
-	};
+};
 }

@@ -63,6 +63,7 @@ namespace Bladestick
 			array<Vector3D ^> ^ vertices; //Вершины
 			array<int> ^ indices; //Индексы вершин, образующих треугольники
 			array<System::Drawing::Color> ^ colors; //Цвета треугольников
+			System::String ^ name;
 
 		public:
 			/// <summary>
@@ -84,12 +85,30 @@ namespace Bladestick
 			static Drawing::SceneObject ^ buildBladestick(double handleLength, int handleRingsCount,
 				double handleEdgesCount, double inBladeRadius, double exBladeRadius,
 				double bladeEdgesCount, double bladeThickness,
-				double primarySpikeLength, double secondarySpikeLength,
-				double primarySpikeAngle, double secondarySpikeAngle,
+				double primarySpikeLength, double primarySpikeAngle, 
+				double secondarySpikeLength, double secondarySpikeAngle,
 				int secondarySpikesCount, array<System::Drawing::Color> ^ palette);
 			static Drawing::SceneObject ^ unite(array<Drawing::SceneObject ^> ^ components);
 
+//SceneObject ^ so = SceneObject::buildBladestick(400, 10, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
+			static double DEFAULT_HANDLE_LENGTH = 400;
+			static int DEFAULT_HANDLE_RINGS_COUNT = 4;
+			static double DEFAULT_HANDLE_EDGES_COUNT = 8;
+			static double DEFAULT_IN_BLADE_RADIUS = 100;
+			static double DEFAULT_EX_BLADE_RADIUS = 150;
+			static double DEFAULT_BLADE_EDGES_COUNT = 32;
+			static double DEFAULT_BLADE_THICKNESS = 30;
+			static double DEFAULT_PRIMARY_SPIKE_LENGTH = 60;
+			static double DEFAULT_PRIMARY_SPIKE_ANGLE = 50;
+			static double DEFAULT_SECONDARY_SPIKE_LENGTH = 40;
+			static double DEFAULT_SECONDARY_SPIKE_ANGLE = 50;
+			static int DEFAULT_SECONDARY_SPIKES_COUNT = 4;
+			static System::Drawing::Color DEFAULT_COLOR_1 = System::Drawing::Color::SaddleBrown;
+			static System::Drawing::Color DEFAULT_COLOR_2 = System::Drawing::Color::DarkGray;
+			static System::Drawing::Color DEFAULT_COLOR_3 = System::Drawing::Color::LightGray;
+
 			SceneObject();
+			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors, System::String ^ name);
 			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors);
 			void transform(Camera camera);
 			void setOffset(double x, double y, double z);
@@ -103,6 +122,7 @@ namespace Bladestick
 			void moveOriginal(Vector3D ^ offset);
 
 			void loadFromStream(System::IO::Stream ^ stream);
+			System::String ^ ToString() override;
 		};
 	}
 }

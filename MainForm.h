@@ -62,10 +62,9 @@ namespace Bladestick
 		System::Windows::Forms::Button^  color1Btn;
 		System::Windows::Forms::Label^  label17;
 		System::Windows::Forms::ColorDialog^  colorDialog1;
-		System::Windows::Forms::CheckBox^  autoApplyChb;
-		System::Windows::Forms::Button^  applyBtn;
+		System::Windows::Forms::CheckBox^  autoApplyParamsChb;
+		System::Windows::Forms::Button^  applyParamsBtn;
 		System::Windows::Forms::Button^  setDefaultParamsBtn;
-
 		System::Windows::Forms::Label^  secondarySpikesCountLabel;
 		System::Windows::Forms::NumericUpDown^  objScaleZ;
 		System::Windows::Forms::NumericUpDown^  objScaleY;
@@ -77,11 +76,12 @@ namespace Bladestick
 		System::Windows::Forms::NumericUpDown^  objPosY;
 		System::Windows::Forms::NumericUpDown^  objPosX;
 		Drawing::Scene ^ scene;
-
 		array<Control ^> ^ selectionDependedControls;
+		bool autoApplyTransform;
 
 		System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 		void redrawScene();
+		void applyObjTransform(Object ^ sender);
 		void applyObjParams();
 		System::Void secondarySpikesCountInput_ValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void createObjBtn_Click(System::Object^  sender, System::EventArgs^  e);
@@ -90,7 +90,6 @@ namespace Bladestick
 		System::Void onObjTransformationChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onObjParamChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void objectsListBox_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
-		System::Void autoApplyChb_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void applyBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void setDefaultParamsBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void colorBtn_Click(System::Object^  sender, System::EventArgs^  e);
@@ -102,7 +101,7 @@ namespace Bladestick
 			scene = gcnew Drawing::Scene();
 			objectsListBox->DataSource = scene->objects;
 			g = canvas->CreateGraphics();
-
+			autoApplyTransform = true;
 			selectionDependedControls = gcnew array<Control ^>(27)
 			{
 				deleteObjBtn, objPosX, objPosY, objPosZ,
@@ -121,10 +120,11 @@ namespace Bladestick
 					secondarySpikeLengthInput,
 					secondarySpikeAngleInput,
 					secondarySpikesCountInput,
-					applyBtn,
+					applyParamsBtn,
 					setDefaultParamsBtn
 			};
 			setDefaultParamsBtn_Click(this, nullptr);
+
 		}
 
 	protected:
@@ -156,10 +156,10 @@ namespace Bladestick
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->objPanel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->autoApplyChb = (gcnew System::Windows::Forms::CheckBox());
+			this->autoApplyParamsChb = (gcnew System::Windows::Forms::CheckBox());
 			this->setDefaultParamsBtn = (gcnew System::Windows::Forms::Button());
 			this->secondarySpikesCountLabel = (gcnew System::Windows::Forms::Label());
-			this->applyBtn = (gcnew System::Windows::Forms::Button());
+			this->applyParamsBtn = (gcnew System::Windows::Forms::Button());
 			this->color3Btn = (gcnew System::Windows::Forms::Button());
 			this->color2Btn = (gcnew System::Windows::Forms::Button());
 			this->color1Btn = (gcnew System::Windows::Forms::Button());
@@ -262,10 +262,10 @@ namespace Bladestick
 			// 
 			// groupBox2
 			// 
-			this->groupBox2->Controls->Add(this->autoApplyChb);
+			this->groupBox2->Controls->Add(this->autoApplyParamsChb);
 			this->groupBox2->Controls->Add(this->setDefaultParamsBtn);
 			this->groupBox2->Controls->Add(this->secondarySpikesCountLabel);
-			this->groupBox2->Controls->Add(this->applyBtn);
+			this->groupBox2->Controls->Add(this->applyParamsBtn);
 			this->groupBox2->Controls->Add(this->color3Btn);
 			this->groupBox2->Controls->Add(this->color2Btn);
 			this->groupBox2->Controls->Add(this->color1Btn);
@@ -302,20 +302,19 @@ namespace Bladestick
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Параметры";
 			// 
-			// autoApplyChb
+			// autoApplyParamsChb
 			// 
-			this->autoApplyChb->Appearance = System::Windows::Forms::Appearance::Button;
-			this->autoApplyChb->Checked = true;
-			this->autoApplyChb->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->autoApplyChb->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7));
-			this->autoApplyChb->Location = System::Drawing::Point(5, 402);
-			this->autoApplyChb->Name = L"autoApplyChb";
-			this->autoApplyChb->Size = System::Drawing::Size(90, 40);
-			this->autoApplyChb->TabIndex = 28;
-			this->autoApplyChb->Text = L"Применять автоматически";
-			this->autoApplyChb->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
-			this->autoApplyChb->UseVisualStyleBackColor = true;
-			this->autoApplyChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::autoApplyChb_CheckedChanged);
+			this->autoApplyParamsChb->Appearance = System::Windows::Forms::Appearance::Button;
+			this->autoApplyParamsChb->Checked = true;
+			this->autoApplyParamsChb->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->autoApplyParamsChb->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7));
+			this->autoApplyParamsChb->Location = System::Drawing::Point(5, 402);
+			this->autoApplyParamsChb->Name = L"autoApplyParamsChb";
+			this->autoApplyParamsChb->Size = System::Drawing::Size(90, 40);
+			this->autoApplyParamsChb->TabIndex = 28;
+			this->autoApplyParamsChb->Text = L"Применять автоматически";
+			this->autoApplyParamsChb->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+			this->autoApplyParamsChb->UseVisualStyleBackColor = true;
 			// 
 			// setDefaultParamsBtn
 			// 
@@ -339,18 +338,18 @@ namespace Bladestick
 			this->secondarySpikesCountLabel->TabIndex = 29;
 			this->secondarySpikesCountLabel->Text = L"4";
 			// 
-			// applyBtn
+			// applyParamsBtn
 			// 
-			this->applyBtn->Enabled = false;
-			this->applyBtn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->applyParamsBtn->Enabled = false;
+			this->applyParamsBtn->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->applyBtn->Location = System::Drawing::Point(95, 402);
-			this->applyBtn->Name = L"applyBtn";
-			this->applyBtn->Size = System::Drawing::Size(90, 40);
-			this->applyBtn->TabIndex = 29;
-			this->applyBtn->Text = L"Применить";
-			this->applyBtn->UseVisualStyleBackColor = true;
-			this->applyBtn->Click += gcnew System::EventHandler(this, &MainForm::applyBtn_Click);
+			this->applyParamsBtn->Location = System::Drawing::Point(95, 402);
+			this->applyParamsBtn->Name = L"applyParamsBtn";
+			this->applyParamsBtn->Size = System::Drawing::Size(90, 40);
+			this->applyParamsBtn->TabIndex = 29;
+			this->applyParamsBtn->Text = L"Применить";
+			this->applyParamsBtn->UseVisualStyleBackColor = true;
+			this->applyParamsBtn->Click += gcnew System::EventHandler(this, &MainForm::applyBtn_Click);
 			// 
 			// color3Btn
 			// 
@@ -683,6 +682,7 @@ namespace Bladestick
 			this->objScaleZ->TabIndex = 20;
 			this->objScaleZ->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->objScaleZ->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objScaleZ->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objScaleY
 			// 
@@ -696,6 +696,7 @@ namespace Bladestick
 			this->objScaleY->TabIndex = 19;
 			this->objScaleY->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->objScaleY->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objScaleY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objScaleX
 			// 
@@ -709,6 +710,7 @@ namespace Bladestick
 			this->objScaleX->TabIndex = 18;
 			this->objScaleX->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			this->objScaleX->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objScaleX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objRotZ
 			// 
@@ -721,6 +723,7 @@ namespace Bladestick
 			this->objRotZ->Size = System::Drawing::Size(64, 20);
 			this->objRotZ->TabIndex = 17;
 			this->objRotZ->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objRotZ->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objRotY
 			// 
@@ -733,6 +736,7 @@ namespace Bladestick
 			this->objRotY->Size = System::Drawing::Size(64, 20);
 			this->objRotY->TabIndex = 16;
 			this->objRotY->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objRotY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objRotX
 			// 
@@ -745,6 +749,7 @@ namespace Bladestick
 			this->objRotX->Size = System::Drawing::Size(64, 20);
 			this->objRotX->TabIndex = 15;
 			this->objRotX->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objRotX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objPosZ
 			// 
@@ -757,6 +762,7 @@ namespace Bladestick
 			this->objPosZ->Size = System::Drawing::Size(64, 20);
 			this->objPosZ->TabIndex = 14;
 			this->objPosZ->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objPosZ->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objPosY
 			// 
@@ -769,6 +775,7 @@ namespace Bladestick
 			this->objPosY->Size = System::Drawing::Size(64, 20);
 			this->objPosY->TabIndex = 13;
 			this->objPosY->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objPosY->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// objPosX
 			// 
@@ -781,6 +788,7 @@ namespace Bladestick
 			this->objPosX->Size = System::Drawing::Size(64, 20);
 			this->objPosX->TabIndex = 12;
 			this->objPosX->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjTransformationChanged);
+			this->objPosX->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::onObjTransformationKeyPress);
 			// 
 			// label4
 			// 
@@ -910,5 +918,6 @@ namespace Bladestick
 
 		}
 #pragma endregion
+private: System::Void onObjTransformationKeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }

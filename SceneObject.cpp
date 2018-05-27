@@ -177,6 +177,12 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	SceneObject ^ cross = buildCross(crossPartLength, crossPartWidth, crossPartThickness, gcnew array<Color>(1) { palette[1] });
 
 	const int spikesCount = secondarySpikesCount + 4;
+	const double primarySpikeCorrection = primarySpikeLength * (1 - Math::Cos(degToRad(primarySpikeAngle / 2)));
+	const double secondarySpikeCorrection = secondarySpikeLength * (1 - Math::Cos(degToRad(secondarySpikeAngle / 2)));
+	const double primaryExSpikeDist = bevelBladeRadius - primarySpikeCorrection;
+	const double secondaryExSpikeDist = bevelBladeRadius - secondarySpikeCorrection;
+	const double primarySpikeLengthCorrected = primarySpikeLength + primarySpikeCorrection;
+	const double secondarySpikeLengthCorrected = secondarySpikeLength + secondarySpikeCorrection;
 	const double primarySpikeBevelStartPoint = primarySpikeLength * 0.5;
 	const double secondarySpikeBevelStartPoint = secondarySpikeLength * 0.5;
 	const double inPrimarySpikeLength = bevelBladeRadius * 0.4;
@@ -184,13 +190,13 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	array<SceneObject ^> ^ spikes = gcnew array<SceneObject ^>(spikesCount);
 	double alphaDeg = -90;
 	const double dAlphaDeg = 360.0 / spikesCount;
+	const int quarter = spikesCount / 4;
 	for (int i = 0; i < spikesCount; ++i)
 	{
-		int tmp = Math::Floor(alphaDeg);
-		if (!cmpDoubles(alphaDeg, tmp) && tmp % 90 == 0)
-			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alphaDeg, primarySpikeAngle, bladeThickness, inPrimarySpikeLength, primarySpikeBevelStartPoint, primarySpikeLength, gcnew array<Color>(2) { palette[1], cmpDoubles(alphaDeg, -90) ? palette[2] : palette[1] });
+		if (i % quarter == 0)
+			spikes[i] = buildSpike(inBladeRadius, primaryExSpikeDist, alphaDeg, primarySpikeAngle, bladeThickness, inPrimarySpikeLength, primarySpikeBevelStartPoint, primarySpikeLengthCorrected, gcnew array<Color>(2) { palette[1], i == 0 ? palette[1] : palette[2] });
 		else
-			spikes[i] = buildSpike(inBladeRadius, bevelBladeRadius, alphaDeg, secondarySpikeAngle, bladeThickness, inSecondarySpikeLength, secondarySpikeBevelStartPoint, secondarySpikeLength, gcnew array<Color>(2) { palette[1], palette[2] });
+			spikes[i] = buildSpike(inBladeRadius, secondaryExSpikeDist, alphaDeg, secondarySpikeAngle, bladeThickness, inSecondarySpikeLength, secondarySpikeBevelStartPoint, secondarySpikeLengthCorrected, gcnew array<Color>(2) { palette[1], palette[2] });
 		alphaDeg += dAlphaDeg;
 	}
 	
@@ -708,7 +714,7 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	iArr[30] = 14;
 	iArr[31] = 10;
 	iArr[32] = 11;
-	cArr[10] = palette[1];
+	cArr[10] = palette[0];
 
 	iArr[33] = 14;
 	iArr[34] = 11;

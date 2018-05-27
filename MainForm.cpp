@@ -188,6 +188,46 @@ void MainForm::redrawScene()
 	scene->render(g);
 }
 
+void MainForm::applyObjTransform(Object ^ sender)
+{
+	if (!autoApplyTransform || objectsListBox->SelectedItems->Count == 0)
+		return;
+
+	if (sender == objPosX)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->offset->x = Convert::ToDouble(objPosX->Value);
+	else if (sender == objPosY)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->offset->y = Convert::ToDouble(objPosY->Value);
+	else if (sender == objPosZ)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->offset->z = Convert::ToDouble(objPosZ->Value);
+	else if (sender == objRotX)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->rotation->x = Convert::ToDouble(objRotX->Value);
+	else if (sender == objRotY)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->rotation->y = Convert::ToDouble(objRotY->Value);
+	else if (sender == objRotZ)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->rotation->z = Convert::ToDouble(objRotZ->Value);
+	else if (sender == objScaleX)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->scaling->x = Convert::ToDouble(objScaleX->Value);
+	else if (sender == objScaleY)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->scaling->y = Convert::ToDouble(objScaleY->Value);
+	else if (sender == objScaleZ)
+		for each (SceneObject ^ so in objectsListBox->SelectedItems)
+			so->scaling->z = Convert::ToDouble(objScaleZ->Value);
+
+	for each (SceneObject ^ so in objectsListBox->SelectedItems)
+		//TODO: изменить список передаваемых аргументов после слияния
+		so->transform(scene->camera);
+
+	redrawScene();
+}
+
 void MainForm::applyObjParams()
 {
 	if (objectsListBox->SelectedItems->Count == 0)
@@ -284,67 +324,47 @@ Void MainForm::colorBtn_Click(Object ^ sender, EventArgs ^ e)
 		safe_cast<Button ^>(sender)->BackColor = colorDialog1->Color;
 }
 
+Void MainForm::onObjTransformationKeyPress(Object ^ sender, KeyPressEventArgs ^ e)
+{
+	if (e->KeyChar == 13 && autoApplyTransform) //Enter
+		applyObjTransform(sender);		
+}
+
 Void MainForm::onObjTransformationChanged(Object ^ sender, EventArgs ^ e)
 {
-	if (objectsListBox->SelectedItems->Count == 0)
-		return;
-
-	if (sender == objPosX)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->offset->x = Convert::ToDouble(objPosX->Value);
-	else if (sender == objPosY)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->offset->y = Convert::ToDouble(objPosY->Value);
-	else if (sender == objPosZ)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->offset->z = Convert::ToDouble(objPosZ->Value);
-	else if (sender == objRotX)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->rotation->x = Convert::ToDouble(objRotX->Value);
-	else if (sender == objRotY)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->rotation->y = Convert::ToDouble(objRotY->Value);
-	else if (sender == objRotZ)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->rotation->z = Convert::ToDouble(objRotZ->Value);
-	else if (sender == objScaleX)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->scaling->x = Convert::ToDouble(objScaleX->Value);
-	else if (sender == objScaleY)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->scaling->y = Convert::ToDouble(objScaleY->Value);
-	else if (sender == objScaleZ)
-		for each (SceneObject ^ so in objectsListBox->SelectedItems)
-			so->scaling->z = Convert::ToDouble(objScaleZ->Value);
-
-	for each (SceneObject ^ so in objectsListBox->SelectedItems)
-		//TODO: изменить список передаваемых аргументов после слияния
-		so->transform(scene->camera);
-	
-	redrawScene();
+	if (autoApplyTransform)
+		applyObjTransform(sender);
 }
 
 Void MainForm::onObjParamChanged(Object ^ sender, EventArgs ^ e)
 {
-	if (autoApplyChb->Checked)
+	if (autoApplyParamsChb->Checked)
 		applyObjParams();
 }
 
 Void MainForm::objectsListBox_SelectedValueChanged(Object ^ sender, EventArgs ^ e)
 {
+	bool isAnySelected = objectsListBox->SelectedItems->Count > 0;
 	for each (Control ^ control in selectionDependedControls)
-		control->Enabled = objectsListBox->SelectedItems->Count > 0;
+		control->Enabled = isAnySelected;
 
-	if (autoApplyChb->Checked)
-		applyBtn->Enabled = false;
-}
+	if (isAnySelected)
+	{
+		bool currAutoApplyTransform = autoApplyTransform;
+		autoApplyTransform = false;
+		
+		objPosX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->x);
+		objPosY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->y);
+		objPosZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->z);
+		objRotX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->x);
+		objRotY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->y);
+		objRotZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->z);
+		objScaleX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->x);
+		objScaleY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->y);
+		objScaleZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->z);
 
-Void MainForm::autoApplyChb_CheckedChanged(Object ^ sender, EventArgs ^ e)
-{
-	if (autoApplyChb->Checked)
-		applyBtn->Enabled = false;
-	else
-		applyBtn->Enabled = objectsListBox->SelectedItems->Count > 0;;
+		autoApplyTransform = currAutoApplyTransform;
+	}
 }
 
 Void MainForm::applyBtn_Click(Object ^ sender, EventArgs ^ e)
@@ -354,8 +374,8 @@ Void MainForm::applyBtn_Click(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::setDefaultParamsBtn_Click(Object ^ sender, EventArgs ^ e)
 {
-	bool autoApplyChecked = autoApplyChb->Checked;
-	autoApplyChb->Checked = false;
+	bool autoApplyChecked = autoApplyParamsChb->Checked;
+	autoApplyParamsChb->Checked = false;
 
 	handleLengthInput->Value = Convert::ToDecimal(SceneObject::DEFAULT_HANDLE_LENGTH);
 	handleRingsCountInput->Value = Convert::ToDecimal(SceneObject::DEFAULT_HANDLE_RINGS_COUNT);
@@ -373,7 +393,7 @@ Void MainForm::setDefaultParamsBtn_Click(Object ^ sender, EventArgs ^ e)
 	color2Btn->BackColor = SceneObject::DEFAULT_COLOR_2;
 	color3Btn->BackColor = SceneObject::DEFAULT_COLOR_3;
 	
-	autoApplyChb->Checked = autoApplyChecked;
-	if (autoApplyChb->Checked)
+	autoApplyParamsChb->Checked = autoApplyChecked;
+	if (autoApplyParamsChb->Checked)
 		applyObjParams();
 }

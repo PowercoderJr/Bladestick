@@ -121,7 +121,6 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	}*/
 
 	SceneObject ^ so;
-	//so = SceneObject::buildBladestick(400, 5, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
 	IO::FileStream ^ stream;
 	try
 	{
@@ -137,6 +136,8 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 	so->transform();
 	scene->setSize(canvas->Width, canvas->Height);
 	scene->camera->perspective = true;
+
+	so = SceneObject::buildBladestick(300, 5, 8, 100, 150, /*64*/32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
 	/*for (int i = 0; i <= 360; i += 5)
 	{
 		scene->clear();
@@ -146,12 +147,15 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 		scene->render(g);
 		//scene->camera->perspective = i % 10 < 5;
 	}*/
-	const double distance = 300;
-	for (int i = 90; i <= 450; i += 3)
+	scene->camera->setTarget(0, 0, 0);
+	const double distance = 1000;
+	for (int i = -90; i <= 270; i += 3)
 	{
 		double a = Math::Cos(degToRad(i)) * distance;
 		double b = Math::Sin(degToRad(i)) * distance;
 		scene->camera->setPosition(a, 0, b);
+		//scene->camera->setPosition(0, 0, i);
+		//scene->camera->fov = i;
 		scene->camera->updateDirs();
 		/*so->setRotation(i, 0, 0);
 		so->transform();*/

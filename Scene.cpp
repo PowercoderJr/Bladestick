@@ -11,7 +11,7 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
-	this->camera = gcnew Camera(gcnew Vector3D(0, 0, 100), gcnew Vector3D(0, 0, 0), 10, 5000, 45, false);
+	this->camera = gcnew Camera(gcnew Vector3D(0, 0, 100), gcnew Vector3D(0, 0, 0), 1, 10000, 60, false);
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
@@ -43,9 +43,14 @@ void Scene::clear()
 	for (int i = 0; i < width; ++i)
 		for (int j = 0; j < height; ++j)
 			zbuffer[index++] = ninf;
-		Graphics ^ g = Graphics::FromImage(bitmap);
-		g->Clear(bgColor);
-		delete g;
+	Graphics ^ g = Graphics::FromImage(bitmap);
+	g->Clear(bgColor);
+	delete g;
+}
+
+bool Scene::isPointVisible(Vector3D ^ p)
+{
+	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height && p->mz <= -camera->near && p->mz >= -camera->far;
 }
 
 void Scene::setPixel(int x, int y, double z, Color color)
@@ -108,12 +113,7 @@ void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color)
 void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, char drawFlags)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
-	double dist1 = (p1 - camera->position)->getMagnitude();
-	if (dist1 < camera->near || dist1 > camera->far) return;
-	double dist2 = (p1 - camera->position)->getMagnitude();
-	if (dist1 < camera->near || dist2 > camera->far) return;
-	double dist3 = (p1 - camera->position)->getMagnitude();
-	if (dist1 < camera->near || dist3 > camera->far) return;
+	if (!(isPointVisible(p1) && isPointVisible(p2) && isPointVisible(p3))) return;
 
 	if (p1->my > p2->my) swap(&p1, &p2);
 	if (p1->my > p3->my) swap(&p1, &p3);
@@ -209,35 +209,54 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags, bool useRandomPalett
 		v->my = camera->upDir->x * xOffset + camera->upDir->y * yOffset + camera->upDir->z * zOffset;
 		v->mz = camera->backDir->x * xOffset + camera->backDir->y * yOffset + camera->backDir->z * zOffset;
 
-		/*v->mx = camera->rightDir->x * (-camera->position->x + v->mx) + camera->rightDir->y * (-camera->position->y + v->my) + camera->rightDir->z * (-camera->position->z + v->mz);
-		v->my = camera->upDir->x * (-camera->position->x + v->mx) + camera->upDir->y * (-camera->position->y + v->my) + camera->upDir->z * (-camera->position->z + v->mz);
-		v->mz = camera->backDir->x * (-camera->position->x + v->mx) + camera->backDir->y * (-camera->position->y + v->my) + camera->backDir->z * (-camera->position->z + v->mz);*/
-
+		double aspect = (double)width / height;
+		double vfov = camera->fov / aspect;
+		double ctg = 1 / Math::Tan(vfov / 2);
+		double n = camera->near, f = camera->far;
 		if (camera->perspective)
-		{
-			double hfov = camera->fov;
-			double vfov = hfov / 16 * 9;
-			float r = (float)Math::Tan(hfov / 2 * Math::PI / 180);
-			float l = -r;
-			float t = (float)Math::Tan(vfov / 2 * Math::PI / 180);
-			float b = -t;
-			float n = camera->near;
-			float f = camera->far;
+		{			
+			//VER_1
+			/*v->mw = v->mz;
+			v->mx = ctg / aspect * v->mx;
+			v->my = ctg * v->my;
+			v->mz = (2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);*/
+			//-
 
-			v->mw = -v->mz;
-			v->mx = (2 * v->mx * n) / (-l + r) + (v->mz * (l + r)) / (l - r);
-			v->my = (2 * v->my * n) / (-b + t) + (v->mz * (b + t)) / (b - t);
-			v->mz = -((2 * f * n) / (f - n)) + (v->mz * (f + n)) / (f - n);
-			v->mx /= v->mw;
-			v->my /= v->mw;
-			v->mz /= v->mw;
-			/*double persp = v->mz / camera->position->z - 1;
-			v->mx /= persp;
-			v->my /= persp;
-			v->mz /= -persp;*/
+			//VER_2
+			double hfov = camera->fov;
+			double vfov = hfov / width * height;
+			float r = Math::Tan(degToRad(hfov / 2));
+			float l = -r;
+			float t = Math::Tan(degToRad(vfov / 2));
+			float b = -t;
+			Vector3D ^ src = v->clone();
+			v->mw = src->mz;
+			v->mx = (2 * src->mx * n) / (-l + r) + (src->mz * (l + r)) / (l - r);
+			v->my = -(2 * src->my * n) / (-b + t) + (src->mz * (b + t)) / (b - t);
+			v->mz = -((2 * f * n) / (f - n)) + (src->mz * (f + n)) / (f - n);
+			//-
+
+			if (v->mw != 1)
+			{
+				v->mx /= v->mw;
+				v->my /= v->mw;
+				//v->mz /= v->mw;
+			}
+
+			v->mx = (v->mx + 1) * this->width / 2;
+			v->my = (v->my + 1) * this->height / 2;
+			//v->mz = v->mz * (camera->far - camera->near);
+			int i = 1;
 		}
-		v->mx += width / 2;
-		v->my += height / 2;
+		else
+		{
+			//Нужно ли искажение X и Y?
+			/*v->mx = -ctg / aspect * v->mx;
+			v->my = -ctg * v->my;*/
+			v->mz = -(2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);
+			v->mx += width / 2;
+			v->my += height / 2;
+		}
 	}
 
 	Random ^ rnd = gcnew Random();

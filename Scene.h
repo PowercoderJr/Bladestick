@@ -16,6 +16,9 @@ namespace Bladestick
 
 		public ref class Scene
 		{
+		private:
+			bool isPointVisible(Vector3D ^ p);
+
 		internal:
 			System::Drawing::Bitmap ^ bitmap;
 			array<double> ^ zbuffer;

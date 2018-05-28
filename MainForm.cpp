@@ -1,6 +1,7 @@
 #include "MainForm.h"
 #include "Utils.h"
 #include "Matrix.h"
+#include "Scene.h"
 
 using namespace Bladestick::Drawing;
 using namespace Bladestick;
@@ -20,11 +21,10 @@ void Main(array<String^> ^ args)
 Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 {
 	//Some debugging here	
-	bool flipVertical = true;
-	scene->setSize(canvas->Width, canvas->Height);
+	/*scene->setSize(canvas->Width, canvas->Height);
 	Random ^ rnd = gcnew Random();
 
-	/*const int N = 1;
+	const int N = 1;
 	array<SceneObject ^> ^ objects = gcnew array<SceneObject^>(N);
 	IO::FileStream ^ stream;
 	try
@@ -57,12 +57,12 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 			{
 				objects[k]->setRotation(objects[k]->rotation + rots[k]);
 				objects[k]->setOffset(objects[k]->offset + dirs[k]);
-				objects[k]->transform(scene->camera);
+				objects[k]->transform();
 				for (int i = 0; i <= 360; i += 3)
 				{
 					scene->clear();
 					objects[k]->setRotation(i, 0, 0);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -70,7 +70,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(0, i, 0);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -78,7 +78,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(0, 0, i);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -86,7 +86,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(i, i, 0);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -94,7 +94,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(i, 0, i);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -102,7 +102,7 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(0, i, i);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
@@ -110,71 +110,113 @@ Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
 				{
 					scene->clear();
 					objects[k]->setRotation(i, i, i);
-					objects[k]->transform(scene->camera);
+					objects[k]->transform();
 					scene->drawToBuffer(objects[k], flipVertical);
 					scene->render(g);
 				}
 			}
 			scene->render(g);
 		}
-	}*/
-	/*so->setOffset(400, 300, 0);
-	scene->setSize(canvas->Width, canvas->Height);
+	}
+	so->setOffset(400, 300, 0);
 
+	SceneObject ^ so;
+	IO::FileStream ^ stream;
+	try
+	{
+		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
+		so = gcnew SceneObject();
+		so->loadFromStream(stream);
+		stream->Close();
+	}
+	finally
+	{
+		stream->Close();
+	}
+	so->transform();
+
+	scene->setSize(canvas->Width, canvas->Height);
+	scene->camera->perspective = true;
+
+	so = SceneObject::buildBladestick(300, 5, 8, 100, 150, 32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
+	for (int i = 0; i <= 360; i += 5)
+	{
+		scene->clear();
+		so->setOffset(0, 0, i*4);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
+		scene->render(g);
+		//scene->camera->perspective = i % 10 < 5;
+	}
+	scene->camera->setTarget(0, 0, 0);
+	const double distance = 1000;
+	for (int i = -90; i <= 270; i += 3)
+	{
+		double a = Math::Cos(degToRad(i)) * distance;
+		double b = Math::Sin(degToRad(i)) * distance;
+		scene->camera->setPosition(a, 0, b);
+		//scene->camera->setPosition(0, 0, i);
+		//scene->camera->fov = i;
+		scene->camera->updateDirs();
+		so->setRotation(i, 0, 0);
+		so->transform();
+		scene->clear();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
+		scene->render(g);
+	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, 0, 0);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
-	}*/
-	/*for (int i = 0; i <= 360; i += 3)
+	}
+	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, 0);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, 0, i);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
+	}for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, i, 0);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, 0, i);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(0, i, i);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}
 	for (int i = 0; i <= 360; i += 3)
 	{
 		scene->clear();
 		so->setRotation(i, i, i);
-		so->transform(scene->camera);
-		scene->drawToBuffer(so, flipVertical);
+		so->transform();
+		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
 		scene->render(g);
 	}*/
 	return Void();
@@ -184,7 +226,8 @@ void MainForm::redrawScene()
 {
 	scene->setSize(canvas->Width, canvas->Height);
 	scene->clear();
-	scene->drawObjectsToBuffer();
+	//TODO: передавать аргументы в зависимости от настроек отрисовки
+	scene->drawObjectsToBuffer(DrawFlags::DRAW_FILL, false);
 	scene->render(g);
 }
 
@@ -222,8 +265,7 @@ void MainForm::applyObjTransform(Object ^ sender)
 			so->scaling->z = Convert::ToDouble(objScaleZ->Value);
 
 	for each (SceneObject ^ so in objectsListBox->SelectedItems)
-		//TODO: изменить список передаваемых аргументов после слияния
-		so->transform(scene->camera);
+		so->transform();
 
 	redrawScene();
 }
@@ -251,8 +293,7 @@ void MainForm::applyObjParams()
 	so->vertices = newSO->vertices;
 	so->indices = newSO->indices;
 	so->colors = newSO->colors;
-	//TODO: изменить список передаваемых аргументов после слияния
-	so->transform(scene->camera);
+	so->transform();
 
 	redrawScene();
 }

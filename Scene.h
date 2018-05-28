@@ -2,24 +2,23 @@
 
 #include "Vector3D.h"
 #include "SceneObject.h"
+#include "Camera.h"
 
 namespace Bladestick
 {
 	namespace Drawing
 	{
-		public value class Camera
+		public enum DrawFlags
 		{
-		internal:
-			Vector3D ^ position;
-			//Vector3D ^ target;
-			Vector3D ^ rotation;
-			int near;
-			int far;
-			bool perspective;
+			DRAW_EDGES = 1,
+			DRAW_FILL = 1 << 1
 		};
 
 		public ref class Scene
 		{
+		private:
+			bool isPointVisible(Vector3D ^ p);
+
 		internal:
 			System::Drawing::Bitmap ^ bitmap;
 			array<double> ^ zbuffer;
@@ -27,9 +26,14 @@ namespace Bladestick
 			System::Drawing::Color edgeColor;
 			int width;
 			int height;
-			Camera camera;
-			System::ComponentModel::BindingList<SceneObject ^> ^ objects;
+			Camera ^ camera;
 			int objCount;
+			System::ComponentModel::BindingList<SceneObject ^> ^ objects;
+
+			void setPixel(int x, int y, double z, System::Drawing::Color color);
+			void drawLine(double x0, double y0, double z0, double x1, double y1, double z1, System::Drawing::Color color);
+			void drawLine(Vector3D ^ p1, Vector3D ^ p2, System::Drawing::Color color);
+			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, char drawFlags);
 
 		public:
 			/*static const int MAX_WIDTH = 1920;
@@ -42,15 +46,10 @@ namespace Bladestick
 			int getWidth();
 			int getHeight();
 			void clear();
-			void setPixel(int x, int y, double z, System::Drawing::Color color, bool flipVertical);
-			void drawLine(double x0, double y0, double z0, double x1, double y1, double z1, System::Drawing::Color color, bool flipVertical);
-			void drawLine(Vector3D ^ p1, Vector3D ^ p2, System::Drawing::Color color, bool flipVertical);
-			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, bool flipVertical, bool drawFill, bool drawEdges);
-			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges, bool useRandomPalette);
-			void drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges);
-			void drawToBuffer(SceneObject ^ obj, bool flipVertical);
+			void drawToBuffer(SceneObject ^ obj, char drawFlags, bool useRandomPalette);
+			void drawToBuffer(SceneObject ^ obj, char drawFlags);
+			void drawObjectsToBuffer(char drawFlags, bool useRandomPalette);
 			void render(System::Drawing::Graphics ^ g);
-			void drawObjectsToBuffer();
 			System::Drawing::Color getBgColor();
 			void setBgColor(System::Drawing::Color color);
 		};

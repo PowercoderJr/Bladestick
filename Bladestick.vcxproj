@@ -133,6 +133,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>

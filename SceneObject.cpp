@@ -39,7 +39,7 @@ SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<
 {
 }
 
-void SceneObject::transform(Camera camera)
+void SceneObject::transform()
 {
 	double alpha = degToRad(rotation->x);
 	double beta = degToRad(rotation->y);
@@ -50,8 +50,9 @@ void SceneObject::transform(Camera camera)
 	for each (Vector3D ^ v in vertices)
 	{
 		//Масштабирование, вращение, смещение
+		/*Было
 		v->mx = offset->x + cos(gamma) * (v->x * scaling->x * cos(beta) +
-				(v->z* scaling->z * cos(alpha) + v->y * scaling->y * sin(alpha)) *
+				(v->z * scaling->z * cos(alpha) + v->y * scaling->y * sin(alpha)) *
 				sin(beta)) - (v->y * scaling->y * cos(alpha) - v->z * scaling->z *
 				sin(alpha)) * sin(gamma);
 		v->my = offset->y + cos(gamma) * (v->y * scaling->y * cos(alpha) - v->z *
@@ -60,14 +61,14 @@ void SceneObject::transform(Camera camera)
 				sin(beta)) * sin(gamma);
 		v->mz = offset->z + cos(beta) * (v->z* scaling->z * cos(alpha) + v->y *
 				scaling->y * sin(alpha)) - v->x * scaling->x * sin(beta);
-
-		if (camera.perspective)
-		{
-			double persp = -v->mz / camera.position->z + 1;
-			v->mx /= persp;
-			v->my /= persp;
-			v->mz /= persp;
-		}
+				*/
+		v->mx = offset->x + scaling->x * (cos(gamma) * (v->x * cos(beta) +
+				(v->z * cos(alpha) + v->y * sin(alpha)) * sin(beta)) - (cos(alpha) *
+				v->y - v->z * sin(alpha)) * sin(gamma));
+		v->my = offset->y + scaling->y * (cos(gamma) * (cos(alpha) * v->y - v->z *
+				sin(alpha)) + (v->x * cos(beta) + (v->z * cos(alpha) + v->y * sin(alpha)) *
+				sin(beta)) * sin(gamma));
+		v->mz = offset->z + scaling->z * (cos(beta) * (v->z * cos(alpha) + v->y * sin(alpha)) - v->x * sin(beta));
 	}
 #undef sin
 #undef cos
@@ -202,7 +203,7 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	
 	SceneObject ^ result = unite(spikes);
 	result = unite(gcnew array<SceneObject ^>(3) {bladeRing, cross, result});
-	result->moveOriginal(0, exBladeRadius, 0);
+	result->moveOriginal(0, bevelBladeRadius, 0);
 
 	const double handleRadius = bladeThickness / 2;
 	array<SceneObject ^> ^ handleRings = gcnew array<SceneObject ^>(handleRingsCount);
@@ -242,7 +243,6 @@ SceneObject ^ SceneObject::unite(array<SceneObject^>^ components)
 		totalICount += components[i]->indices->Length;
 	}
 
-	Random ^ rnd = gcnew Random();
 	List<Vector3D ^> ^ vTotal = gcnew List<Vector3D ^>(totalVCount);
 	List<int> ^ iTotal = gcnew List<int>(totalICount);
 	List<Color> ^ cTotal = gcnew List<Color>(totalICount / 3);

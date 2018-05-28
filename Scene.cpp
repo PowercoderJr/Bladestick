@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Utils.h"
+#include "Matrix.h"
 
 using namespace Bladestick::Drawing;
 using namespace System::ComponentModel;
@@ -11,9 +12,9 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
-	this->camera = {gcnew Vector3D(0, 0, -1000), gcnew Vector3D(0, 0, 0), -5000, 5000, false};
-	this->objects = gcnew BindingList<SceneObject ^>();
+	this->camera = gcnew Camera(gcnew Vector3D(0, 0, 500), gcnew Vector3D(0, 0, 0), 1, 10000, 40, false);
 	this->objCount = 0;
+	this->objects = gcnew BindingList<SceneObject ^>();
 }
 
 Scene::Scene(int width, int height) : Scene::Scene(width, height, Color::Black, Color::White) {}
@@ -41,28 +42,34 @@ int Scene::getHeight()
 void Scene::clear()
 {
 	int index = 0;
-	double ninf = Double::PositiveInfinity;
+	double ninf = Double::NegativeInfinity;
 	for (int i = 0; i < width; ++i)
 		for (int j = 0; j < height; ++j)
 			zbuffer[index++] = ninf;
-		Graphics ^ g = Graphics::FromImage(bitmap);
-		g->Clear(bgColor);
-		delete g;
+	Graphics ^ g = Graphics::FromImage(bitmap);
+	g->Clear(bgColor);
+	delete g;
 }
 
-void Scene::setPixel(int x, int y, double z, Color color, bool flipVertical)
+bool Scene::isPointVisible(Vector3D ^ p)
+{
+	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height && p->mz >= camera->near && p->mz <= camera->far;
+}
+
+void Scene::setPixel(int x, int y, double z, Color color)
 {
 	if (x < 1 || x >= width || y < 1 || y >= height) return;
 
 	int index = x * height + y;
-	if (z <= zbuffer[index])
+	if (z >= zbuffer[index])
 	{
 		zbuffer[index] = z;
-		bitmap->SetPixel(x, flipVertical ? height - y : y, color);
+		bitmap->SetPixel(x, camera->perspective ? y : height - y, color);
+		//bitmap->SetPixel(x, height - y, color);
 	}
 }
 
-void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color color, bool flipVertical)
+void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, double z1, Color color)
 {
 	bool steep = false;
 	if (Math::Abs(x0 - x1) < Math::Abs(y0 - y1))
@@ -87,9 +94,9 @@ void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, doub
 	for (int x = x0; x <= x1; x++)
 	{
 		if (steep)
-			setPixel(y, x, z, color, flipVertical);
+			setPixel(y, x, z, color);
 		else
-			setPixel(x, y, z, color, flipVertical);
+			setPixel(x, y, z, color);
 		error2 += derror2;
 		z += zStep;
 
@@ -101,17 +108,15 @@ void Scene::drawLine(double x0, double y0, double z0, double x1, double y1, doub
 	}
 }
 
-void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color, bool flipVertical)
+void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color)
 {
-	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color, flipVertical);
+	drawLine(p1->mx, p1->my, p1->mz, p2->mx, p2->my, p2->mz, color);
 }
 
-void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, bool flipVertical, bool drawFill, bool drawEdges)
+void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, char drawFlags)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
-	if (p1->mz < camera.near || p1->mz > camera.far) return;
-	if (p2->mz < camera.near || p2->mz > camera.far) return;
-	if (p3->mz < camera.near || p3->mz > camera.far) return;
+	if (!(isPointVisible(p1) && isPointVisible(p2) && isPointVisible(p3))) return;
 
 	if (p1->my > p2->my) swap(&p1, &p2);
 	if (p1->my > p3->my) swap(&p1, &p3);
@@ -124,13 +129,13 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 		breakPoint->mx = p1->mx + (p3->mx - p1->mx) / yRatio;
 		breakPoint->my = p1->my + (p3->my - p1->my) / yRatio;
 		breakPoint->mz = p1->mz + (p3->mz - p1->mz) / yRatio;
-		drawTriangle(p1, p2, breakPoint, color, flipVertical, drawFill, drawEdges);
-		drawTriangle(breakPoint, p2, p3, color, flipVertical, drawFill, drawEdges);
+		drawTriangle(p1, p2, breakPoint, color, drawFlags);
+		drawTriangle(breakPoint, p2, p3, color, drawFlags);
 	}
 	else
 	{
 		//Заливка
-		if (drawFill)
+		if ((drawFlags & DrawFlags::DRAW_FILL) > 0)
 		{
 			int height = p3->my - p1->my;
 			Vector3D ^leftSmaller, ^leftBigger, ^rightSmaller, ^rightBigger;
@@ -177,42 +182,100 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 				{
 					double k2 = (double)j / length;
 					double mz = leftZ + (rightZ - leftZ) * k2;
-					setPixel(leftX + j, p1->my + i, mz, color, flipVertical);
+					setPixel(leftX + j, p1->my + i, mz, color);
 				}
 			}
 		}
 
 		//Контур
-		if (drawEdges)
+		if ((drawFlags & DrawFlags::DRAW_EDGES) > 0)
 		{
-			drawLine(p1, p2, edgeColor, flipVertical);
-			drawLine(p2, p3, edgeColor, flipVertical);
-			drawLine(p3, p1, edgeColor, flipVertical);
+			drawLine(p1, p2, edgeColor);
+			drawLine(p2, p3, edgeColor);
+			drawLine(p3, p1, edgeColor);
 		}
 	}
 }
 
-void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges, bool useRandomPalette)
+void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags, bool useRandomPalette)
 {
+	int vCount = obj->vertices->Length;
+	array<Vector3D ^> ^ vertices = gcnew array<Vector3D ^>(vCount);
+	for (int i = 0; i < vCount; ++i)
+		vertices[i] = obj->vertices[i]->clone();
+	for each (Vector3D ^ v in vertices)
+	{
+		double xOffset = v->mx - camera->position->x;
+		double yOffset = v->my - camera->position->y;
+		double zOffset = v->mz - camera->position->z;
+		v->mx = camera->rightDir->x * xOffset + camera->rightDir->y * yOffset + camera->rightDir->z * zOffset;
+		v->my = camera->upDir->x * xOffset + camera->upDir->y * yOffset + camera->upDir->z * zOffset;
+		v->mz = camera->backDir->x * xOffset + camera->backDir->y * yOffset + camera->backDir->z * zOffset;
+
+		double aspect = (double)width / height;
+		double vfov = camera->fov / aspect;
+		double ctg = 1 / Math::Tan(vfov / 2);
+		double n = camera->near, f = camera->far;
+		if (camera->perspective)
+		{			
+			//VER_1
+			/*v->mw = v->mz;
+			v->mx = ctg / aspect * v->mx;
+			v->my = ctg * v->my;
+			v->mz = -(2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);*/
+			//-
+
+			//VER_2
+			double hfov = camera->fov;
+			double vfov = hfov / width * height;
+			float r = Math::Tan(degToRad(hfov / 2));
+			float l = -r;
+			float t = Math::Tan(degToRad(vfov / 2));
+			float b = -t;
+			Vector3D ^ src = v->clone();
+			v->mw = src->mz;
+			v->mx = -((2 * src->mx * n) / (-l + r) + (src->mz * (l + r)) / (l - r));
+			v->my = (2 * src->my * n) / (-b + t) + (src->mz * (b + t)) / (b - t);
+			v->mz = -((2 * f * n) / (f - n) + (src->mz * (f + n)) / (f - n));
+			//-
+
+			if (v->mw != 1)
+			{
+				v->mx /= v->mw;
+				v->my /= v->mw;
+				//v->mz /= v->mw;
+			}
+
+			v->mx = (v->mx + 1) * this->width / 2;
+			v->my = (v->my + 1) * this->height / 2;
+			//v->mz = v->mz * (camera->far - camera->near);
+			int i = 1;
+		}
+		else
+		{
+			//Нужно ли искажение X и Y?
+			/*v->mx = -ctg / aspect * v->mx;
+			v->my = -ctg * v->my;*/
+			v->mz = -(2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);
+			v->mx += width / 2;
+			v->my += height / 2;
+		}
+	}
+
 	Random ^ rnd = gcnew Random();
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
-		drawTriangle(obj->vertices[obj->indices[i] - 1],
-			obj->vertices[obj->indices[i + 1] - 1],
-			obj->vertices[obj->indices[i + 2] - 1],
+		drawTriangle(vertices[obj->indices[i] - 1],
+			vertices[obj->indices[i + 1] - 1],
+			vertices[obj->indices[i + 2] - 1],
 			useRandomPalette ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3],
-			flipVertical, drawFill, drawEdges);
+			drawFlags);
 	}
 }
 
-void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical, bool drawFill, bool drawEdges)
+void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 {
-	drawToBuffer(obj, flipVertical, drawFill, drawEdges, false);
-}
-
-void Scene::drawToBuffer(SceneObject ^ obj, bool flipVertical)
-{
-	drawToBuffer(obj, flipVertical, true, false);
+	drawToBuffer(obj, drawFlags, false);
 }
 
 void Scene::render(Graphics ^ g)
@@ -220,11 +283,10 @@ void Scene::render(Graphics ^ g)
 	g->DrawImage(bitmap, 0, 0, width, height);
 }
 
-void Scene::drawObjectsToBuffer()
+void Scene::drawObjectsToBuffer(char drawFlags, bool useRandomPalette)
 {
 	for each (SceneObject ^ so in objects)
-		//TODO: изменить список передаваемых аргументов после слияния
-		drawToBuffer(so, true);
+		drawToBuffer(so, drawFlags, useRandomPalette);
 }
 
 Color Scene::getBgColor()

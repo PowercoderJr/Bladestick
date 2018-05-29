@@ -6,6 +6,12 @@
 
 using namespace Bladestick::Drawing;
 
+//”гол между векторами в радианах
+double Vector3D::getAngleBetween(Vector3D ^ v1, Vector3D ^ v2)
+{
+	return System::Math::Acos(v1->scalarProduct(v2) / (v1->getMagnitude() * v2->getMagnitude()));
+}
+
 Vector3D::Vector3D(double x, double y, double z, double w, double mx, double my, double mz, double mw)
 {
 	this->x = x;
@@ -134,4 +140,9 @@ Vector3D ^ Vector3D::vectorProduct(Vector3D ^ v)
 Vector3D ^ Vector3D::clone()
 {
 	return gcnew Vector3D(x, y, z, w, mx, my, mz, mw);
+}
+
+bool Vector3D::Equals(Vector3D ^ v)
+{
+	return this->x == v->x && this->y == v->y && this->z == v->z;
 }

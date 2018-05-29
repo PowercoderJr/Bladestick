@@ -5,6 +5,7 @@
 
 using namespace Bladestick::Drawing;
 using namespace Bladestick;
+using namespace System::ComponentModel;
 using namespace System::Windows::Forms;
 using namespace System::Drawing;
 using namespace System;
@@ -18,208 +19,95 @@ void Main(array<String^> ^ args)
 	Application::Run(%form);
 }
 
-Void MainForm::button1_Click(System::Object ^ sender, System::EventArgs ^ e)
+MainForm::MainForm(void)
 {
-	//Some debugging here	
-	/*scene->setSize(canvas->Width, canvas->Height);
-	Random ^ rnd = gcnew Random();
+	InitializeComponent();
+	scene = gcnew Drawing::Scene();
+	autoApplyTransform = true;
+	selectionDependedControls = gcnew array<Control ^>(27)
+	{
+		deleteObjBtn, objPosX, objPosY, objPosZ,
+			objRotX, objRotY, objRotZ,
+			objScaleX, objScaleY, objScaleZ,
+			color1Btn, color2Btn, color3Btn,
+			handleLengthInput,
+			handleRingsCountInput,
+			handleEdgesCountInput,
+			inBladeRadiusInput,
+			exBladeRadiusInput,
+			bladeThicknessInput,
+			bladeEdgesCountInput,
+			primarySpikeLengthInput,
+			primarySpikeAngleInput,
+			secondarySpikeLengthInput,
+			secondarySpikeAngleInput,
+			secondarySpikesCountInput,
+			applyParamsBtn,
+			setDefaultParamsBtn
+	};
+	setDefaultParamsBtn_Click(this, nullptr);
+	this->color1Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
+	this->color2Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
+	this->color3Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
+	this->secondarySpikesCountInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
+	this->fovInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
 
-	const int N = 1;
-	array<SceneObject ^> ^ objects = gcnew array<SceneObject^>(N);
-	IO::FileStream ^ stream;
-	try
-	{
-		for (int i = 0; i < N; ++i)
-		{
-			stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
-			objects[i] = gcnew SceneObject();
-			objects[i]->loadFromStream(stream);
-			stream->Close();
-		}
-	}
-	finally
-	{
-		stream->Close();
-	}
-	array<Vector3D ^> ^ dirs = gcnew array<Vector3D ^>(N);
-	array<Vector3D ^> ^ rots = gcnew array<Vector3D ^>(N);
-	for (int k = 0; k < N; ++k)
-	{
-		objects[k]->setScaling(3, 3, 3);
-		objects[k]->setScaling(rnd->NextDouble() * 2, rnd->NextDouble() * 2, rnd->NextDouble() * 2);
-		objects[k]->setOffset(canvas->Width / 2, canvas->Height / 2, rnd->NextDouble() * 100 - 50);
-		dirs[k] = gcnew Vector3D(rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25, rnd->NextDouble() * 50 - 25);
-		rots[k] = gcnew Vector3D(rnd->NextDouble() * 8 - 4, rnd->NextDouble() * 8 - 4, rnd->NextDouble() * 8 - 4);
-		for (int j = 0; j < 50; ++j)
-		{
-			scene->clear();
-			for (int k = 0; k < N; ++k)
-			{
-				objects[k]->setRotation(objects[k]->rotation + rots[k]);
-				objects[k]->setOffset(objects[k]->offset + dirs[k]);
-				objects[k]->transform();
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(i, 0, 0);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(0, i, 0);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(0, 0, i);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(i, i, 0);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(i, 0, i);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(0, i, i);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-				for (int i = 0; i <= 360; i += 3)
-				{
-					scene->clear();
-					objects[k]->setRotation(i, i, i);
-					objects[k]->transform();
-					scene->drawToBuffer(objects[k], flipVertical);
-					scene->render(g);
-				}
-			}
-			scene->render(g);
-		}
-	}
-	so->setOffset(400, 300, 0);
+	objectsListBox->DataSource = scene->objects;
+	updateObjComboBoxes();
+	objControllerPanel->Dock = ::DockStyle::Fill;
+	cameraControllerPanel->Dock = ::DockStyle::Fill;
+	renderControllerPanel->Dock = ::DockStyle::Fill;
+	controllerPanelSwitch_Click(пультУправленияОбъектамиToolStripMenuItem, nullptr);
+	g = canvas->CreateGraphics();
+	redrawScene();
+}
 
-	SceneObject ^ so;
-	IO::FileStream ^ stream;
-	try
-	{
-		stream = gcnew IO::FileStream("cube.obj", IO::FileMode::Open);
-		so = gcnew SceneObject();
-		so->loadFromStream(stream);
-		stream->Close();
-	}
-	finally
-	{
-		stream->Close();
-	}
-	so->transform();
+Void MainForm::onDrawMethodChanged(Object ^ sender, EventArgs ^ e)
+{
+	redrawScene();
+}
 
-	scene->setSize(canvas->Width, canvas->Height);
-	scene->camera->perspective = true;
+Void MainForm::onProjectionTypeChanged(Object ^ sender, EventArgs ^ e)
+{
+	if (!((RadioButton ^)sender)->Checked) return;
 
-	so = SceneObject::buildBladestick(300, 5, 8, 100, 150, 32, 30, 60, 40, 50, 50, 4, gcnew array<Color>(3) { Color::SaddleBrown, Color::DarkGray, Color::LightGray });
-	for (int i = 0; i <= 360; i += 5)
+	if (sender == pProjectionRb)
+		scene->camera->perspective = false;
+	else if (sender == cProjectionRb)
+		scene->camera->perspective = true;
+
+	redrawScene();
+}
+
+Void MainForm::onFrustumChanged(Object ^ sender, EventArgs ^ e)
+{
+	if (sender == nearPlaneInput)
+		scene->camera->near = Convert::ToDouble(nearPlaneInput->Value);
+	else if (sender == farPlaneInput)
+		scene->camera->far = Convert::ToDouble(farPlaneInput->Value);
+	else if (sender == fovInput)
+		scene->camera->fov = fovInput->Value;
+
+	redrawScene();
+}
+
+Void MainForm::onPaletteBtnClicked(Object ^ sender, EventArgs ^ e)
+{
+	if (colorDialog->ShowDialog() == ::DialogResult::OK)
 	{
-		scene->clear();
-		so->setOffset(0, 0, i*4);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-		//scene->camera->perspective = i % 10 < 5;
+		safe_cast<Button ^>(sender)->BackColor = colorDialog->Color;
+		if (sender == sceneBgColorBtn)
+			scene->bgColor = colorDialog->Color;
+		else if (sender == edgesColorBtn)
+			scene->edgeColor = colorDialog->Color;
 	}
-	scene->camera->setTarget(0, 0, 0);
-	const double distance = 1000;
-	for (int i = -90; i <= 270; i += 3)
-	{
-		double a = Math::Cos(degToRad(i)) * distance;
-		double b = Math::Sin(degToRad(i)) * distance;
-		scene->camera->setPosition(a, 0, b);
-		//scene->camera->setPosition(0, 0, i);
-		//scene->camera->fov = i;
-		scene->camera->updateDirs();
-		so->setRotation(i, 0, 0);
-		so->transform();
-		scene->clear();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(i, 0, 0);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(0, i, 0);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(0, 0, i);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(i, i, 0);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(i, 0, i);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(0, i, i);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}
-	for (int i = 0; i <= 360; i += 3)
-	{
-		scene->clear();
-		so->setRotation(i, i, i);
-		so->transform();
-		scene->drawToBuffer(so, DrawFlags::DRAW_FILL);
-		scene->render(g);
-	}*/
-	return Void();
+
+	redrawScene();
+}
+
+Void MainForm::onFovInputValueChanged(Object ^ sender, EventArgs ^ e)
+{
+	fovLabel->Text = "" + fovInput->Value;
 }
 
 void MainForm::redrawScene()
@@ -227,7 +115,12 @@ void MainForm::redrawScene()
 	scene->setSize(canvas->Width, canvas->Height);
 	scene->clear();
 	//TODO: передавать аргументы в зависимости от настроек отрисовки
-	scene->drawObjectsToBuffer(DrawFlags::DRAW_FILL, false);
+	char drawFlags = 0;
+	if (drawEdgesChb->Checked)
+		drawFlags |= DRAW_EDGES;
+	if (drawFillChb->Checked)
+		drawFlags |= DRAW_FILL;
+	scene->drawObjectsToBuffer(drawFlags, useRandomPaletteChb->Checked);
 	scene->render(g);
 }
 
@@ -298,6 +191,59 @@ void MainForm::applyObjParams()
 	redrawScene();
 }
 
+void MainForm::updateObjComboBoxes()
+{
+	SceneObject ^ tmp1 = nullptr;
+	if (placeCameraRelativeCb->SelectedIndex > -1)
+		tmp1 = safe_cast<SceneObject ^>(placeCameraRelativeCb->SelectedItem);
+	BindingList<SceneObject ^> ^ list1 = gcnew BindingList<SceneObject ^>(scene->objects);
+	placeCameraRelativeCb->DataSource = list1;
+	if (tmp1 != nullptr && list1->Contains(tmp1))
+		placeCameraRelativeCb->SelectedItem = tmp1;
+	else
+	{
+		placeCameraRelativeCb->SelectedIndex = -1;
+		placeCameraRelativeCb->Text = "";
+		placeCameraRelativeBtn->Enabled = false;
+		cameraRelativePosX->Enabled = false;
+		cameraRelativePosY->Enabled = false;
+		cameraRelativePosZ->Enabled = false;
+	}
+
+	SceneObject ^ tmp2 = nullptr;
+	if (cameraLookAtCb->SelectedIndex > -1)
+		tmp2 = safe_cast<SceneObject ^>(cameraLookAtCb->SelectedItem);
+	BindingList<SceneObject ^> ^ list2 = gcnew BindingList<SceneObject ^>(scene->objects);
+	cameraLookAtCb->DataSource = list2;
+	if (tmp2 != nullptr && list2->Contains(tmp2))
+		cameraLookAtCb->SelectedItem = tmp2;
+	else
+	{
+		cameraLookAtCb->SelectedIndex = -1;
+		cameraLookAtCb->Text = "";
+		cameraLookAtBtn->Enabled = false;
+	}
+}
+
+void MainForm::updateCameraTransformInputs()
+{
+	cameraPosX->Value = Convert::ToDecimal(scene->camera->position->x);
+	cameraPosY->Value = Convert::ToDecimal(scene->camera->position->y);
+	cameraPosZ->Value = Convert::ToDecimal(scene->camera->position->z);
+
+	cameraTargetX->Value = Convert::ToDecimal(scene->camera->target->x);
+	cameraTargetY->Value = Convert::ToDecimal(scene->camera->target->y);
+	cameraTargetZ->Value = Convert::ToDecimal(scene->camera->target->z);
+
+	double yaw = radToDeg(Vector3D::getAngleBetween(scene->camera->rightDir, gcnew Vector3D(1, 0, 0)));
+	yaw = scene->camera->target->x < scene->camera->position->x ? -yaw : yaw;
+	double pitch = radToDeg(Vector3D::getAngleBetween(scene->camera->upDir, gcnew Vector3D(0, 1, 0)));
+	pitch = scene->camera->target->y < scene->camera->position->y ? -pitch : pitch;
+	cameraYaw->Value = Convert::ToDecimal(yaw);
+	cameraPitch->Value = Convert::ToDecimal(pitch);
+	//cameraRoll->Value = NEEDED?;
+}
+
 Void MainForm::secondarySpikesCountInput_ValueChanged(Object ^ sender, EventArgs ^ e)
 {
 	secondarySpikesCountLabel->Text = "" + (secondarySpikesCountInput->Value * 4);
@@ -320,11 +266,12 @@ Void MainForm::createObjBtn_Click(Object ^ sender, EventArgs ^ e)
 		SceneObject::DEFAULT_SECONDARY_SPIKES_COUNT,
 		gcnew array<Color>(3) { SceneObject::DEFAULT_COLOR_1, SceneObject::DEFAULT_COLOR_2, SceneObject::DEFAULT_COLOR_3}
 	);
-	so->name = "Объект #" + ++scene->objCount;
+	so->name = "Объект #" + ++scene->objTotalCount;
 	scene->objects->Add(so);
 	objectsListBox->ClearSelected();
 	objectsListBox->SelectedItem = so;
 
+	updateObjComboBoxes();
 	redrawScene();
 }
 
@@ -344,6 +291,7 @@ Void MainForm::deleteObjBtn_Click(Object ^ sender, EventArgs ^ e)
 		for (int i = 0; i < items->Count; ++i)
 			scene->objects->Remove(items[i]);
 		objectsListBox->ClearSelected();
+		updateObjComboBoxes();
 	}
 
 	redrawScene();
@@ -351,9 +299,12 @@ Void MainForm::deleteObjBtn_Click(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::clearObjBtn_Click(Object ^ sender, EventArgs ^ e)
 {
+	if (scene->objects->Count == 0) return;
+
 	if (MessageBox::Show(this, "Очистить список объектов?", "Подтвердите операцию", MessageBoxButtons::YesNo) == ::DialogResult::Yes)
 	{
 		scene->objects->Clear();
+		updateObjComboBoxes();
 	}
 
 	redrawScene();
@@ -361,14 +312,129 @@ Void MainForm::clearObjBtn_Click(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::colorBtn_Click(Object ^ sender, EventArgs ^ e)
 {
-	if (colorDialog1->ShowDialog() == ::DialogResult::OK)
-		safe_cast<Button ^>(sender)->BackColor = colorDialog1->Color;
+	if (colorDialog->ShowDialog() == ::DialogResult::OK)
+		safe_cast<Button ^>(sender)->BackColor = colorDialog->Color;
 }
 
 Void MainForm::onObjTransformationKeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 {
 	if (e->KeyChar == 13 && autoApplyTransform) //Enter
 		applyObjTransform(sender);		
+}
+
+Void MainForm::canvas_Resize(Object ^ sender, EventArgs ^ e)
+{
+	g = canvas->CreateGraphics();
+	redrawScene();
+}
+
+Void MainForm::обновитьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
+{
+	redrawScene();
+}
+
+Void MainForm::controllerPanelSwitch_Click(Object ^ sender, EventArgs ^ e)
+{
+	/*static*/ array<Panel ^> ^ controllerPanels = gcnew array<Panel ^>(3) 
+		{ objControllerPanel, cameraControllerPanel, renderControllerPanel };
+
+	for each (Panel ^ item in controllerPanels)
+		item->SendToBack();
+
+	int index = Convert::ToInt32(safe_cast<ToolStripMenuItem ^>(sender)->Tag);
+	controllerPanels[index]->BringToFront();
+}
+
+Void MainForm::placeCameraRelativeCb_SelectedValueChanged(Object ^ sender, EventArgs ^ e)
+{
+	bool isAnySelected = placeCameraRelativeCb->SelectedIndex > -1;
+	placeCameraRelativeBtn->Enabled = isAnySelected;
+	cameraRelativePosX->Enabled = isAnySelected;
+	cameraRelativePosY->Enabled = isAnySelected;
+	cameraRelativePosZ->Enabled = isAnySelected;
+}
+
+Void MainForm::cameraLookAtCb_SelectedValueChanged(Object ^ sender, EventArgs ^ e)
+{
+	cameraLookAtBtn->Enabled = cameraLookAtCb->SelectedIndex > -1;
+}
+
+Void MainForm::placeCameraRelativeBtn_Click(Object ^ sender, EventArgs ^ e)
+{
+	if (placeCameraRelativeCb->SelectedIndex > -1)
+	{
+		Vector3D ^ objPos = safe_cast<SceneObject ^>(placeCameraRelativeCb->SelectedItem)->offset;
+		Vector3D ^ offset = gcnew Vector3D(Convert::ToDouble(cameraRelativePosX->Value),
+			Convert::ToDouble(cameraRelativePosY->Value), Convert::ToDouble(cameraRelativePosZ->Value));
+		Vector3D ^ newCameraPos = objPos + offset;
+
+		if (!newCameraPos->Equals(scene->camera->target))
+		{
+			scene->camera->position = newCameraPos;
+			scene->camera->updateDirs();
+			updateCameraTransformInputs();
+			redrawScene();
+		}
+		else
+		{
+			MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена");
+		}
+	}
+	else
+	{
+		MessageBox::Show("Выберите объект из списка", "Операция отклонена");
+	}
+}
+
+Void MainForm::cameraLookAtBtn_Click(Object ^ sender, EventArgs ^ e)
+{
+	if (cameraLookAtCb->SelectedIndex > -1)
+	{
+		Vector3D ^ objPos = safe_cast<SceneObject ^>(cameraLookAtCb->SelectedItem)->offset;
+
+		if (!objPos->Equals(scene->camera->position))
+		{
+			scene->camera->target = objPos;
+			scene->camera->updateDirs();
+			updateCameraTransformInputs();
+			redrawScene();
+		}
+		else
+		{
+			MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена");
+		}
+	}
+	else
+	{
+		MessageBox::Show("Выберите объект из списка", "Операция отклонена");
+	}
+}
+
+Void MainForm::onCameraTransformationChanged(Object ^ sender, EventArgs ^ e)
+{
+	if (sender == cameraPosX)
+		scene->camera->position->x = Convert::ToDouble(cameraPosX->Value);
+	else if (sender == cameraPosY)
+		scene->camera->position->y = Convert::ToDouble(cameraPosY->Value);
+	else if (sender == cameraPosZ)
+		scene->camera->position->z = Convert::ToDouble(cameraPosZ->Value);
+	else if (sender == cameraTargetX)
+		scene->camera->target->x = Convert::ToDouble(cameraTargetX->Value);
+	else if (sender == cameraTargetY)
+		scene->camera->target->y = Convert::ToDouble(cameraTargetY->Value);
+	else if (sender == cameraTargetZ)
+		scene->camera->target->z = Convert::ToDouble(cameraTargetZ->Value);
+	/*TODO
+	else if (sender == cameraRotX)
+		
+	else if (sender == cameraRotY)
+		
+	else if (sender == cameraRotZ)
+	*/
+
+	scene->camera->updateDirs();
+	updateCameraTransformInputs();
+	redrawScene();
 }
 
 Void MainForm::onObjTransformationChanged(Object ^ sender, EventArgs ^ e)
@@ -394,17 +460,24 @@ Void MainForm::objectsListBox_SelectedValueChanged(Object ^ sender, EventArgs ^ 
 		bool currAutoApplyTransform = autoApplyTransform;
 		autoApplyTransform = false;
 		
-		objPosX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->x);
-		objPosY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->y);
-		objPosZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->z);
-		objRotX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->x);
-		objRotY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->y);
-		objRotZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->rotation->z);
-		objScaleX->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->x);
-		objScaleY->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->y);
-		objScaleZ->Value = Convert::ToDecimal(safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->scaling->z);
+		SceneObject ^ obj = safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0]);
+		objPosX->Value = Convert::ToDecimal(obj->offset->x);
+		objPosY->Value = Convert::ToDecimal(obj->offset->y);
+		objPosZ->Value = Convert::ToDecimal(obj->offset->z);
+		objRotX->Value = Convert::ToDecimal(obj->rotation->x);
+		objRotY->Value = Convert::ToDecimal(obj->rotation->y);
+		objRotZ->Value = Convert::ToDecimal(obj->rotation->z);
+		objScaleX->Value = Convert::ToDecimal(obj->scaling->x);
+		objScaleY->Value = Convert::ToDecimal(obj->scaling->y);
+		objScaleZ->Value = Convert::ToDecimal(obj->scaling->z);
 
 		autoApplyTransform = currAutoApplyTransform;
+
+		objTransformGroup->Text = "Преобразования (" + obj->name + (objectsListBox->SelectedItems->Count > 1 ? " + ещё " + (objectsListBox->SelectedItems->Count - 1) + "шт." : "") + ")";
+	}
+	else
+	{
+		objTransformGroup->Text = "Преобразования (выберите объект)";
 	}
 }
 

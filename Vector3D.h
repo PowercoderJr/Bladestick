@@ -17,6 +17,7 @@ namespace Bladestick
 			double mw;
 
 		public:
+			static double getAngleBetween(Vector3D ^ v1, Vector3D ^ v2);
 			Vector3D(double x, double y, double z, double w, double mx, double my, double mz, double mw);
 			Vector3D(double x, double y, double z, double w);
 			Vector3D(double x, double y, double z);
@@ -40,6 +41,7 @@ namespace Bladestick
 			Vector3D ^ vectorProduct(double x, double y, double z);
 			Vector3D ^ vectorProduct(Vector3D ^ v);
 			Vector3D ^ clone();
+			bool Equals(Vector3D ^ v) override;
 		};
 	}
 }

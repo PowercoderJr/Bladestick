@@ -27,7 +27,7 @@ namespace Bladestick
 			int width;
 			int height;
 			Camera ^ camera;
-			int objCount;
+			int objTotalCount;
 			System::ComponentModel::BindingList<SceneObject ^> ^ objects;
 
 			void setPixel(int x, int y, double z, System::Drawing::Color color);

@@ -18,21 +18,20 @@ namespace Bladestick
 	{
 	private:
 		System::Drawing::Graphics ^ g;
-		System::ComponentModel::BackgroundWorker ^ backgroundWorker1;
-		System::Windows::Forms::MenuStrip^  menuStrip1;
-		System::Windows::Forms::Panel^  objPanel;
+		System::ComponentModel::BackgroundWorker^  backgroundWorker;
+		System::Windows::Forms::MenuStrip^  menuStrip;
+		System::Windows::Forms::Panel^  objControllerPanel;
 		System::Windows::Forms::Button^  clearObjBtn;
 		System::Windows::Forms::Button^  deleteObjBtn;
 		System::Windows::Forms::Button^  createObjBtn;
 		System::Windows::Forms::Label^  label1;
 		System::Windows::Forms::ListBox^  objectsListBox;
-		System::Windows::Forms::Button^  button1;
 		System::Windows::Forms::PictureBox^  canvas;
-		System::Windows::Forms::GroupBox^  groupBox1;
+		System::Windows::Forms::GroupBox^  objTransformGroup;
 		System::Windows::Forms::Label^  label3;
 		System::Windows::Forms::Label^  label2;
 		System::Windows::Forms::Label^  label4;
-		System::Windows::Forms::GroupBox^  groupBox2;
+		System::Windows::Forms::GroupBox^  objParamsGroup;
 		System::Windows::Forms::Label^  label16;
 		System::Windows::Forms::NumericUpDown^  secondarySpikeAngleInput;
 		System::Windows::Forms::Label^  label14;
@@ -61,7 +60,7 @@ namespace Bladestick
 		System::Windows::Forms::Button^  color2Btn;
 		System::Windows::Forms::Button^  color1Btn;
 		System::Windows::Forms::Label^  label17;
-		System::Windows::Forms::ColorDialog^  colorDialog1;
+		System::Windows::Forms::ColorDialog^  colorDialog;
 		System::Windows::Forms::CheckBox^  autoApplyParamsChb;
 		System::Windows::Forms::Button^  applyParamsBtn;
 		System::Windows::Forms::Button^  setDefaultParamsBtn;
@@ -75,14 +74,72 @@ namespace Bladestick
 		System::Windows::Forms::NumericUpDown^  objPosZ;
 		System::Windows::Forms::NumericUpDown^  objPosY;
 		System::Windows::Forms::NumericUpDown^  objPosX;
+		System::Windows::Forms::ToolStripMenuItem^  ÒˆÂÌ‡ToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  Ó·ÌÓ‚ËÚ¸ToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  Ó˜ËÒÚËÚ¸ToolStripMenuItem;
+		System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+		System::Windows::Forms::ToolStripMenuItem^  ÒÓı‡ÌËÚ¸ToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  Á‡„ÛÁËÚ¸ToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  ÔÛÎ¸ÚToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem;
+		System::Windows::Forms::ToolStripMenuItem^  Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem;
+		System::Windows::Forms::Panel^  cameraControllerPanel;
+		System::Windows::Forms::Panel^  renderControllerPanel;
+		System::Windows::Forms::Panel^  controllersPanel;
+		System::Windows::Forms::GroupBox^  groupBox2;
+		System::Windows::Forms::NumericUpDown^  cameraRelativePosZ;
+		System::Windows::Forms::NumericUpDown^  cameraRelativePosY;
+		System::Windows::Forms::NumericUpDown^  cameraRelativePosX;
+		System::Windows::Forms::Label^  label22;
+		System::Windows::Forms::Label^  label21;
+		System::Windows::Forms::ComboBox^  placeCameraRelativeCb;
+		System::Windows::Forms::GroupBox^  groupBox1;
+		System::Windows::Forms::NumericUpDown^  cameraRoll;
+		System::Windows::Forms::NumericUpDown^  cameraPitch;
+		System::Windows::Forms::NumericUpDown^  cameraYaw;
+		System::Windows::Forms::NumericUpDown^  cameraTargetZ;
+		System::Windows::Forms::NumericUpDown^  cameraTargetY;
+		System::Windows::Forms::NumericUpDown^  cameraTargetX;
+		System::Windows::Forms::NumericUpDown^  cameraPosZ;
+		System::Windows::Forms::NumericUpDown^  cameraPosY;
+		System::Windows::Forms::NumericUpDown^  cameraPosX;
+		System::Windows::Forms::Label^  label18;
+		System::Windows::Forms::Label^  label19;
+		System::Windows::Forms::Label^  label20;
+		System::Windows::Forms::GroupBox^  groupBox3;
+		System::Windows::Forms::Button^  cameraLookAtBtn;
+		System::Windows::Forms::Label^  label24;
+		System::Windows::Forms::ComboBox^  cameraLookAtCb;
+		System::Windows::Forms::Button^  placeCameraRelativeBtn;
+		System::Windows::Forms::GroupBox^  groupBox7;
+		System::Windows::Forms::Button^  edgesColorBtn;
+		System::Windows::Forms::Label^  label28;
+		System::Windows::Forms::Button^  sceneBgColorBtn;
+		System::Windows::Forms::Label^  label27;
+		System::Windows::Forms::GroupBox^  groupBox6;
+		System::Windows::Forms::CheckBox^  useRandomPaletteChb;
+		System::Windows::Forms::CheckBox^  drawFillChb;
+		System::Windows::Forms::CheckBox^  drawEdgesChb;
+		System::Windows::Forms::GroupBox^  groupBox5;
+		System::Windows::Forms::Label^  fovLabel;
+		System::Windows::Forms::TrackBar^  fovInput;
+		System::Windows::Forms::Label^  label26;
+		System::Windows::Forms::NumericUpDown^  farPlaneInput;
+		System::Windows::Forms::NumericUpDown^  nearPlaneInput;
+		System::Windows::Forms::Label^  label25;
+		System::Windows::Forms::Label^  label23;
+		System::Windows::Forms::GroupBox^  groupBox4;
+		System::Windows::Forms::RadioButton^  cProjectionRb;
+		System::Windows::Forms::RadioButton^  pProjectionRb;
 		Drawing::Scene ^ scene;
 		array<Control ^> ^ selectionDependedControls;
 		bool autoApplyTransform;
-
-		System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 		void redrawScene();
 		void applyObjTransform(Object ^ sender);
 		void applyObjParams();
+		void updateObjComboBoxes();
+		void updateCameraTransformInputs();
 		System::Void secondarySpikesCountInput_ValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void createObjBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void deleteObjBtn_Click(System::Object^  sender, System::EventArgs^  e);
@@ -93,39 +150,23 @@ namespace Bladestick
 		System::Void applyBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void setDefaultParamsBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void colorBtn_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void onObjTransformationKeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+		System::Void onCameraTransformationChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void placeCameraRelativeCb_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void cameraLookAtCb_SelectedValueChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void placeCameraRelativeBtn_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void cameraLookAtBtn_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void canvas_Resize(System::Object^  sender, System::EventArgs^  e);
+		System::Void Ó·ÌÓ‚ËÚ¸ToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void controllerPanelSwitch_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void onProjectionTypeChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void onFrustumChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void onPaletteBtnClicked(System::Object^  sender, System::EventArgs^  e);
+		System::Void onFovInputValueChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void onDrawMethodChanged(System::Object^  sender, System::EventArgs^  e);
 
 	public:
-		MainForm(void)
-		{
-			InitializeComponent();
-			scene = gcnew Drawing::Scene();
-			objectsListBox->DataSource = scene->objects;
-			g = canvas->CreateGraphics();
-			autoApplyTransform = true;
-			selectionDependedControls = gcnew array<Control ^>(27)
-			{
-				deleteObjBtn, objPosX, objPosY, objPosZ,
-					objRotX, objRotY, objRotZ,
-					objScaleX, objScaleY, objScaleZ,
-					color1Btn, color2Btn, color3Btn,
-					handleLengthInput,
-					handleRingsCountInput,
-					handleEdgesCountInput,
-					inBladeRadiusInput,
-					exBladeRadiusInput,
-					bladeThicknessInput,
-					bladeEdgesCountInput,
-					primarySpikeLengthInput,
-					primarySpikeAngleInput,
-					secondarySpikeLengthInput,
-					secondarySpikeAngleInput,
-					secondarySpikesCountInput,
-					applyParamsBtn,
-					setDefaultParamsBtn
-			};
-			setDefaultParamsBtn_Click(this, nullptr);
-
-		}
+		MainForm(void);
 
 	protected:
 		/// <summary>
@@ -152,10 +193,20 @@ namespace Bladestick
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
-			this->objPanel = (gcnew System::Windows::Forms::Panel());
-			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->backgroundWorker = (gcnew System::ComponentModel::BackgroundWorker());
+			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
+			this->ÒˆÂÌ‡ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->Ó˜ËÒÚËÚ¸ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->ÒÓı‡ÌËÚ¸ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->Á‡„ÛÁËÚ¸ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ÔÛÎ¸ÚToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->objControllerPanel = (gcnew System::Windows::Forms::Panel());
+			this->objParamsGroup = (gcnew System::Windows::Forms::GroupBox());
 			this->autoApplyParamsChb = (gcnew System::Windows::Forms::CheckBox());
 			this->setDefaultParamsBtn = (gcnew System::Windows::Forms::Button());
 			this->secondarySpikesCountLabel = (gcnew System::Windows::Forms::Label());
@@ -171,7 +222,6 @@ namespace Bladestick
 			this->primarySpikeAngleInput = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->secondarySpikeLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->primarySpikeLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label12 = (gcnew System::Windows::Forms::Label());
@@ -189,7 +239,7 @@ namespace Bladestick
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->handleLengthInput = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->objTransformGroup = (gcnew System::Windows::Forms::GroupBox());
 			this->objScaleZ = (gcnew System::Windows::Forms::NumericUpDown());
 			this->objScaleY = (gcnew System::Windows::Forms::NumericUpDown());
 			this->objScaleX = (gcnew System::Windows::Forms::NumericUpDown());
@@ -208,9 +258,58 @@ namespace Bladestick
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->objectsListBox = (gcnew System::Windows::Forms::ListBox());
 			this->canvas = (gcnew System::Windows::Forms::PictureBox());
-			this->colorDialog1 = (gcnew System::Windows::Forms::ColorDialog());
-			this->objPanel->SuspendLayout();
-			this->groupBox2->SuspendLayout();
+			this->colorDialog = (gcnew System::Windows::Forms::ColorDialog());
+			this->cameraControllerPanel = (gcnew System::Windows::Forms::Panel());
+			this->groupBox3 = (gcnew System::Windows::Forms::GroupBox());
+			this->cameraLookAtBtn = (gcnew System::Windows::Forms::Button());
+			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->cameraLookAtCb = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->placeCameraRelativeBtn = (gcnew System::Windows::Forms::Button());
+			this->cameraRelativePosZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraRelativePosY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraRelativePosX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label22 = (gcnew System::Windows::Forms::Label());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->placeCameraRelativeCb = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->cameraRoll = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraPitch = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraYaw = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraTargetZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraTargetY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraTargetX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraPosZ = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraPosY = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cameraPosX = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->renderControllerPanel = (gcnew System::Windows::Forms::Panel());
+			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
+			this->edgesColorBtn = (gcnew System::Windows::Forms::Button());
+			this->label28 = (gcnew System::Windows::Forms::Label());
+			this->sceneBgColorBtn = (gcnew System::Windows::Forms::Button());
+			this->label27 = (gcnew System::Windows::Forms::Label());
+			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->useRandomPaletteChb = (gcnew System::Windows::Forms::CheckBox());
+			this->drawFillChb = (gcnew System::Windows::Forms::CheckBox());
+			this->drawEdgesChb = (gcnew System::Windows::Forms::CheckBox());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->fovLabel = (gcnew System::Windows::Forms::Label());
+			this->fovInput = (gcnew System::Windows::Forms::TrackBar());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->farPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nearPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->cProjectionRb = (gcnew System::Windows::Forms::RadioButton());
+			this->pProjectionRb = (gcnew System::Windows::Forms::RadioButton());
+			this->controllersPanel = (gcnew System::Windows::Forms::Panel());
+			this->menuStrip->SuspendLayout();
+			this->objControllerPanel->SuspendLayout();
+			this->objParamsGroup->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikesCountInput))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeAngleInput))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeAngleInput))->BeginInit();
@@ -223,7 +322,7 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleEdgesCountInput))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleRingsCountInput))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleLengthInput))->BeginInit();
-			this->groupBox1->SuspendLayout();
+			this->objTransformGroup->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleZ))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleY))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleX))->BeginInit();
@@ -234,73 +333,175 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosY))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosX))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->canvas))->BeginInit();
+			this->cameraControllerPanel->SuspendLayout();
+			this->groupBox3->SuspendLayout();
+			this->groupBox2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosZ))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosX))->BeginInit();
+			this->groupBox1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRoll))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPitch))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraYaw))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetZ))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetX))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosZ))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosY))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosX))->BeginInit();
+			this->renderControllerPanel->SuspendLayout();
+			this->groupBox7->SuspendLayout();
+			this->groupBox6->SuspendLayout();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->BeginInit();
+			this->groupBox4->SuspendLayout();
+			this->controllersPanel->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// menuStrip1
+			// menuStrip
 			// 
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1264, 24);
-			this->menuStrip1->TabIndex = 3;
-			this->menuStrip1->Text = L"menuStrip1";
+			this->menuStrip->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->ÒˆÂÌ‡ToolStripMenuItem,
+					this->ÔÛÎ¸ÚToolStripMenuItem
+			});
+			this->menuStrip->Location = System::Drawing::Point(0, 0);
+			this->menuStrip->Name = L"menuStrip";
+			this->menuStrip->Size = System::Drawing::Size(1264, 24);
+			this->menuStrip->TabIndex = 3;
+			this->menuStrip->Text = L"menuStrip1";
 			// 
-			// objPanel
+			// ÒˆÂÌ‡ToolStripMenuItem
 			// 
-			this->objPanel->AutoScroll = true;
-			this->objPanel->Controls->Add(this->groupBox2);
-			this->objPanel->Controls->Add(this->groupBox1);
-			this->objPanel->Controls->Add(this->clearObjBtn);
-			this->objPanel->Controls->Add(this->deleteObjBtn);
-			this->objPanel->Controls->Add(this->createObjBtn);
-			this->objPanel->Controls->Add(this->label1);
-			this->objPanel->Controls->Add(this->objectsListBox);
-			this->objPanel->Dock = System::Windows::Forms::DockStyle::Left;
-			this->objPanel->Location = System::Drawing::Point(0, 24);
-			this->objPanel->Name = L"objPanel";
-			this->objPanel->Size = System::Drawing::Size(310, 740);
-			this->objPanel->TabIndex = 4;
+			this->ÒˆÂÌ‡ToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+				this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem,
+					this->Ó˜ËÒÚËÚ¸ToolStripMenuItem, this->toolStripSeparator1, this->ÒÓı‡ÌËÚ¸ToolStripMenuItem, this->Á‡„ÛÁËÚ¸ToolStripMenuItem
+			});
+			this->ÒˆÂÌ‡ToolStripMenuItem->Name = L"ÒˆÂÌ‡ToolStripMenuItem";
+			this->ÒˆÂÌ‡ToolStripMenuItem->Size = System::Drawing::Size(53, 20);
+			this->ÒˆÂÌ‡ToolStripMenuItem->Text = L"—ˆÂÌ‡";
 			// 
-			// groupBox2
+			// Ó·ÌÓ‚ËÚ¸ToolStripMenuItem
 			// 
-			this->groupBox2->Controls->Add(this->autoApplyParamsChb);
-			this->groupBox2->Controls->Add(this->setDefaultParamsBtn);
-			this->groupBox2->Controls->Add(this->secondarySpikesCountLabel);
-			this->groupBox2->Controls->Add(this->applyParamsBtn);
-			this->groupBox2->Controls->Add(this->color3Btn);
-			this->groupBox2->Controls->Add(this->color2Btn);
-			this->groupBox2->Controls->Add(this->color1Btn);
-			this->groupBox2->Controls->Add(this->label17);
-			this->groupBox2->Controls->Add(this->secondarySpikesCountInput);
-			this->groupBox2->Controls->Add(this->label16);
-			this->groupBox2->Controls->Add(this->secondarySpikeAngleInput);
-			this->groupBox2->Controls->Add(this->label14);
-			this->groupBox2->Controls->Add(this->primarySpikeAngleInput);
-			this->groupBox2->Controls->Add(this->label15);
-			this->groupBox2->Controls->Add(this->secondarySpikeLengthInput);
-			this->groupBox2->Controls->Add(this->button1);
-			this->groupBox2->Controls->Add(this->label13);
-			this->groupBox2->Controls->Add(this->primarySpikeLengthInput);
-			this->groupBox2->Controls->Add(this->label12);
-			this->groupBox2->Controls->Add(this->bladeThicknessInput);
-			this->groupBox2->Controls->Add(this->label11);
-			this->groupBox2->Controls->Add(this->bladeEdgesCountInput);
-			this->groupBox2->Controls->Add(this->label10);
-			this->groupBox2->Controls->Add(this->exBladeRadiusInput);
-			this->groupBox2->Controls->Add(this->label9);
-			this->groupBox2->Controls->Add(this->inBladeRadiusInput);
-			this->groupBox2->Controls->Add(this->label8);
-			this->groupBox2->Controls->Add(this->handleEdgesCountInput);
-			this->groupBox2->Controls->Add(this->label7);
-			this->groupBox2->Controls->Add(this->handleRingsCountInput);
-			this->groupBox2->Controls->Add(this->label6);
-			this->groupBox2->Controls->Add(this->handleLengthInput);
-			this->groupBox2->Controls->Add(this->label5);
-			this->groupBox2->Location = System::Drawing::Point(7, 286);
-			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(281, 450);
-			this->groupBox2->TabIndex = 7;
-			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"œ‡‡ÏÂÚ˚";
+			this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem->Name = L"Ó·ÌÓ‚ËÚ¸ToolStripMenuItem";
+			this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem->Text = L"Œ·ÌÓ‚ËÚ¸";
+			this->Ó·ÌÓ‚ËÚ¸ToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::Ó·ÌÓ‚ËÚ¸ToolStripMenuItem_Click);
+			// 
+			// Ó˜ËÒÚËÚ¸ToolStripMenuItem
+			// 
+			this->Ó˜ËÒÚËÚ¸ToolStripMenuItem->Name = L"Ó˜ËÒÚËÚ¸ToolStripMenuItem";
+			this->Ó˜ËÒÚËÚ¸ToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->Ó˜ËÒÚËÚ¸ToolStripMenuItem->Text = L"Œ˜ËÒÚËÚ¸";
+			this->Ó˜ËÒÚËÚ¸ToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::clearObjBtn_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this->toolStripSeparator1->Name = L"toolStripSeparator1";
+			this->toolStripSeparator1->Size = System::Drawing::Size(138, 6);
+			// 
+			// ÒÓı‡ÌËÚ¸ToolStripMenuItem
+			// 
+			this->ÒÓı‡ÌËÚ¸ToolStripMenuItem->Name = L"ÒÓı‡ÌËÚ¸ToolStripMenuItem";
+			this->ÒÓı‡ÌËÚ¸ToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->ÒÓı‡ÌËÚ¸ToolStripMenuItem->Text = L"—Óı‡ÌËÚ¸...";
+			// 
+			// Á‡„ÛÁËÚ¸ToolStripMenuItem
+			// 
+			this->Á‡„ÛÁËÚ¸ToolStripMenuItem->Name = L"Á‡„ÛÁËÚ¸ToolStripMenuItem";
+			this->Á‡„ÛÁËÚ¸ToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->Á‡„ÛÁËÚ¸ToolStripMenuItem->Text = L"«‡„ÛÁËÚ¸...";
+			// 
+			// ÔÛÎ¸ÚToolStripMenuItem
+			// 
+			this->ÔÛÎ¸ÚToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem,
+					this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem, this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem
+			});
+			this->ÔÛÎ¸ÚToolStripMenuItem->Name = L"ÔÛÎ¸ÚToolStripMenuItem";
+			this->ÔÛÎ¸ÚToolStripMenuItem->Size = System::Drawing::Size(52, 20);
+			this->ÔÛÎ¸ÚToolStripMenuItem->Text = L"œÛÎ¸Ú";
+			// 
+			// ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem
+			// 
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem->Name = L"ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem->Tag = L"0";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem->Text = L"œÛÎ¸Ú ÛÔ‡‚ÎÂÌËˇ Ó·˙ÂÍÚ‡ÏË";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇŒ·˙ÂÍÚ‡ÏËToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
+			// 
+			// ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem
+			// 
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem->Name = L"ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem->Tag = L"1";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem->Text = L"œÛÎ¸Ú ÛÔ‡‚ÎÂÌËˇ Í‡ÏÂÓÈ";
+			this->ÔÛÎ¸Ú”Ô‡‚ÎÂÌËˇ ‡ÏÂÓÈToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
+			// 
+			// Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem
+			// 
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem->Name = L"Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem";
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem->Tag = L"2";
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem->Text = L"Õ‡ÒÚÓÈÍË ÂÌ‰Â‡";
+			this->Ì‡ÒÚÓÈÍË–ÂÌ‰Â‡ToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
+			// 
+			// objControllerPanel
+			// 
+			this->objControllerPanel->AutoScroll = true;
+			this->objControllerPanel->Controls->Add(this->objParamsGroup);
+			this->objControllerPanel->Controls->Add(this->objTransformGroup);
+			this->objControllerPanel->Controls->Add(this->clearObjBtn);
+			this->objControllerPanel->Controls->Add(this->deleteObjBtn);
+			this->objControllerPanel->Controls->Add(this->createObjBtn);
+			this->objControllerPanel->Controls->Add(this->label1);
+			this->objControllerPanel->Controls->Add(this->objectsListBox);
+			this->objControllerPanel->Location = System::Drawing::Point(288, 33);
+			this->objControllerPanel->Name = L"objControllerPanel";
+			this->objControllerPanel->Size = System::Drawing::Size(310, 740);
+			this->objControllerPanel->TabIndex = 4;
+			// 
+			// objParamsGroup
+			// 
+			this->objParamsGroup->Controls->Add(this->autoApplyParamsChb);
+			this->objParamsGroup->Controls->Add(this->setDefaultParamsBtn);
+			this->objParamsGroup->Controls->Add(this->secondarySpikesCountLabel);
+			this->objParamsGroup->Controls->Add(this->applyParamsBtn);
+			this->objParamsGroup->Controls->Add(this->color3Btn);
+			this->objParamsGroup->Controls->Add(this->color2Btn);
+			this->objParamsGroup->Controls->Add(this->color1Btn);
+			this->objParamsGroup->Controls->Add(this->label17);
+			this->objParamsGroup->Controls->Add(this->secondarySpikesCountInput);
+			this->objParamsGroup->Controls->Add(this->label16);
+			this->objParamsGroup->Controls->Add(this->secondarySpikeAngleInput);
+			this->objParamsGroup->Controls->Add(this->label14);
+			this->objParamsGroup->Controls->Add(this->primarySpikeAngleInput);
+			this->objParamsGroup->Controls->Add(this->label15);
+			this->objParamsGroup->Controls->Add(this->secondarySpikeLengthInput);
+			this->objParamsGroup->Controls->Add(this->label13);
+			this->objParamsGroup->Controls->Add(this->primarySpikeLengthInput);
+			this->objParamsGroup->Controls->Add(this->label12);
+			this->objParamsGroup->Controls->Add(this->bladeThicknessInput);
+			this->objParamsGroup->Controls->Add(this->label11);
+			this->objParamsGroup->Controls->Add(this->bladeEdgesCountInput);
+			this->objParamsGroup->Controls->Add(this->label10);
+			this->objParamsGroup->Controls->Add(this->exBladeRadiusInput);
+			this->objParamsGroup->Controls->Add(this->label9);
+			this->objParamsGroup->Controls->Add(this->inBladeRadiusInput);
+			this->objParamsGroup->Controls->Add(this->label8);
+			this->objParamsGroup->Controls->Add(this->handleEdgesCountInput);
+			this->objParamsGroup->Controls->Add(this->label7);
+			this->objParamsGroup->Controls->Add(this->handleRingsCountInput);
+			this->objParamsGroup->Controls->Add(this->label6);
+			this->objParamsGroup->Controls->Add(this->handleLengthInput);
+			this->objParamsGroup->Controls->Add(this->label5);
+			this->objParamsGroup->Location = System::Drawing::Point(8, 287);
+			this->objParamsGroup->Name = L"objParamsGroup";
+			this->objParamsGroup->Size = System::Drawing::Size(280, 448);
+			this->objParamsGroup->TabIndex = 7;
+			this->objParamsGroup->TabStop = false;
+			this->objParamsGroup->Text = L"œ‡‡ÏÂÚ˚";
 			// 
 			// autoApplyParamsChb
 			// 
@@ -355,37 +556,34 @@ namespace Bladestick
 			// 
 			this->color3Btn->BackColor = System::Drawing::Color::White;
 			this->color3Btn->Enabled = false;
-			this->color3Btn->Location = System::Drawing::Point(208, 365);
+			this->color3Btn->Location = System::Drawing::Point(210, 365);
 			this->color3Btn->Name = L"color3Btn";
-			this->color3Btn->Size = System::Drawing::Size(67, 23);
+			this->color3Btn->Size = System::Drawing::Size(64, 23);
 			this->color3Btn->TabIndex = 27;
 			this->color3Btn->UseVisualStyleBackColor = false;
 			this->color3Btn->Click += gcnew System::EventHandler(this, &MainForm::colorBtn_Click);
-			this->color3Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
 			// 
 			// color2Btn
 			// 
 			this->color2Btn->BackColor = System::Drawing::Color::White;
 			this->color2Btn->Enabled = false;
-			this->color2Btn->Location = System::Drawing::Point(136, 365);
+			this->color2Btn->Location = System::Drawing::Point(139, 365);
 			this->color2Btn->Name = L"color2Btn";
-			this->color2Btn->Size = System::Drawing::Size(67, 23);
+			this->color2Btn->Size = System::Drawing::Size(64, 23);
 			this->color2Btn->TabIndex = 26;
 			this->color2Btn->UseVisualStyleBackColor = false;
 			this->color2Btn->Click += gcnew System::EventHandler(this, &MainForm::colorBtn_Click);
-			this->color2Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
 			// 
 			// color1Btn
 			// 
 			this->color1Btn->BackColor = System::Drawing::Color::White;
 			this->color1Btn->Enabled = false;
-			this->color1Btn->Location = System::Drawing::Point(64, 365);
+			this->color1Btn->Location = System::Drawing::Point(68, 365);
 			this->color1Btn->Name = L"color1Btn";
-			this->color1Btn->Size = System::Drawing::Size(67, 23);
+			this->color1Btn->Size = System::Drawing::Size(64, 23);
 			this->color1Btn->TabIndex = 25;
 			this->color1Btn->UseVisualStyleBackColor = false;
 			this->color1Btn->Click += gcnew System::EventHandler(this, &MainForm::colorBtn_Click);
-			this->color1Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
 			// 
 			// label17
 			// 
@@ -406,10 +604,8 @@ namespace Bladestick
 			this->secondarySpikesCountInput->Name = L"secondarySpikesCountInput";
 			this->secondarySpikesCountInput->Size = System::Drawing::Size(270, 45);
 			this->secondarySpikesCountInput->TabIndex = 23;
-			this->secondarySpikesCountInput->TickFrequency = 4;
 			this->secondarySpikesCountInput->Value = 1;
 			this->secondarySpikesCountInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::secondarySpikesCountInput_ValueChanged);
-			this->secondarySpikesCountInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
 			// 
 			// label16
 			// 
@@ -424,7 +620,7 @@ namespace Bladestick
 			// 
 			this->secondarySpikeAngleInput->DecimalPlaces = 2;
 			this->secondarySpikeAngleInput->Enabled = false;
-			this->secondarySpikeAngleInput->Location = System::Drawing::Point(211, 278);
+			this->secondarySpikeAngleInput->Location = System::Drawing::Point(210, 278);
 			this->secondarySpikeAngleInput->Name = L"secondarySpikeAngleInput";
 			this->secondarySpikeAngleInput->Size = System::Drawing::Size(64, 20);
 			this->secondarySpikeAngleInput->TabIndex = 21;
@@ -433,7 +629,7 @@ namespace Bladestick
 			// label14
 			// 
 			this->label14->AutoSize = true;
-			this->label14->Location = System::Drawing::Point(79, 280);
+			this->label14->Location = System::Drawing::Point(78, 280);
 			this->label14->Name = L"label14";
 			this->label14->Size = System::Drawing::Size(126, 13);
 			this->label14->TabIndex = 20;
@@ -443,7 +639,7 @@ namespace Bladestick
 			// 
 			this->primarySpikeAngleInput->DecimalPlaces = 2;
 			this->primarySpikeAngleInput->Enabled = false;
-			this->primarySpikeAngleInput->Location = System::Drawing::Point(211, 226);
+			this->primarySpikeAngleInput->Location = System::Drawing::Point(210, 226);
 			this->primarySpikeAngleInput->Name = L"primarySpikeAngleInput";
 			this->primarySpikeAngleInput->Size = System::Drawing::Size(64, 20);
 			this->primarySpikeAngleInput->TabIndex = 19;
@@ -452,7 +648,7 @@ namespace Bladestick
 			// label15
 			// 
 			this->label15->AutoSize = true;
-			this->label15->Location = System::Drawing::Point(78, 228);
+			this->label15->Location = System::Drawing::Point(77, 228);
 			this->label15->Name = L"label15";
 			this->label15->Size = System::Drawing::Size(127, 13);
 			this->label15->TabIndex = 18;
@@ -462,27 +658,17 @@ namespace Bladestick
 			// 
 			this->secondarySpikeLengthInput->DecimalPlaces = 2;
 			this->secondarySpikeLengthInput->Enabled = false;
-			this->secondarySpikeLengthInput->Location = System::Drawing::Point(211, 252);
+			this->secondarySpikeLengthInput->Location = System::Drawing::Point(210, 252);
 			this->secondarySpikeLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->secondarySpikeLengthInput->Name = L"secondarySpikeLengthInput";
 			this->secondarySpikeLengthInput->Size = System::Drawing::Size(64, 20);
 			this->secondarySpikeLengthInput->TabIndex = 17;
 			this->secondarySpikeLengthInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
 			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(200, -11);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"TEST";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
-			// 
 			// label13
 			// 
 			this->label13->AutoSize = true;
-			this->label13->Location = System::Drawing::Point(71, 254);
+			this->label13->Location = System::Drawing::Point(70, 254);
 			this->label13->Name = L"label13";
 			this->label13->Size = System::Drawing::Size(134, 13);
 			this->label13->TabIndex = 16;
@@ -492,7 +678,7 @@ namespace Bladestick
 			// 
 			this->primarySpikeLengthInput->DecimalPlaces = 2;
 			this->primarySpikeLengthInput->Enabled = false;
-			this->primarySpikeLengthInput->Location = System::Drawing::Point(211, 200);
+			this->primarySpikeLengthInput->Location = System::Drawing::Point(210, 200);
 			this->primarySpikeLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->primarySpikeLengthInput->Name = L"primarySpikeLengthInput";
 			this->primarySpikeLengthInput->Size = System::Drawing::Size(64, 20);
@@ -502,7 +688,7 @@ namespace Bladestick
 			// label12
 			// 
 			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(70, 202);
+			this->label12->Location = System::Drawing::Point(69, 202);
 			this->label12->Name = L"label12";
 			this->label12->Size = System::Drawing::Size(135, 13);
 			this->label12->TabIndex = 14;
@@ -512,7 +698,7 @@ namespace Bladestick
 			// 
 			this->bladeThicknessInput->DecimalPlaces = 2;
 			this->bladeThicknessInput->Enabled = false;
-			this->bladeThicknessInput->Location = System::Drawing::Point(211, 174);
+			this->bladeThicknessInput->Location = System::Drawing::Point(210, 174);
 			this->bladeThicknessInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->bladeThicknessInput->Name = L"bladeThicknessInput";
 			this->bladeThicknessInput->Size = System::Drawing::Size(64, 20);
@@ -522,7 +708,7 @@ namespace Bladestick
 			// label11
 			// 
 			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(110, 176);
+			this->label11->Location = System::Drawing::Point(109, 176);
 			this->label11->Name = L"label11";
 			this->label11->Size = System::Drawing::Size(95, 13);
 			this->label11->TabIndex = 12;
@@ -531,7 +717,7 @@ namespace Bladestick
 			// bladeEdgesCountInput
 			// 
 			this->bladeEdgesCountInput->Enabled = false;
-			this->bladeEdgesCountInput->Location = System::Drawing::Point(211, 148);
+			this->bladeEdgesCountInput->Location = System::Drawing::Point(210, 148);
 			this->bladeEdgesCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1024, 0, 0, 0 });
 			this->bladeEdgesCountInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
 			this->bladeEdgesCountInput->Name = L"bladeEdgesCountInput";
@@ -543,7 +729,7 @@ namespace Bladestick
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(31, 150);
+			this->label10->Location = System::Drawing::Point(30, 150);
 			this->label10->Name = L"label10";
 			this->label10->Size = System::Drawing::Size(174, 13);
 			this->label10->TabIndex = 10;
@@ -553,7 +739,7 @@ namespace Bladestick
 			// 
 			this->exBladeRadiusInput->DecimalPlaces = 2;
 			this->exBladeRadiusInput->Enabled = false;
-			this->exBladeRadiusInput->Location = System::Drawing::Point(211, 122);
+			this->exBladeRadiusInput->Location = System::Drawing::Point(210, 122);
 			this->exBladeRadiusInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->exBladeRadiusInput->Name = L"exBladeRadiusInput";
 			this->exBladeRadiusInput->Size = System::Drawing::Size(64, 20);
@@ -563,7 +749,7 @@ namespace Bladestick
 			// label9
 			// 
 			this->label9->AutoSize = true;
-			this->label9->Location = System::Drawing::Point(73, 124);
+			this->label9->Location = System::Drawing::Point(72, 124);
 			this->label9->Name = L"label9";
 			this->label9->Size = System::Drawing::Size(132, 13);
 			this->label9->TabIndex = 8;
@@ -573,7 +759,7 @@ namespace Bladestick
 			// 
 			this->inBladeRadiusInput->DecimalPlaces = 2;
 			this->inBladeRadiusInput->Enabled = false;
-			this->inBladeRadiusInput->Location = System::Drawing::Point(211, 96);
+			this->inBladeRadiusInput->Location = System::Drawing::Point(210, 96);
 			this->inBladeRadiusInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->inBladeRadiusInput->Name = L"inBladeRadiusInput";
 			this->inBladeRadiusInput->Size = System::Drawing::Size(64, 20);
@@ -583,7 +769,7 @@ namespace Bladestick
 			// label8
 			// 
 			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(59, 98);
+			this->label8->Location = System::Drawing::Point(58, 98);
 			this->label8->Name = L"label8";
 			this->label8->Size = System::Drawing::Size(146, 13);
 			this->label8->TabIndex = 6;
@@ -592,7 +778,7 @@ namespace Bladestick
 			// handleEdgesCountInput
 			// 
 			this->handleEdgesCountInput->Enabled = false;
-			this->handleEdgesCountInput->Location = System::Drawing::Point(211, 70);
+			this->handleEdgesCountInput->Location = System::Drawing::Point(210, 70);
 			this->handleEdgesCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1024, 0, 0, 0 });
 			this->handleEdgesCountInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3, 0, 0, 0 });
 			this->handleEdgesCountInput->Name = L"handleEdgesCountInput";
@@ -604,7 +790,7 @@ namespace Bladestick
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(27, 72);
+			this->label7->Location = System::Drawing::Point(26, 72);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(178, 13);
 			this->label7->TabIndex = 4;
@@ -613,7 +799,7 @@ namespace Bladestick
 			// handleRingsCountInput
 			// 
 			this->handleRingsCountInput->Enabled = false;
-			this->handleRingsCountInput->Location = System::Drawing::Point(211, 44);
+			this->handleRingsCountInput->Location = System::Drawing::Point(210, 44);
 			this->handleRingsCountInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, 0 });
 			this->handleRingsCountInput->Name = L"handleRingsCountInput";
 			this->handleRingsCountInput->Size = System::Drawing::Size(64, 20);
@@ -623,7 +809,7 @@ namespace Bladestick
 			// label6
 			// 
 			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(12, 46);
+			this->label6->Location = System::Drawing::Point(11, 46);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(193, 13);
 			this->label6->TabIndex = 2;
@@ -633,7 +819,7 @@ namespace Bladestick
 			// 
 			this->handleLengthInput->DecimalPlaces = 2;
 			this->handleLengthInput->Enabled = false;
-			this->handleLengthInput->Location = System::Drawing::Point(211, 18);
+			this->handleLengthInput->Location = System::Drawing::Point(210, 18);
 			this->handleLengthInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 9999, 0, 0, 0 });
 			this->handleLengthInput->Name = L"handleLengthInput";
 			this->handleLengthInput->Size = System::Drawing::Size(64, 20);
@@ -643,38 +829,38 @@ namespace Bladestick
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(119, 20);
+			this->label5->Location = System::Drawing::Point(118, 20);
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(86, 13);
 			this->label5->TabIndex = 0;
 			this->label5->Text = L"ƒÎËÌ‡ ÛÍÓˇÚË:";
 			// 
-			// groupBox1
+			// objTransformGroup
 			// 
-			this->groupBox1->Controls->Add(this->objScaleZ);
-			this->groupBox1->Controls->Add(this->objScaleY);
-			this->groupBox1->Controls->Add(this->objScaleX);
-			this->groupBox1->Controls->Add(this->objRotZ);
-			this->groupBox1->Controls->Add(this->objRotY);
-			this->groupBox1->Controls->Add(this->objRotX);
-			this->groupBox1->Controls->Add(this->objPosZ);
-			this->groupBox1->Controls->Add(this->objPosY);
-			this->groupBox1->Controls->Add(this->objPosX);
-			this->groupBox1->Controls->Add(this->label4);
-			this->groupBox1->Controls->Add(this->label3);
-			this->groupBox1->Controls->Add(this->label2);
-			this->groupBox1->Location = System::Drawing::Point(6, 179);
-			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(282, 100);
-			this->groupBox1->TabIndex = 6;
-			this->groupBox1->TabStop = false;
-			this->groupBox1->Text = L"œÂÓ·‡ÁÓ‚‡ÌËˇ";
+			this->objTransformGroup->Controls->Add(this->objScaleZ);
+			this->objTransformGroup->Controls->Add(this->objScaleY);
+			this->objTransformGroup->Controls->Add(this->objScaleX);
+			this->objTransformGroup->Controls->Add(this->objRotZ);
+			this->objTransformGroup->Controls->Add(this->objRotY);
+			this->objTransformGroup->Controls->Add(this->objRotX);
+			this->objTransformGroup->Controls->Add(this->objPosZ);
+			this->objTransformGroup->Controls->Add(this->objPosY);
+			this->objTransformGroup->Controls->Add(this->objPosX);
+			this->objTransformGroup->Controls->Add(this->label4);
+			this->objTransformGroup->Controls->Add(this->label3);
+			this->objTransformGroup->Controls->Add(this->label2);
+			this->objTransformGroup->Location = System::Drawing::Point(8, 179);
+			this->objTransformGroup->Name = L"objTransformGroup";
+			this->objTransformGroup->Size = System::Drawing::Size(280, 102);
+			this->objTransformGroup->TabIndex = 6;
+			this->objTransformGroup->TabStop = false;
+			this->objTransformGroup->Text = L"œÂÓ·‡ÁÓ‚‡ÌËˇ (‚˚·ÂËÚÂ Ó·˙ÂÍÚ)";
 			// 
 			// objScaleZ
 			// 
 			this->objScaleZ->DecimalPlaces = 2;
 			this->objScaleZ->Enabled = false;
-			this->objScaleZ->Location = System::Drawing::Point(212, 71);
+			this->objScaleZ->Location = System::Drawing::Point(210, 75);
 			this->objScaleZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, 0 });
 			this->objScaleZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, System::Int32::MinValue });
 			this->objScaleZ->Name = L"objScaleZ";
@@ -688,7 +874,7 @@ namespace Bladestick
 			// 
 			this->objScaleY->DecimalPlaces = 2;
 			this->objScaleY->Enabled = false;
-			this->objScaleY->Location = System::Drawing::Point(140, 71);
+			this->objScaleY->Location = System::Drawing::Point(139, 75);
 			this->objScaleY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, 0 });
 			this->objScaleY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, System::Int32::MinValue });
 			this->objScaleY->Name = L"objScaleY";
@@ -702,7 +888,7 @@ namespace Bladestick
 			// 
 			this->objScaleX->DecimalPlaces = 2;
 			this->objScaleX->Enabled = false;
-			this->objScaleX->Location = System::Drawing::Point(68, 71);
+			this->objScaleX->Location = System::Drawing::Point(68, 75);
 			this->objScaleX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, 0 });
 			this->objScaleX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99, 0, 0, System::Int32::MinValue });
 			this->objScaleX->Name = L"objScaleX";
@@ -716,7 +902,7 @@ namespace Bladestick
 			// 
 			this->objRotZ->DecimalPlaces = 2;
 			this->objRotZ->Enabled = false;
-			this->objRotZ->Location = System::Drawing::Point(212, 46);
+			this->objRotZ->Location = System::Drawing::Point(210, 49);
 			this->objRotZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
 			this->objRotZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 360, 0, 0, System::Int32::MinValue });
 			this->objRotZ->Name = L"objRotZ";
@@ -729,7 +915,7 @@ namespace Bladestick
 			// 
 			this->objRotY->DecimalPlaces = 2;
 			this->objRotY->Enabled = false;
-			this->objRotY->Location = System::Drawing::Point(140, 46);
+			this->objRotY->Location = System::Drawing::Point(139, 49);
 			this->objRotY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
 			this->objRotY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 360, 0, 0, System::Int32::MinValue });
 			this->objRotY->Name = L"objRotY";
@@ -742,7 +928,7 @@ namespace Bladestick
 			// 
 			this->objRotX->DecimalPlaces = 2;
 			this->objRotX->Enabled = false;
-			this->objRotX->Location = System::Drawing::Point(68, 46);
+			this->objRotX->Location = System::Drawing::Point(68, 49);
 			this->objRotX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
 			this->objRotX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 360, 0, 0, System::Int32::MinValue });
 			this->objRotX->Name = L"objRotX";
@@ -755,7 +941,7 @@ namespace Bladestick
 			// 
 			this->objPosZ->DecimalPlaces = 2;
 			this->objPosZ->Enabled = false;
-			this->objPosZ->Location = System::Drawing::Point(212, 23);
+			this->objPosZ->Location = System::Drawing::Point(210, 23);
 			this->objPosZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
 			this->objPosZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
 			this->objPosZ->Name = L"objPosZ";
@@ -768,7 +954,7 @@ namespace Bladestick
 			// 
 			this->objPosY->DecimalPlaces = 2;
 			this->objPosY->Enabled = false;
-			this->objPosY->Location = System::Drawing::Point(140, 23);
+			this->objPosY->Location = System::Drawing::Point(139, 23);
 			this->objPosY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
 			this->objPosY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
 			this->objPosY->Name = L"objPosY";
@@ -793,7 +979,7 @@ namespace Bladestick
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(6, 73);
+			this->label4->Location = System::Drawing::Point(6, 77);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(56, 13);
 			this->label4->TabIndex = 2;
@@ -802,7 +988,7 @@ namespace Bladestick
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(6, 48);
+			this->label3->Location = System::Drawing::Point(9, 51);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(53, 13);
 			this->label3->TabIndex = 1;
@@ -811,7 +997,7 @@ namespace Bladestick
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(6, 25);
+			this->label2->Location = System::Drawing::Point(8, 25);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(54, 13);
 			this->label2->TabIndex = 0;
@@ -829,6 +1015,7 @@ namespace Bladestick
 			// 
 			// deleteObjBtn
 			// 
+			this->deleteObjBtn->Enabled = false;
 			this->deleteObjBtn->Location = System::Drawing::Point(102, 140);
 			this->deleteObjBtn->Name = L"deleteObjBtn";
 			this->deleteObjBtn->Size = System::Drawing::Size(90, 23);
@@ -874,6 +1061,539 @@ namespace Bladestick
 			this->canvas->Size = System::Drawing::Size(954, 740);
 			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
+			this->canvas->Resize += gcnew System::EventHandler(this, &MainForm::canvas_Resize);
+			// 
+			// cameraControllerPanel
+			// 
+			this->cameraControllerPanel->AutoScroll = true;
+			this->cameraControllerPanel->Controls->Add(this->groupBox3);
+			this->cameraControllerPanel->Controls->Add(this->groupBox2);
+			this->cameraControllerPanel->Controls->Add(this->groupBox1);
+			this->cameraControllerPanel->Location = System::Drawing::Point(296, 13);
+			this->cameraControllerPanel->Name = L"cameraControllerPanel";
+			this->cameraControllerPanel->Size = System::Drawing::Size(310, 740);
+			this->cameraControllerPanel->TabIndex = 6;
+			// 
+			// groupBox3
+			// 
+			this->groupBox3->Controls->Add(this->cameraLookAtBtn);
+			this->groupBox3->Controls->Add(this->label24);
+			this->groupBox3->Controls->Add(this->cameraLookAtCb);
+			this->groupBox3->Location = System::Drawing::Point(8, 245);
+			this->groupBox3->Name = L"groupBox3";
+			this->groupBox3->Size = System::Drawing::Size(280, 96);
+			this->groupBox3->TabIndex = 9;
+			this->groupBox3->TabStop = false;
+			this->groupBox3->Text = L"Õ‡Ô‡‚ËÚ¸ Ì‡ Ó·˙ÂÍÚ";
+			// 
+			// cameraLookAtBtn
+			// 
+			this->cameraLookAtBtn->Enabled = false;
+			this->cameraLookAtBtn->Location = System::Drawing::Point(6, 49);
+			this->cameraLookAtBtn->Name = L"cameraLookAtBtn";
+			this->cameraLookAtBtn->Size = System::Drawing::Size(268, 40);
+			this->cameraLookAtBtn->TabIndex = 19;
+			this->cameraLookAtBtn->Text = L"œËÏÂÌËÚ¸";
+			this->cameraLookAtBtn->UseVisualStyleBackColor = true;
+			this->cameraLookAtBtn->Click += gcnew System::EventHandler(this, &MainForm::cameraLookAtBtn_Click);
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Location = System::Drawing::Point(14, 25);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(48, 13);
+			this->label24->TabIndex = 1;
+			this->label24->Text = L"Œ·˙ÂÍÚ:";
+			// 
+			// cameraLookAtCb
+			// 
+			this->cameraLookAtCb->FormattingEnabled = true;
+			this->cameraLookAtCb->Location = System::Drawing::Point(68, 22);
+			this->cameraLookAtCb->Name = L"cameraLookAtCb";
+			this->cameraLookAtCb->Size = System::Drawing::Size(206, 21);
+			this->cameraLookAtCb->TabIndex = 0;
+			this->cameraLookAtCb->SelectedValueChanged += gcnew System::EventHandler(this, &MainForm::cameraLookAtCb_SelectedValueChanged);
+			// 
+			// groupBox2
+			// 
+			this->groupBox2->Controls->Add(this->placeCameraRelativeBtn);
+			this->groupBox2->Controls->Add(this->cameraRelativePosZ);
+			this->groupBox2->Controls->Add(this->cameraRelativePosY);
+			this->groupBox2->Controls->Add(this->cameraRelativePosX);
+			this->groupBox2->Controls->Add(this->label22);
+			this->groupBox2->Controls->Add(this->label21);
+			this->groupBox2->Controls->Add(this->placeCameraRelativeCb);
+			this->groupBox2->Location = System::Drawing::Point(8, 117);
+			this->groupBox2->Name = L"groupBox2";
+			this->groupBox2->Size = System::Drawing::Size(280, 122);
+			this->groupBox2->TabIndex = 8;
+			this->groupBox2->TabStop = false;
+			this->groupBox2->Text = L"–‡ÒÔÓÎÓÊËÚ¸ ÔÓ ÓÚÌÓ¯ÂÌË˛ Í Ó·˙ÂÍÚÛ";
+			// 
+			// placeCameraRelativeBtn
+			// 
+			this->placeCameraRelativeBtn->Enabled = false;
+			this->placeCameraRelativeBtn->Location = System::Drawing::Point(6, 75);
+			this->placeCameraRelativeBtn->Name = L"placeCameraRelativeBtn";
+			this->placeCameraRelativeBtn->Size = System::Drawing::Size(268, 40);
+			this->placeCameraRelativeBtn->TabIndex = 19;
+			this->placeCameraRelativeBtn->Text = L"œËÏÂÌËÚ¸";
+			this->placeCameraRelativeBtn->UseVisualStyleBackColor = true;
+			this->placeCameraRelativeBtn->Click += gcnew System::EventHandler(this, &MainForm::placeCameraRelativeBtn_Click);
+			// 
+			// cameraRelativePosZ
+			// 
+			this->cameraRelativePosZ->DecimalPlaces = 2;
+			this->cameraRelativePosZ->Enabled = false;
+			this->cameraRelativePosZ->Location = System::Drawing::Point(210, 49);
+			this->cameraRelativePosZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraRelativePosZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraRelativePosZ->Name = L"cameraRelativePosZ";
+			this->cameraRelativePosZ->Size = System::Drawing::Size(64, 20);
+			this->cameraRelativePosZ->TabIndex = 18;
+			// 
+			// cameraRelativePosY
+			// 
+			this->cameraRelativePosY->DecimalPlaces = 2;
+			this->cameraRelativePosY->Enabled = false;
+			this->cameraRelativePosY->Location = System::Drawing::Point(139, 49);
+			this->cameraRelativePosY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraRelativePosY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraRelativePosY->Name = L"cameraRelativePosY";
+			this->cameraRelativePosY->Size = System::Drawing::Size(64, 20);
+			this->cameraRelativePosY->TabIndex = 17;
+			// 
+			// cameraRelativePosX
+			// 
+			this->cameraRelativePosX->DecimalPlaces = 2;
+			this->cameraRelativePosX->Enabled = false;
+			this->cameraRelativePosX->Location = System::Drawing::Point(68, 49);
+			this->cameraRelativePosX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraRelativePosX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraRelativePosX->Name = L"cameraRelativePosX";
+			this->cameraRelativePosX->Size = System::Drawing::Size(64, 20);
+			this->cameraRelativePosX->TabIndex = 16;
+			// 
+			// label22
+			// 
+			this->label22->AutoSize = true;
+			this->label22->Location = System::Drawing::Point(8, 51);
+			this->label22->Name = L"label22";
+			this->label22->Size = System::Drawing::Size(54, 13);
+			this->label22->TabIndex = 15;
+			this->label22->Text = L"œÓÁËˆËˇ:";
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Location = System::Drawing::Point(14, 25);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(48, 13);
+			this->label21->TabIndex = 1;
+			this->label21->Text = L"Œ·˙ÂÍÚ:";
+			// 
+			// placeCameraRelativeCb
+			// 
+			this->placeCameraRelativeCb->FormattingEnabled = true;
+			this->placeCameraRelativeCb->Location = System::Drawing::Point(68, 22);
+			this->placeCameraRelativeCb->Name = L"placeCameraRelativeCb";
+			this->placeCameraRelativeCb->Size = System::Drawing::Size(206, 21);
+			this->placeCameraRelativeCb->TabIndex = 0;
+			this->placeCameraRelativeCb->SelectedValueChanged += gcnew System::EventHandler(this, &MainForm::placeCameraRelativeCb_SelectedValueChanged);
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->cameraRoll);
+			this->groupBox1->Controls->Add(this->cameraPitch);
+			this->groupBox1->Controls->Add(this->cameraYaw);
+			this->groupBox1->Controls->Add(this->cameraTargetZ);
+			this->groupBox1->Controls->Add(this->cameraTargetY);
+			this->groupBox1->Controls->Add(this->cameraTargetX);
+			this->groupBox1->Controls->Add(this->cameraPosZ);
+			this->groupBox1->Controls->Add(this->cameraPosY);
+			this->groupBox1->Controls->Add(this->cameraPosX);
+			this->groupBox1->Controls->Add(this->label18);
+			this->groupBox1->Controls->Add(this->label19);
+			this->groupBox1->Controls->Add(this->label20);
+			this->groupBox1->Location = System::Drawing::Point(8, 9);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(280, 102);
+			this->groupBox1->TabIndex = 7;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"œÓÎÓÊÂÌËÂ Í‡ÏÂ˚";
+			// 
+			// cameraRoll
+			// 
+			this->cameraRoll->DecimalPlaces = 2;
+			this->cameraRoll->Location = System::Drawing::Point(210, 75);
+			this->cameraRoll->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
+			this->cameraRoll->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 360, 0, 0, System::Int32::MinValue });
+			this->cameraRoll->Name = L"cameraRoll";
+			this->cameraRoll->Size = System::Drawing::Size(64, 20);
+			this->cameraRoll->TabIndex = 20;
+			this->cameraRoll->Visible = false;
+			this->cameraRoll->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraPitch
+			// 
+			this->cameraPitch->DecimalPlaces = 2;
+			this->cameraPitch->Location = System::Drawing::Point(139, 75);
+			this->cameraPitch->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 90, 0, 0, 0 });
+			this->cameraPitch->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 90, 0, 0, System::Int32::MinValue });
+			this->cameraPitch->Name = L"cameraPitch";
+			this->cameraPitch->Size = System::Drawing::Size(64, 20);
+			this->cameraPitch->TabIndex = 19;
+			this->cameraPitch->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraYaw
+			// 
+			this->cameraYaw->DecimalPlaces = 2;
+			this->cameraYaw->Location = System::Drawing::Point(68, 75);
+			this->cameraYaw->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 359, 0, 0, 0 });
+			this->cameraYaw->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 360, 0, 0, System::Int32::MinValue });
+			this->cameraYaw->Name = L"cameraYaw";
+			this->cameraYaw->Size = System::Drawing::Size(64, 20);
+			this->cameraYaw->TabIndex = 18;
+			this->cameraYaw->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraTargetZ
+			// 
+			this->cameraTargetZ->DecimalPlaces = 2;
+			this->cameraTargetZ->Location = System::Drawing::Point(210, 49);
+			this->cameraTargetZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraTargetZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraTargetZ->Name = L"cameraTargetZ";
+			this->cameraTargetZ->Size = System::Drawing::Size(64, 20);
+			this->cameraTargetZ->TabIndex = 17;
+			this->cameraTargetZ->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraTargetY
+			// 
+			this->cameraTargetY->DecimalPlaces = 2;
+			this->cameraTargetY->Location = System::Drawing::Point(139, 49);
+			this->cameraTargetY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraTargetY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraTargetY->Name = L"cameraTargetY";
+			this->cameraTargetY->Size = System::Drawing::Size(64, 20);
+			this->cameraTargetY->TabIndex = 16;
+			this->cameraTargetY->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraTargetX
+			// 
+			this->cameraTargetX->DecimalPlaces = 2;
+			this->cameraTargetX->Location = System::Drawing::Point(68, 49);
+			this->cameraTargetX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraTargetX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraTargetX->Name = L"cameraTargetX";
+			this->cameraTargetX->Size = System::Drawing::Size(64, 20);
+			this->cameraTargetX->TabIndex = 15;
+			this->cameraTargetX->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraPosZ
+			// 
+			this->cameraPosZ->DecimalPlaces = 2;
+			this->cameraPosZ->Location = System::Drawing::Point(210, 23);
+			this->cameraPosZ->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraPosZ->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraPosZ->Name = L"cameraPosZ";
+			this->cameraPosZ->Size = System::Drawing::Size(64, 20);
+			this->cameraPosZ->TabIndex = 14;
+			this->cameraPosZ->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000, 0, 0, 0 });
+			this->cameraPosZ->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraPosY
+			// 
+			this->cameraPosY->DecimalPlaces = 2;
+			this->cameraPosY->Location = System::Drawing::Point(139, 23);
+			this->cameraPosY->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraPosY->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraPosY->Name = L"cameraPosY";
+			this->cameraPosY->Size = System::Drawing::Size(64, 20);
+			this->cameraPosY->TabIndex = 13;
+			this->cameraPosY->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// cameraPosX
+			// 
+			this->cameraPosX->DecimalPlaces = 2;
+			this->cameraPosX->Location = System::Drawing::Point(68, 23);
+			this->cameraPosX->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->cameraPosX->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, System::Int32::MinValue });
+			this->cameraPosX->Name = L"cameraPosX";
+			this->cameraPosX->Size = System::Drawing::Size(64, 20);
+			this->cameraPosX->TabIndex = 12;
+			this->cameraPosX->ValueChanged += gcnew System::EventHandler(this, &MainForm::onCameraTransformationChanged);
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Location = System::Drawing::Point(9, 77);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(53, 13);
+			this->label18->TabIndex = 2;
+			this->label18->Text = L"œÓ‚ÓÓÚ:";
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Location = System::Drawing::Point(26, 51);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(36, 13);
+			this->label19->TabIndex = 1;
+			this->label19->Text = L"÷ÂÎ¸:";
+			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Location = System::Drawing::Point(8, 25);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(54, 13);
+			this->label20->TabIndex = 0;
+			this->label20->Text = L"œÓÁËˆËˇ:";
+			// 
+			// renderControllerPanel
+			// 
+			this->renderControllerPanel->AutoScroll = true;
+			this->renderControllerPanel->Controls->Add(this->groupBox7);
+			this->renderControllerPanel->Controls->Add(this->groupBox6);
+			this->renderControllerPanel->Controls->Add(this->groupBox5);
+			this->renderControllerPanel->Controls->Add(this->groupBox4);
+			this->renderControllerPanel->Location = System::Drawing::Point(0, 51);
+			this->renderControllerPanel->Name = L"renderControllerPanel";
+			this->renderControllerPanel->Size = System::Drawing::Size(310, 740);
+			this->renderControllerPanel->TabIndex = 7;
+			// 
+			// groupBox7
+			// 
+			this->groupBox7->Controls->Add(this->edgesColorBtn);
+			this->groupBox7->Controls->Add(this->label28);
+			this->groupBox7->Controls->Add(this->sceneBgColorBtn);
+			this->groupBox7->Controls->Add(this->label27);
+			this->groupBox7->Location = System::Drawing::Point(8, 311);
+			this->groupBox7->Name = L"groupBox7";
+			this->groupBox7->Size = System::Drawing::Size(280, 79);
+			this->groupBox7->TabIndex = 3;
+			this->groupBox7->TabStop = false;
+			this->groupBox7->Text = L"œ‡ÎËÚ‡ ÒˆÂÌ˚";
+			// 
+			// edgesColorBtn
+			// 
+			this->edgesColorBtn->BackColor = System::Drawing::Color::White;
+			this->edgesColorBtn->Location = System::Drawing::Point(49, 48);
+			this->edgesColorBtn->Name = L"edgesColorBtn";
+			this->edgesColorBtn->Size = System::Drawing::Size(75, 23);
+			this->edgesColorBtn->TabIndex = 10;
+			this->edgesColorBtn->UseVisualStyleBackColor = false;
+			this->edgesColorBtn->Click += gcnew System::EventHandler(this, &MainForm::onPaletteBtnClicked);
+			// 
+			// label28
+			// 
+			this->label28->AutoSize = true;
+			this->label28->Location = System::Drawing::Point(6, 53);
+			this->label28->Name = L"label28";
+			this->label28->Size = System::Drawing::Size(41, 13);
+			this->label28->TabIndex = 9;
+			this->label28->Text = L"–∏·‡:";
+			// 
+			// sceneBgColorBtn
+			// 
+			this->sceneBgColorBtn->BackColor = System::Drawing::Color::Black;
+			this->sceneBgColorBtn->Location = System::Drawing::Point(49, 19);
+			this->sceneBgColorBtn->Name = L"sceneBgColorBtn";
+			this->sceneBgColorBtn->Size = System::Drawing::Size(75, 23);
+			this->sceneBgColorBtn->TabIndex = 8;
+			this->sceneBgColorBtn->UseVisualStyleBackColor = false;
+			this->sceneBgColorBtn->Click += gcnew System::EventHandler(this, &MainForm::onPaletteBtnClicked);
+			// 
+			// label27
+			// 
+			this->label27->AutoSize = true;
+			this->label27->Location = System::Drawing::Point(10, 24);
+			this->label27->Name = L"label27";
+			this->label27->Size = System::Drawing::Size(33, 13);
+			this->label27->TabIndex = 7;
+			this->label27->Text = L"‘ÓÌ:";
+			// 
+			// groupBox6
+			// 
+			this->groupBox6->Controls->Add(this->useRandomPaletteChb);
+			this->groupBox6->Controls->Add(this->drawFillChb);
+			this->groupBox6->Controls->Add(this->drawEdgesChb);
+			this->groupBox6->Location = System::Drawing::Point(8, 219);
+			this->groupBox6->Name = L"groupBox6";
+			this->groupBox6->Size = System::Drawing::Size(280, 86);
+			this->groupBox6->TabIndex = 2;
+			this->groupBox6->TabStop = false;
+			this->groupBox6->Text = L"—ÔÓÒÓ· ËÒÓ‚‡ÌËˇ";
+			// 
+			// useRandomPaletteChb
+			// 
+			this->useRandomPaletteChb->AutoSize = true;
+			this->useRandomPaletteChb->Location = System::Drawing::Point(6, 65);
+			this->useRandomPaletteChb->Name = L"useRandomPaletteChb";
+			this->useRandomPaletteChb->Size = System::Drawing::Size(185, 17);
+			this->useRandomPaletteChb->TabIndex = 2;
+			this->useRandomPaletteChb->Text = L"«‡ÎË‚‡Ú¸ ÒÎÛ˜‡ÈÌ˚ÏË ˆ‚ÂÚ‡ÏË";
+			this->useRandomPaletteChb->UseVisualStyleBackColor = true;
+			this->useRandomPaletteChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onDrawMethodChanged);
+			// 
+			// drawFillChb
+			// 
+			this->drawFillChb->AutoSize = true;
+			this->drawFillChb->Checked = true;
+			this->drawFillChb->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->drawFillChb->ForeColor = System::Drawing::SystemColors::ControlText;
+			this->drawFillChb->Location = System::Drawing::Point(6, 42);
+			this->drawFillChb->Name = L"drawFillChb";
+			this->drawFillChb->Size = System::Drawing::Size(118, 17);
+			this->drawFillChb->TabIndex = 1;
+			this->drawFillChb->Text = L"–ËÒÓ‚‡Ú¸ Á‡ÎË‚ÍÛ";
+			this->drawFillChb->UseVisualStyleBackColor = true;
+			this->drawFillChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onDrawMethodChanged);
+			// 
+			// drawEdgesChb
+			// 
+			this->drawEdgesChb->AutoSize = true;
+			this->drawEdgesChb->Location = System::Drawing::Point(6, 19);
+			this->drawEdgesChb->Name = L"drawEdgesChb";
+			this->drawEdgesChb->Size = System::Drawing::Size(107, 17);
+			this->drawEdgesChb->TabIndex = 0;
+			this->drawEdgesChb->Text = L"–ËÒÓ‚‡Ú¸ ∏·‡";
+			this->drawEdgesChb->UseVisualStyleBackColor = true;
+			this->drawEdgesChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onDrawMethodChanged);
+			// 
+			// groupBox5
+			// 
+			this->groupBox5->Controls->Add(this->fovLabel);
+			this->groupBox5->Controls->Add(this->fovInput);
+			this->groupBox5->Controls->Add(this->label26);
+			this->groupBox5->Controls->Add(this->farPlaneInput);
+			this->groupBox5->Controls->Add(this->nearPlaneInput);
+			this->groupBox5->Controls->Add(this->label25);
+			this->groupBox5->Controls->Add(this->label23);
+			this->groupBox5->Location = System::Drawing::Point(8, 79);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(280, 134);
+			this->groupBox5->TabIndex = 1;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"œË‡ÏË‰‡ ‚Ë‰ËÏÓÒÚË";
+			// 
+			// fovLabel
+			// 
+			this->fovLabel->AutoSize = true;
+			this->fovLabel->Location = System::Drawing::Point(87, 65);
+			this->fovLabel->Name = L"fovLabel";
+			this->fovLabel->Size = System::Drawing::Size(19, 13);
+			this->fovLabel->TabIndex = 6;
+			this->fovLabel->Text = L"40";
+			// 
+			// fovInput
+			// 
+			this->fovInput->Location = System::Drawing::Point(6, 82);
+			this->fovInput->Maximum = 180;
+			this->fovInput->Name = L"fovInput";
+			this->fovInput->Size = System::Drawing::Size(268, 45);
+			this->fovInput->TabIndex = 5;
+			this->fovInput->TickFrequency = 10;
+			this->fovInput->Value = 40;
+			this->fovInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFovInputValueChanged);
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Location = System::Drawing::Point(6, 65);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(75, 13);
+			this->label26->TabIndex = 4;
+			this->label26->Text = L"œÓÎÂ ÁÂÌËˇ:";
+			// 
+			// farPlaneInput
+			// 
+			this->farPlaneInput->DecimalPlaces = 2;
+			this->farPlaneInput->Location = System::Drawing::Point(190, 41);
+			this->farPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->farPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->farPlaneInput->Name = L"farPlaneInput";
+			this->farPlaneInput->Size = System::Drawing::Size(64, 20);
+			this->farPlaneInput->TabIndex = 3;
+			this->farPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5000, 0, 0, 0 });
+			this->farPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
+			// 
+			// nearPlaneInput
+			// 
+			this->nearPlaneInput->DecimalPlaces = 2;
+			this->nearPlaneInput->Location = System::Drawing::Point(190, 17);
+			this->nearPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->nearPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nearPlaneInput->Name = L"nearPlaneInput";
+			this->nearPlaneInput->Size = System::Drawing::Size(64, 20);
+			this->nearPlaneInput->TabIndex = 2;
+			this->nearPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nearPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Location = System::Drawing::Point(6, 43);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(178, 13);
+			this->label25->TabIndex = 1;
+			this->label25->Text = L"ƒ‡Î¸Ìˇˇ ÓÚÒÂÍ‡˛˘‡ˇ ÔÎÓÒÍÓÒÚ¸:";
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Location = System::Drawing::Point(6, 19);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(178, 13);
+			this->label23->TabIndex = 0;
+			this->label23->Text = L"¡ÎËÊÌˇˇ ÓÚÒÂÍ‡˛˘‡ˇ ÔÎÓÒÍÓÒÚ¸:";
+			// 
+			// groupBox4
+			// 
+			this->groupBox4->Controls->Add(this->cProjectionRb);
+			this->groupBox4->Controls->Add(this->pProjectionRb);
+			this->groupBox4->Location = System::Drawing::Point(8, 9);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(280, 64);
+			this->groupBox4->TabIndex = 0;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"¬Ë‰ ÔÓÂˆËÓ‚‡ÌËˇ";
+			// 
+			// cProjectionRb
+			// 
+			this->cProjectionRb->AutoSize = true;
+			this->cProjectionRb->Location = System::Drawing::Point(6, 42);
+			this->cProjectionRb->Name = L"cProjectionRb";
+			this->cProjectionRb->Size = System::Drawing::Size(90, 17);
+			this->cProjectionRb->TabIndex = 1;
+			this->cProjectionRb->Text = L"ˆÂÌÚ‡Î¸ÌÓÂ";
+			this->cProjectionRb->UseVisualStyleBackColor = true;
+			this->cProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
+			// 
+			// pProjectionRb
+			// 
+			this->pProjectionRb->AutoSize = true;
+			this->pProjectionRb->Checked = true;
+			this->pProjectionRb->Location = System::Drawing::Point(6, 19);
+			this->pProjectionRb->Name = L"pProjectionRb";
+			this->pProjectionRb->Size = System::Drawing::Size(97, 17);
+			this->pProjectionRb->TabIndex = 0;
+			this->pProjectionRb->TabStop = true;
+			this->pProjectionRb->Text = L"Ô‡‡ÎÎÂÎ¸ÌÓÂ";
+			this->pProjectionRb->UseVisualStyleBackColor = true;
+			this->pProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
+			// 
+			// controllersPanel
+			// 
+			this->controllersPanel->Controls->Add(this->cameraControllerPanel);
+			this->controllersPanel->Controls->Add(this->renderControllerPanel);
+			this->controllersPanel->Controls->Add(this->objControllerPanel);
+			this->controllersPanel->Dock = System::Windows::Forms::DockStyle::Left;
+			this->controllersPanel->Location = System::Drawing::Point(0, 24);
+			this->controllersPanel->Name = L"controllersPanel";
+			this->controllersPanel->Size = System::Drawing::Size(310, 740);
+			this->controllersPanel->TabIndex = 8;
 			// 
 			// MainForm
 			// 
@@ -881,14 +1601,16 @@ namespace Bladestick
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1264, 764);
 			this->Controls->Add(this->canvas);
-			this->Controls->Add(this->objPanel);
-			this->Controls->Add(this->menuStrip1);
+			this->Controls->Add(this->controllersPanel);
+			this->Controls->Add(this->menuStrip);
 			this->Name = L"MainForm";
 			this->Text = L"MainForm";
-			this->objPanel->ResumeLayout(false);
-			this->objPanel->PerformLayout();
-			this->groupBox2->ResumeLayout(false);
-			this->groupBox2->PerformLayout();
+			this->menuStrip->ResumeLayout(false);
+			this->menuStrip->PerformLayout();
+			this->objControllerPanel->ResumeLayout(false);
+			this->objControllerPanel->PerformLayout();
+			this->objParamsGroup->ResumeLayout(false);
+			this->objParamsGroup->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikesCountInput))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->secondarySpikeAngleInput))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->primarySpikeAngleInput))->EndInit();
@@ -901,8 +1623,8 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleEdgesCountInput))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleRingsCountInput))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handleLengthInput))->EndInit();
-			this->groupBox1->ResumeLayout(false);
-			this->groupBox1->PerformLayout();
+			this->objTransformGroup->ResumeLayout(false);
+			this->objTransformGroup->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleZ))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleY))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objScaleX))->EndInit();
@@ -913,11 +1635,42 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosY))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->objPosX))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->canvas))->EndInit();
+			this->cameraControllerPanel->ResumeLayout(false);
+			this->groupBox3->ResumeLayout(false);
+			this->groupBox3->PerformLayout();
+			this->groupBox2->ResumeLayout(false);
+			this->groupBox2->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosZ))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosX))->EndInit();
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRoll))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPitch))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraYaw))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetZ))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraTargetX))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosZ))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosY))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosX))->EndInit();
+			this->renderControllerPanel->ResumeLayout(false);
+			this->groupBox7->ResumeLayout(false);
+			this->groupBox7->PerformLayout();
+			this->groupBox6->ResumeLayout(false);
+			this->groupBox6->PerformLayout();
+			this->groupBox5->ResumeLayout(false);
+			this->groupBox5->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->EndInit();
+			this->groupBox4->ResumeLayout(false);
+			this->groupBox4->PerformLayout();
+			this->controllersPanel->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-private: System::Void onObjTransformationKeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }

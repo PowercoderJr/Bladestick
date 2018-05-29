@@ -2,10 +2,14 @@
 
 namespace Bladestick
 {
-
 	static double degToRad(double deg)
 	{
 		return System::Math::PI / 180 * deg;
+	}
+
+	static double radToDeg(double rad)
+	{
+		return 180 * rad / System::Math::PI;
 	}
 
 	template <typename T> static void swap(T * a, T * b)

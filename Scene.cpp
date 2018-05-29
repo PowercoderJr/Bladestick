@@ -12,8 +12,8 @@ Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
 	setSize(width, height);
 	this->bgColor = bgColor;
 	this->edgeColor = edgeColor;
-	this->camera = gcnew Camera(gcnew Vector3D(0, 0, 500), gcnew Vector3D(0, 0, 0), 1, 10000, 40, false);
-	this->objCount = 0;
+	this->camera = gcnew Camera(gcnew Vector3D(0, 0, 1000), gcnew Vector3D(0, 0, 0), 1, 5000, 40, false);
+	this->objTotalCount = 0;
 	this->objects = gcnew BindingList<SceneObject ^>();
 }
 

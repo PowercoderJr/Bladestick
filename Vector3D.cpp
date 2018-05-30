@@ -142,6 +142,14 @@ Vector3D ^ Vector3D::clone()
 	return gcnew Vector3D(x, y, z, w, mx, my, mz, mw);
 }
 
+void Vector3D::modifiedToMain()
+{
+	x = mx;
+	y = my;
+	z = mz;
+	w = mw;
+}
+
 bool Vector3D::Equals(Vector3D ^ v)
 {
 	return this->x == v->x && this->y == v->y && this->z == v->z;

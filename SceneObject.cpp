@@ -19,10 +19,11 @@ SceneObject::SceneObject()
 
 	this->vertices = gcnew array<Vector3D ^>(N);
 	this->indices = gcnew array<int>(3 * N);
+	this->normals = gcnew array<Vector3D ^>(N);
 	this->colors = gcnew array<Color>(N);
 }
 
-SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors, String ^ name)
+SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Vector3D^>^ normals, array<Color>^ colors, String ^ name)
 {
 	this->offset = gcnew Vector3D(0, 0, 0);
 	this->scaling = gcnew Vector3D(1, 1, 1);
@@ -30,12 +31,13 @@ SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<
 
 	this->vertices = vertices;
 	this->indices = indices;
+	this->normals = normals;
 	this->colors = colors;
 
 	this->name = gcnew String(name);
 }
 
-SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Color>^ colors) : SceneObject::SceneObject(vertices, indices, colors, "Объект")
+SceneObject::SceneObject(array<Vector3D^>^ vertices, array<int>^ indices, array<Vector3D^>^ normals, array<Color>^ colors) : SceneObject::SceneObject(vertices, indices, normals, colors, "Объект")
 {
 }
 
@@ -202,7 +204,9 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 	}
 	
 	SceneObject ^ result = unite(spikes);
+	result->name = "Шипы";
 	result = unite(gcnew array<SceneObject ^>(3) {bladeRing, cross, result});
+	result->name = "Лезвие целиком";
 	result->moveOriginal(0, bevelBladeRadius, 0);
 
 	const double handleRadius = bladeThickness / 2;
@@ -220,9 +224,11 @@ SceneObject ^ SceneObject::buildBladestick(double handleLength, int handleRingsC
 		handleRings[i]->moveOriginal(0, (i + 1) * handleRingInterval, 0);
 	}
 	SceneObject ^ unitedRings = unite(handleRings);
+	unitedRings->name = "Кольца для рукояти";
 	unitedRings->moveOriginal(0, -handleLength, 0);
 	
 	result = unite(gcnew array<SceneObject ^>(3) { result, handle, unitedRings });
+	result->name = "Лезвиепалка";
 
 	//DEBUG
 	/*int colorsCount = result->indices->Length / 3;
@@ -245,6 +251,7 @@ SceneObject ^ SceneObject::unite(array<SceneObject^>^ components)
 
 	List<Vector3D ^> ^ vTotal = gcnew List<Vector3D ^>(totalVCount);
 	List<int> ^ iTotal = gcnew List<int>(totalICount);
+	List<Vector3D ^> ^ nTotal = gcnew List<Vector3D ^>(totalICount / 3);
 	List<Color> ^ cTotal = gcnew List<Color>(totalICount / 3);
 	for (int i = 0; i < components->Length; ++i)
 	{
@@ -254,10 +261,11 @@ SceneObject ^ SceneObject::unite(array<SceneObject^>^ components)
 		iTotal->AddRange(components[i]->indices);
 		for (int j = iOffset; j < iTotal->Count; ++j)
 			iTotal[j] += vOffset;
+		nTotal->AddRange(components[i]->normals);
 		cTotal->AddRange(components[i]->colors);
 	}
 
-	return gcnew SceneObject(vTotal->ToArray(), iTotal->ToArray(), cTotal->ToArray());
+	return gcnew SceneObject(vTotal->ToArray(), iTotal->ToArray(), nTotal->ToArray(), cTotal->ToArray());
 }
 
 //vertices: nEdges * 2 + 2
@@ -266,17 +274,16 @@ SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges,
 {
 	const int INDICES_MUL = 12;
 	Vector3D ^ bottomCenter = gcnew Vector3D(0, -height / 2, 0);
-	Vector3D ^ topCenter = bottomCenter->add(0, height, 0);
+	Vector3D ^ topCenter = gcnew Vector3D(0, height / 2, 0);
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(nEdges * 2 + 2);
 	array<int> ^ iArr = gcnew array<int>(nEdges * INDICES_MUL);
+	array<Vector3D ^> ^ nArr = gcnew array<Vector3D ^>(nEdges * INDICES_MUL / 3);
 	array<Color> ^ cArr = gcnew array<Color>(nEdges * INDICES_MUL / 3);
 
-	Vector3D bc = *bottomCenter;
-	vArr[0] = %bc;
-	Vector3D tc = *topCenter;
-	vArr[nEdges + 1] = %tc;
+	vArr[0] = bottomCenter->clone();
+	vArr[nEdges + 1] = topCenter->clone();
 
-	const double FACETS_PER_ITERATION = INDICES_MUL / 3;
+	const int FACETS_PER_ITERATION = INDICES_MUL / 3;
 	double dAlpha = degToRad(360.0 / nEdges);
 	double alpha = degToRad(-90);
 	for (int i = 1; i <= nEdges; ++i)
@@ -320,7 +327,21 @@ SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges,
 	iArr[closing + 10] = iArr[closing + 4];
 	iArr[closing + 11] = iArr[closing + 1];
 
-	return gcnew SceneObject(vArr, iArr, cArr);
+	for (int i = 0; i < nEdges - 1; ++i)
+	{
+		int mi = i * FACETS_PER_ITERATION;
+		nArr[mi] = (vArr[i + 2] - vArr[0])->normalized()->vectorProduct((vArr[i + 1] - vArr[0])->normalized())->normalized();
+		nArr[mi + 1] = (vArr[nEdges + i + 2] - vArr[nEdges + 1])->normalized()->vectorProduct((vArr[nEdges + i + 3] - vArr[nEdges + 1])->normalized())->normalized();
+		nArr[mi + 2] = (vArr[nEdges + i + 3] - vArr[i + 2])->normalized()->vectorProduct((vArr[i + 1] - vArr[i + 2])->normalized())->normalized();
+		nArr[mi + 3] = nArr[mi + 2]->clone();
+	}
+	int closing2 = (nEdges - 1) * FACETS_PER_ITERATION;
+	nArr[closing2] = (vArr[1] - vArr[0])->normalized()->vectorProduct((vArr[nEdges] - vArr[0])->normalized())->normalized();
+	nArr[closing2 + 1] = (vArr[nEdges * 2 - 1] - vArr[nEdges + 1])->normalized()->vectorProduct((vArr[nEdges + 2] - vArr[nEdges + 1])->normalized())->normalized();
+	nArr[closing2 + 2] = (vArr[nEdges + 2] - vArr[1])->normalized()->vectorProduct((vArr[nEdges] - vArr[1])->normalized())->normalized();
+	nArr[closing2 + 3] = nArr[closing2 + 2]->clone();
+
+	return gcnew SceneObject(vArr, iArr, nArr, cArr, "Рукоять");
 }
 
 //vertices: nEdges * 5
@@ -332,6 +353,7 @@ SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, d
 	Vector3D ^ farCenter = nearCenter->add(0, 0, thickness);
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(nEdges * 5);
 	array<int> ^ iArr = gcnew array<int>(nEdges * INDICES_MUL);
+	array<Vector3D ^> ^ nArr = gcnew array<Vector3D ^>(nEdges * INDICES_MUL / 3);
 	array<Color> ^ cArr = gcnew array<Color>(nEdges * INDICES_MUL / 3);
 
 	double const FACETS_PER_ITERATION = INDICES_MUL / 3;
@@ -440,7 +462,33 @@ SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, d
 	iArr[closing + 28] = nEdges * 5;
 	iArr[closing + 29] = nEdges * 4 + 1;
 
-	return gcnew SceneObject(vArr, iArr, cArr);
+	for (int i = 0; i < nEdges - 1; ++i)
+	{
+		int mi = i * FACETS_PER_ITERATION;
+		nArr[mi] = (vArr[nEdges + i] - vArr[nEdges + i + 1])->normalized()->vectorProduct((vArr[i] - vArr[nEdges + i])->normalized())->normalized();
+		nArr[mi + 1] = nArr[mi]->clone();
+		nArr[mi + 2] = Vector3D::BACK->clone();
+		nArr[mi + 3] = nArr[mi + 2]->clone();
+		nArr[mi + 4] = (vArr[nEdges * 3 + i] - vArr[nEdges * 2 + i])->normalized()->vectorProduct((vArr[nEdges * 2 + i] - vArr[nEdges * 2 + i + 1])->normalized())->normalized();
+		nArr[mi + 5] = nArr[mi + 4]->clone();
+		nArr[mi + 6] = Vector3D::FORTH->clone();
+		nArr[mi + 7] = nArr[mi + 6]->clone();
+		nArr[mi + 8] = (vArr[i] - vArr[i + 1])->normalized()->vectorProduct((vArr[nEdges * 4 + i] - vArr[i])->normalized())->normalized();
+		nArr[mi + 9] = nArr[mi + 8]->clone();
+	}
+	int closing2 = (nEdges - 1) * FACETS_PER_ITERATION;
+	nArr[closing2] = (vArr[nEdges * 2 - 1] - vArr[nEdges])->normalized()->vectorProduct((vArr[nEdges - 1] - vArr[nEdges * 2 - 1])->normalized())->normalized();
+	nArr[closing2 + 1] = nArr[closing2]->clone();
+	nArr[closing2 + 2] = Vector3D::BACK->clone();
+	nArr[closing2 + 3] = nArr[closing2 + 2]->clone();
+	nArr[closing2 + 4] = (vArr[nEdges * 4 - 1] - vArr[nEdges * 3 - 1])->normalized()->vectorProduct((vArr[nEdges * 2] - vArr[nEdges * 3 - 1])->normalized())->normalized();
+	nArr[closing2 + 5] = nArr[closing2 + 4]->clone();
+	nArr[closing2 + 6] = Vector3D::FORTH->clone();
+	nArr[closing2 + 7] = nArr[closing2 + 6]->clone();
+	nArr[closing2 + 8] = (vArr[nEdges - 1] - vArr[0])->normalized()->vectorProduct((vArr[nEdges * 5 - 1] - vArr[nEdges - 1])->normalized())->normalized();
+	nArr[closing2 + 9] = nArr[closing2 + 8]->clone();
+
+	return gcnew SceneObject(vArr, iArr, nArr, cArr, "Кольцевое лезвие");
 }
 
 //vertices: 24
@@ -450,6 +498,7 @@ SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThi
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(24);
 	const int N_FACETS = 36;
 	array<int> ^ iArr = gcnew array<int>(N_FACETS * 3);
+	array<Vector3D ^> ^ nArr = gcnew array<Vector3D ^>(N_FACETS);
 	array<Color> ^ cArr = gcnew array<Color>(N_FACETS);
 
 	double hWidth = pWidth / 2;
@@ -611,7 +660,27 @@ SceneObject ^ SceneObject::buildCross(double pLength, double pWidth, double pThi
 	for (int i = 0; i < N_FACETS; ++i)
 		cArr[i] = palette[0];
 
-	return gcnew SceneObject(vArr, iArr, cArr);
+	array<Vector3D ^> ^ dirs1 = gcnew array<Vector3D ^>(4) {Vector3D::BACK, Vector3D::DOWN, Vector3D::FORTH, Vector3D::UP};
+	array<Vector3D ^> ^ dirs2 = gcnew array<Vector3D ^>(4) {Vector3D::BACK, Vector3D::LEFT, Vector3D::FORTH, Vector3D::RIGHT};
+	for (int i = 0; i < 4; ++i)
+	{
+		nArr[i * 2] = dirs1[i]->clone();
+		nArr[i * 2 + 1] = dirs1[i]->clone();
+		nArr[i * 2 + 16] = dirs1[i]->clone();
+		nArr[i * 2 + 17] = dirs1[i]->clone();
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+		nArr[i * 2 + 8] = dirs2[i]->clone();
+		nArr[i * 2 + 9] = dirs2[i]->clone();
+		nArr[i * 2 + 24] = dirs2[i]->clone();
+		nArr[i * 2 + 25] = dirs2[i]->clone();
+	}
+	nArr[32] = Vector3D::BACK->clone();
+	nArr[33] = Vector3D::BACK->clone();
+	nArr[34] = Vector3D::FORTH->clone();
+	nArr[35] = Vector3D::FORTH->clone();
+	return gcnew SceneObject(vArr, iArr, nArr, cArr, "Крест");
 }
 
 //vertices: 14
@@ -621,6 +690,7 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(14);
 	const double N_FACETS = 14;
 	array<int> ^ iArr = gcnew array<int>(N_FACETS * 3);
+	array<Vector3D ^> ^ nArr = gcnew array<Vector3D ^>(N_FACETS);
 	array<Color> ^ cArr = gcnew array<Color>(N_FACETS);
 
 	const double alpha = degToRad(alphaDeg);
@@ -664,110 +734,86 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	iArr[1] = 2;
 	iArr[2] = 8;
 	cArr[0] = palette[1];
+	nArr[0] = (vArr[7] - vArr[3])->normalized()->vectorProduct((vArr[1] - vArr[3])->normalized())->normalized();
 
 	iArr[3] = 1;
 	iArr[4] = 2;
 	iArr[5] = 9;
 	cArr[1] = palette[1];
+	nArr[1] = (vArr[8] - vArr[4])->normalized()->vectorProduct((vArr[4] - vArr[1])->normalized())->normalized();
 
 	iArr[6] = 2;
 	iArr[7] = 8;
 	iArr[8] = 4;
 	cArr[2] = palette[1];
+	nArr[2] = nArr[0]->clone();
 
 	iArr[9] = 2;
 	iArr[10] = 9;
 	iArr[11] = 5;
 	cArr[3] = palette[1];
+	nArr[3] = nArr[1]->clone();
 
 	iArr[12] = 1;
 	iArr[13] = 3;
 	iArr[14] = 8;
 	cArr[4] = palette[1];
+	nArr[4] = (vArr[7] - vArr[2])->normalized()->vectorProduct((vArr[5] - vArr[2])->normalized())->normalized();
 
 	iArr[15] = 1;
 	iArr[16] = 3;
 	iArr[17] = 9;
 	cArr[5] = palette[1];
+	nArr[5] = (vArr[8] - vArr[6])->normalized()->vectorProduct((vArr[2] - vArr[6])->normalized())->normalized();
 
 	iArr[18] = 3;
 	iArr[19] = 8;
 	iArr[20] = 6;
 	cArr[6] = palette[1];
+	nArr[6] = nArr[4]->clone();
 
 	iArr[21] = 3;
 	iArr[22] = 9;
 	iArr[23] = 7;
 	cArr[7] = palette[1];
+	nArr[7] = nArr[5]->clone();
 	
 	iArr[24] = 4;
 	iArr[25] = 8;
 	iArr[26] = 6;
 	cArr[8] = palette[0];
+	nArr[8] = Vector3D::BACK->clone();
 
 	iArr[27] = 5;
 	iArr[28] = 9;
 	iArr[29] = 7;
 	cArr[9] = palette[0];
+	nArr[9] = Vector3D::FORTH->clone();
 
 	//Внутренняя часть
 	iArr[30] = 14;
 	iArr[31] = 10;
 	iArr[32] = 11;
 	cArr[10] = palette[0];
+	nArr[10] = (vArr[10] - vArr[9])->normalized()->vectorProduct((vArr[13] - vArr[9])->normalized())->normalized();
 
 	iArr[33] = 14;
 	iArr[34] = 11;
 	iArr[35] = 12;
 	cArr[11] = palette[0];
+	nArr[11] = (vArr[11] - vArr[10])->normalized()->vectorProduct((vArr[13] - vArr[10])->normalized())->normalized();
 	
 	iArr[36] = 14;
 	iArr[37] = 12;
 	iArr[38] = 13;
 	cArr[12] = palette[0];
+	nArr[12] = (vArr[12] - vArr[11])->normalized()->vectorProduct((vArr[13] - vArr[11])->normalized())->normalized();
 
 	iArr[39] = 14;
 	iArr[40] = 13;
 	iArr[41] = 10;
 	cArr[13] = palette[0];
+	nArr[13] = (vArr[9] - vArr[12])->normalized()->vectorProduct((vArr[13] - vArr[12])->normalized())->normalized();
 
-
-	//Старый вариант
-	/*vArr[0] = inV;
-	vArr[1] = inCenter - sideVec;
-	vArr[2] = inCenter->subtract(0, 0, thickness / 2);
-	vArr[3] = inCenter + sideVec;
-	vArr[4] = inCenter->add(0, 0, thickness / 2);
-	vArr[5] = exCenter - sideVec;
-	vArr[6] = exCenter->subtract(0, 0, thickness / 2);
-	vArr[7] = exCenter + sideVec;
-	vArr[8] = exCenter->add(0, 0, thickness / 2);
-	vArr[9] = exV;
-
-	iArr[0] = 1;
-	iArr[1] = 2;
-	iArr[2] = 3;
-	iArr[3] = 1;
-	iArr[4] = 3;
-	iArr[5] = 4;
-	iArr[6] = 1;
-	iArr[7] = 4;
-	iArr[8] = 5;
-	iArr[9] = 1;
-	iArr[10] = 5;
-	iArr[11] = 2;
-	iArr[12] = 10;
-	iArr[13] = 6;
-	iArr[14] = 7;
-	iArr[15] = 10;
-	iArr[16] = 7;
-	iArr[17] = 8;
-	iArr[18] = 10;
-	iArr[19] = 8;
-	iArr[20] = 9;
-	iArr[21] = 10;
-	iArr[22] = 9;
-	iArr[23] = 6;*/
-
-	return gcnew SceneObject(vArr, iArr, cArr);
+	return gcnew SceneObject(vArr, iArr, nArr, cArr, "Шип");
 }

@@ -61,6 +61,7 @@ namespace Bladestick
 			Vector3D ^ rotation; //Углы поворотов в градусах
 			array<Vector3D ^> ^ vertices; //Вершины
 			array<int> ^ indices; //Индексы вершин, образующих треугольники
+			array<Vector3D ^> ^ normals; //Нормали
 			array<System::Drawing::Color> ^ colors; //Цвета треугольников
 			System::String ^ name;
 
@@ -106,8 +107,10 @@ namespace Bladestick
 			static System::Drawing::Color DEFAULT_COLOR_3 = System::Drawing::Color::LightGray;
 
 			SceneObject();
-			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors, System::String ^ name);
-			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<System::Drawing::Color> ^ colors);
+			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<Vector3D ^> ^ normals,
+				array<System::Drawing::Color> ^ colors, System::String ^ name);
+			SceneObject(array<Vector3D ^> ^ vertices, array<int> ^ indices, array<Vector3D ^> ^ normals,
+				array<System::Drawing::Color> ^ colors);
 			void transform();
 			void setOffset(double x, double y, double z);
 			void setOffset(Vector3D ^ offset);

@@ -23,6 +23,12 @@ namespace Bladestick
 			Vector3D(double x, double y, double z);
 			Vector3D(const Vector3D %vector);
 			Vector3D();
+			static Vector3D ^ UP = gcnew Vector3D(0, 1, 0);
+			static Vector3D ^ DOWN = gcnew Vector3D(0, -1, 0);
+			static Vector3D ^ LEFT = gcnew Vector3D(-1, 0, 0);
+			static Vector3D ^ RIGHT = gcnew Vector3D(1, 0, 0);
+			static Vector3D ^ FORTH = gcnew Vector3D(0, 0, -1);
+			static Vector3D ^ BACK = gcnew Vector3D(0, 0, 1);
 			Vector3D operator= (Vector3D vector);
 			Vector3D ^ operator= (Vector3D ^ vector);
 			Vector3D ^ add(double x, double y, double z);
@@ -41,6 +47,7 @@ namespace Bladestick
 			Vector3D ^ vectorProduct(double x, double y, double z);
 			Vector3D ^ vectorProduct(Vector3D ^ v);
 			Vector3D ^ clone();
+			void modifiedToMain();
 			bool Equals(Vector3D ^ v) override;
 		};
 	}

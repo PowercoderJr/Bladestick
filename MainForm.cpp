@@ -185,6 +185,7 @@ void MainForm::applyObjParams()
 	SceneObject ^ so = safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0]);
 	so->vertices = newSO->vertices;
 	so->indices = newSO->indices;
+	so->normals = newSO->normals;
 	so->colors = newSO->colors;
 	so->transform();
 

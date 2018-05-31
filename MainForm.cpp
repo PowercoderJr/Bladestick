@@ -62,6 +62,11 @@ MainForm::MainForm(void)
 	redrawScene();
 }
 
+Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
+{
+	//TODO
+}
+
 Void MainForm::onDrawMethodChanged(Object ^ sender, EventArgs ^ e)
 {
 	redrawScene();
@@ -120,7 +125,11 @@ void MainForm::redrawScene()
 		drawFlags |= DRAW_EDGES;
 	if (drawFillChb->Checked)
 		drawFlags |= DRAW_FILL;
-	scene->drawObjectsToBuffer(drawFlags, useRandomPaletteChb->Checked);
+	if (useRandomPaletteChb->Checked)
+		drawFlags |= USE_RND_COLORS;
+	if (simulateLightChb->Checked)
+		drawFlags |= SIMULATE_LIGHT;
+	scene->drawObjectsToBuffer(drawFlags);
 	scene->render(g);
 }
 

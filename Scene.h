@@ -11,7 +11,9 @@ namespace Bladestick
 		public enum DrawFlags
 		{
 			DRAW_EDGES = 1,
-			DRAW_FILL = 1 << 1
+			DRAW_FILL = 1 << 1,
+			USE_RND_COLORS = 1 << 2,
+			SIMULATE_LIGHT = 1 << 3
 		};
 
 		public ref class Scene
@@ -46,9 +48,8 @@ namespace Bladestick
 			int getWidth();
 			int getHeight();
 			void clear();
-			void drawToBuffer(SceneObject ^ obj, char drawFlags, bool useRandomPalette);
 			void drawToBuffer(SceneObject ^ obj, char drawFlags);
-			void drawObjectsToBuffer(char drawFlags, bool useRandomPalette);
+			void drawObjectsToBuffer(char drawFlags);
 			void render(System::Drawing::Graphics ^ g);
 			System::Drawing::Color getBgColor();
 			void setBgColor(System::Drawing::Color color);

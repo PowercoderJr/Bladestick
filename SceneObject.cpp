@@ -51,19 +51,6 @@ void SceneObject::transform()
 #define cos Math::Cos
 	for each (Vector3D ^ v in vertices)
 	{
-		//Масштабирование, вращение, смещение
-		/*Было
-		v->mx = offset->x + cos(gamma) * (v->x * scaling->x * cos(beta) +
-				(v->z * scaling->z * cos(alpha) + v->y * scaling->y * sin(alpha)) *
-				sin(beta)) - (v->y * scaling->y * cos(alpha) - v->z * scaling->z *
-				sin(alpha)) * sin(gamma);
-		v->my = offset->y + cos(gamma) * (v->y * scaling->y * cos(alpha) - v->z *
-				scaling->z * sin(alpha)) + (v->x * scaling->x * cos(beta) +
-				(v->z* scaling->z * cos(alpha) + v->y * scaling->y * sin(alpha)) *
-				sin(beta)) * sin(gamma);
-		v->mz = offset->z + cos(beta) * (v->z* scaling->z * cos(alpha) + v->y *
-				scaling->y * sin(alpha)) - v->x * scaling->x * sin(beta);
-				*/
 		v->mx = offset->x + scaling->x * (cos(gamma) * (v->x * cos(beta) +
 				(v->z * cos(alpha) + v->y * sin(alpha)) * sin(beta)) - (cos(alpha) *
 				v->y - v->z * sin(alpha)) * sin(gamma));

@@ -134,7 +134,8 @@ namespace Bladestick
 		System::Windows::Forms::RadioButton^  pProjectionRb;
 		Drawing::Scene ^ scene;
 		array<Control ^> ^ selectionDependedControls;
-		bool autoApplyTransform;
+private: System::Windows::Forms::CheckBox^  simulateLightChb;
+		 bool autoApplyTransform;
 		void redrawScene();
 		void applyObjTransform(Object ^ sender);
 		void applyObjParams();
@@ -272,6 +273,14 @@ namespace Bladestick
 			this->label22 = (gcnew System::Windows::Forms::Label());
 			this->label21 = (gcnew System::Windows::Forms::Label());
 			this->placeCameraRelativeCb = (gcnew System::Windows::Forms::ComboBox());
+			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
+			this->fovLabel = (gcnew System::Windows::Forms::Label());
+			this->fovInput = (gcnew System::Windows::Forms::TrackBar());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->farPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->nearPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->cameraRoll = (gcnew System::Windows::Forms::NumericUpDown());
 			this->cameraPitch = (gcnew System::Windows::Forms::NumericUpDown());
@@ -285,6 +294,9 @@ namespace Bladestick
 			this->label18 = (gcnew System::Windows::Forms::Label());
 			this->label19 = (gcnew System::Windows::Forms::Label());
 			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
+			this->cProjectionRb = (gcnew System::Windows::Forms::RadioButton());
+			this->pProjectionRb = (gcnew System::Windows::Forms::RadioButton());
 			this->renderControllerPanel = (gcnew System::Windows::Forms::Panel());
 			this->groupBox7 = (gcnew System::Windows::Forms::GroupBox());
 			this->edgesColorBtn = (gcnew System::Windows::Forms::Button());
@@ -292,20 +304,10 @@ namespace Bladestick
 			this->sceneBgColorBtn = (gcnew System::Windows::Forms::Button());
 			this->label27 = (gcnew System::Windows::Forms::Label());
 			this->groupBox6 = (gcnew System::Windows::Forms::GroupBox());
+			this->simulateLightChb = (gcnew System::Windows::Forms::CheckBox());
 			this->useRandomPaletteChb = (gcnew System::Windows::Forms::CheckBox());
 			this->drawFillChb = (gcnew System::Windows::Forms::CheckBox());
 			this->drawEdgesChb = (gcnew System::Windows::Forms::CheckBox());
-			this->groupBox5 = (gcnew System::Windows::Forms::GroupBox());
-			this->fovLabel = (gcnew System::Windows::Forms::Label());
-			this->fovInput = (gcnew System::Windows::Forms::TrackBar());
-			this->label26 = (gcnew System::Windows::Forms::Label());
-			this->farPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
-			this->nearPlaneInput = (gcnew System::Windows::Forms::NumericUpDown());
-			this->label25 = (gcnew System::Windows::Forms::Label());
-			this->label23 = (gcnew System::Windows::Forms::Label());
-			this->groupBox4 = (gcnew System::Windows::Forms::GroupBox());
-			this->cProjectionRb = (gcnew System::Windows::Forms::RadioButton());
-			this->pProjectionRb = (gcnew System::Windows::Forms::RadioButton());
 			this->controllersPanel = (gcnew System::Windows::Forms::Panel());
 			this->menuStrip->SuspendLayout();
 			this->objControllerPanel->SuspendLayout();
@@ -339,6 +341,10 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosZ))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosY))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosX))->BeginInit();
+			this->groupBox5->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->BeginInit();
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRoll))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPitch))->BeginInit();
@@ -349,14 +355,10 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosZ))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosY))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosX))->BeginInit();
+			this->groupBox4->SuspendLayout();
 			this->renderControllerPanel->SuspendLayout();
 			this->groupBox7->SuspendLayout();
 			this->groupBox6->SuspendLayout();
-			this->groupBox5->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->BeginInit();
-			this->groupBox4->SuspendLayout();
 			this->controllersPanel->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -426,7 +428,8 @@ namespace Bladestick
 			// ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem
 			// 
 			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Name = L"ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem";
-			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D1));
+			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Size = System::Drawing::Size(278, 22);
 			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Tag = L"0";
 			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Text = L"Ïóëüò óïðàâëåíèÿ îáúåêòàìè";
 			this->ïóëüòÓïðàâëåíèÿÎáúåêòàìèToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
@@ -434,7 +437,8 @@ namespace Bladestick
 			// ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem
 			// 
 			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Name = L"ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem";
-			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D2));
+			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Size = System::Drawing::Size(278, 22);
 			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Tag = L"1";
 			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Text = L"Ïóëüò óïðàâëåíèÿ êàìåðîé";
 			this->ïóëüòÓïðàâëåíèÿÊàìåðîéToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
@@ -442,7 +446,8 @@ namespace Bladestick
 			// íàñòðîéêèÐåíäåðàToolStripMenuItem
 			// 
 			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Name = L"íàñòðîéêèÐåíäåðàToolStripMenuItem";
-			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Size = System::Drawing::Size(238, 22);
+			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D3));
+			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Size = System::Drawing::Size(278, 22);
 			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Tag = L"2";
 			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Text = L"Íàñòðîéêè ðåíäåðà";
 			this->íàñòðîéêèÐåíäåðàToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::controllerPanelSwitch_Click);
@@ -1058,7 +1063,7 @@ namespace Bladestick
 			this->canvas->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->canvas->Location = System::Drawing::Point(310, 24);
 			this->canvas->Name = L"canvas";
-			this->canvas->Size = System::Drawing::Size(954, 740);
+			this->canvas->Size = System::Drawing::Size(954, 808);
 			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
 			this->canvas->Resize += gcnew System::EventHandler(this, &MainForm::canvas_Resize);
@@ -1068,7 +1073,9 @@ namespace Bladestick
 			this->cameraControllerPanel->AutoScroll = true;
 			this->cameraControllerPanel->Controls->Add(this->groupBox3);
 			this->cameraControllerPanel->Controls->Add(this->groupBox2);
+			this->cameraControllerPanel->Controls->Add(this->groupBox5);
 			this->cameraControllerPanel->Controls->Add(this->groupBox1);
+			this->cameraControllerPanel->Controls->Add(this->groupBox4);
 			this->cameraControllerPanel->Location = System::Drawing::Point(296, 13);
 			this->cameraControllerPanel->Name = L"cameraControllerPanel";
 			this->cameraControllerPanel->Size = System::Drawing::Size(310, 740);
@@ -1201,6 +1208,93 @@ namespace Bladestick
 			this->placeCameraRelativeCb->Size = System::Drawing::Size(206, 21);
 			this->placeCameraRelativeCb->TabIndex = 0;
 			this->placeCameraRelativeCb->SelectedValueChanged += gcnew System::EventHandler(this, &MainForm::placeCameraRelativeCb_SelectedValueChanged);
+			// 
+			// groupBox5
+			// 
+			this->groupBox5->Controls->Add(this->fovLabel);
+			this->groupBox5->Controls->Add(this->fovInput);
+			this->groupBox5->Controls->Add(this->label26);
+			this->groupBox5->Controls->Add(this->farPlaneInput);
+			this->groupBox5->Controls->Add(this->nearPlaneInput);
+			this->groupBox5->Controls->Add(this->label25);
+			this->groupBox5->Controls->Add(this->label23);
+			this->groupBox5->Location = System::Drawing::Point(8, 417);
+			this->groupBox5->Name = L"groupBox5";
+			this->groupBox5->Size = System::Drawing::Size(280, 134);
+			this->groupBox5->TabIndex = 1;
+			this->groupBox5->TabStop = false;
+			this->groupBox5->Text = L"Ïèðàìèäà âèäèìîñòè";
+			// 
+			// fovLabel
+			// 
+			this->fovLabel->AutoSize = true;
+			this->fovLabel->Location = System::Drawing::Point(87, 65);
+			this->fovLabel->Name = L"fovLabel";
+			this->fovLabel->Size = System::Drawing::Size(19, 13);
+			this->fovLabel->TabIndex = 6;
+			this->fovLabel->Text = L"40";
+			// 
+			// fovInput
+			// 
+			this->fovInput->Location = System::Drawing::Point(6, 82);
+			this->fovInput->Maximum = 180;
+			this->fovInput->Name = L"fovInput";
+			this->fovInput->Size = System::Drawing::Size(268, 45);
+			this->fovInput->TabIndex = 5;
+			this->fovInput->TickFrequency = 10;
+			this->fovInput->Value = 40;
+			this->fovInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFovInputValueChanged);
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Location = System::Drawing::Point(6, 65);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(75, 13);
+			this->label26->TabIndex = 4;
+			this->label26->Text = L"Ïîëå çðåíèÿ:";
+			// 
+			// farPlaneInput
+			// 
+			this->farPlaneInput->DecimalPlaces = 2;
+			this->farPlaneInput->Location = System::Drawing::Point(190, 41);
+			this->farPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->farPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->farPlaneInput->Name = L"farPlaneInput";
+			this->farPlaneInput->Size = System::Drawing::Size(64, 20);
+			this->farPlaneInput->TabIndex = 3;
+			this->farPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5000, 0, 0, 0 });
+			this->farPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
+			// 
+			// nearPlaneInput
+			// 
+			this->nearPlaneInput->DecimalPlaces = 2;
+			this->nearPlaneInput->Location = System::Drawing::Point(190, 17);
+			this->nearPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
+			this->nearPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nearPlaneInput->Name = L"nearPlaneInput";
+			this->nearPlaneInput->Size = System::Drawing::Size(64, 20);
+			this->nearPlaneInput->TabIndex = 2;
+			this->nearPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nearPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Location = System::Drawing::Point(6, 43);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(178, 13);
+			this->label25->TabIndex = 1;
+			this->label25->Text = L"Äàëüíÿÿ îòñåêàþùàÿ ïëîñêîñòü:";
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Location = System::Drawing::Point(6, 19);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(178, 13);
+			this->label23->TabIndex = 0;
+			this->label23->Text = L"Áëèæíÿÿ îòñåêàþùàÿ ïëîñêîñòü:";
 			// 
 			// groupBox1
 			// 
@@ -1351,13 +1445,46 @@ namespace Bladestick
 			this->label20->TabIndex = 0;
 			this->label20->Text = L"Ïîçèöèÿ:";
 			// 
+			// groupBox4
+			// 
+			this->groupBox4->Controls->Add(this->cProjectionRb);
+			this->groupBox4->Controls->Add(this->pProjectionRb);
+			this->groupBox4->Location = System::Drawing::Point(8, 347);
+			this->groupBox4->Name = L"groupBox4";
+			this->groupBox4->Size = System::Drawing::Size(280, 64);
+			this->groupBox4->TabIndex = 0;
+			this->groupBox4->TabStop = false;
+			this->groupBox4->Text = L"Âèä ïðîåöèðîâàíèÿ";
+			// 
+			// cProjectionRb
+			// 
+			this->cProjectionRb->AutoSize = true;
+			this->cProjectionRb->Location = System::Drawing::Point(6, 42);
+			this->cProjectionRb->Name = L"cProjectionRb";
+			this->cProjectionRb->Size = System::Drawing::Size(90, 17);
+			this->cProjectionRb->TabIndex = 1;
+			this->cProjectionRb->Text = L"öåíòðàëüíîå";
+			this->cProjectionRb->UseVisualStyleBackColor = true;
+			this->cProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
+			// 
+			// pProjectionRb
+			// 
+			this->pProjectionRb->AutoSize = true;
+			this->pProjectionRb->Checked = true;
+			this->pProjectionRb->Location = System::Drawing::Point(6, 19);
+			this->pProjectionRb->Name = L"pProjectionRb";
+			this->pProjectionRb->Size = System::Drawing::Size(97, 17);
+			this->pProjectionRb->TabIndex = 0;
+			this->pProjectionRb->TabStop = true;
+			this->pProjectionRb->Text = L"ïàðàëëåëüíîå";
+			this->pProjectionRb->UseVisualStyleBackColor = true;
+			this->pProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
+			// 
 			// renderControllerPanel
 			// 
 			this->renderControllerPanel->AutoScroll = true;
 			this->renderControllerPanel->Controls->Add(this->groupBox7);
 			this->renderControllerPanel->Controls->Add(this->groupBox6);
-			this->renderControllerPanel->Controls->Add(this->groupBox5);
-			this->renderControllerPanel->Controls->Add(this->groupBox4);
 			this->renderControllerPanel->Location = System::Drawing::Point(0, 51);
 			this->renderControllerPanel->Name = L"renderControllerPanel";
 			this->renderControllerPanel->Size = System::Drawing::Size(310, 740);
@@ -1369,7 +1496,7 @@ namespace Bladestick
 			this->groupBox7->Controls->Add(this->label28);
 			this->groupBox7->Controls->Add(this->sceneBgColorBtn);
 			this->groupBox7->Controls->Add(this->label27);
-			this->groupBox7->Location = System::Drawing::Point(8, 311);
+			this->groupBox7->Location = System::Drawing::Point(8, 124);
 			this->groupBox7->Name = L"groupBox7";
 			this->groupBox7->Size = System::Drawing::Size(280, 79);
 			this->groupBox7->TabIndex = 3;
@@ -1416,15 +1543,29 @@ namespace Bladestick
 			// 
 			// groupBox6
 			// 
+			this->groupBox6->Controls->Add(this->simulateLightChb);
 			this->groupBox6->Controls->Add(this->useRandomPaletteChb);
 			this->groupBox6->Controls->Add(this->drawFillChb);
 			this->groupBox6->Controls->Add(this->drawEdgesChb);
-			this->groupBox6->Location = System::Drawing::Point(8, 219);
+			this->groupBox6->Location = System::Drawing::Point(8, 9);
 			this->groupBox6->Name = L"groupBox6";
-			this->groupBox6->Size = System::Drawing::Size(280, 86);
+			this->groupBox6->Size = System::Drawing::Size(280, 109);
 			this->groupBox6->TabIndex = 2;
 			this->groupBox6->TabStop = false;
 			this->groupBox6->Text = L"Ñïîñîá ðèñîâàíèÿ";
+			// 
+			// simulateLightChb
+			// 
+			this->simulateLightChb->AutoSize = true;
+			this->simulateLightChb->Checked = true;
+			this->simulateLightChb->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->simulateLightChb->Location = System::Drawing::Point(6, 88);
+			this->simulateLightChb->Name = L"simulateLightChb";
+			this->simulateLightChb->Size = System::Drawing::Size(159, 17);
+			this->simulateLightChb->TabIndex = 3;
+			this->simulateLightChb->Text = L"Ñèìóëèðîâàòü îñâåùåíèå";
+			this->simulateLightChb->UseVisualStyleBackColor = true;
+			this->simulateLightChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onDrawMethodChanged);
 			// 
 			// useRandomPaletteChb
 			// 
@@ -1462,128 +1603,6 @@ namespace Bladestick
 			this->drawEdgesChb->UseVisualStyleBackColor = true;
 			this->drawEdgesChb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onDrawMethodChanged);
 			// 
-			// groupBox5
-			// 
-			this->groupBox5->Controls->Add(this->fovLabel);
-			this->groupBox5->Controls->Add(this->fovInput);
-			this->groupBox5->Controls->Add(this->label26);
-			this->groupBox5->Controls->Add(this->farPlaneInput);
-			this->groupBox5->Controls->Add(this->nearPlaneInput);
-			this->groupBox5->Controls->Add(this->label25);
-			this->groupBox5->Controls->Add(this->label23);
-			this->groupBox5->Location = System::Drawing::Point(8, 79);
-			this->groupBox5->Name = L"groupBox5";
-			this->groupBox5->Size = System::Drawing::Size(280, 134);
-			this->groupBox5->TabIndex = 1;
-			this->groupBox5->TabStop = false;
-			this->groupBox5->Text = L"Ïèðàìèäà âèäèìîñòè";
-			// 
-			// fovLabel
-			// 
-			this->fovLabel->AutoSize = true;
-			this->fovLabel->Location = System::Drawing::Point(87, 65);
-			this->fovLabel->Name = L"fovLabel";
-			this->fovLabel->Size = System::Drawing::Size(19, 13);
-			this->fovLabel->TabIndex = 6;
-			this->fovLabel->Text = L"40";
-			// 
-			// fovInput
-			// 
-			this->fovInput->Location = System::Drawing::Point(6, 82);
-			this->fovInput->Maximum = 180;
-			this->fovInput->Name = L"fovInput";
-			this->fovInput->Size = System::Drawing::Size(268, 45);
-			this->fovInput->TabIndex = 5;
-			this->fovInput->TickFrequency = 10;
-			this->fovInput->Value = 40;
-			this->fovInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFovInputValueChanged);
-			// 
-			// label26
-			// 
-			this->label26->AutoSize = true;
-			this->label26->Location = System::Drawing::Point(6, 65);
-			this->label26->Name = L"label26";
-			this->label26->Size = System::Drawing::Size(75, 13);
-			this->label26->TabIndex = 4;
-			this->label26->Text = L"Ïîëå çðåíèÿ:";
-			// 
-			// farPlaneInput
-			// 
-			this->farPlaneInput->DecimalPlaces = 2;
-			this->farPlaneInput->Location = System::Drawing::Point(190, 41);
-			this->farPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
-			this->farPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			this->farPlaneInput->Name = L"farPlaneInput";
-			this->farPlaneInput->Size = System::Drawing::Size(64, 20);
-			this->farPlaneInput->TabIndex = 3;
-			this->farPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5000, 0, 0, 0 });
-			this->farPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
-			// 
-			// nearPlaneInput
-			// 
-			this->nearPlaneInput->DecimalPlaces = 2;
-			this->nearPlaneInput->Location = System::Drawing::Point(190, 17);
-			this->nearPlaneInput->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 99999, 0, 0, 0 });
-			this->nearPlaneInput->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			this->nearPlaneInput->Name = L"nearPlaneInput";
-			this->nearPlaneInput->Size = System::Drawing::Size(64, 20);
-			this->nearPlaneInput->TabIndex = 2;
-			this->nearPlaneInput->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			this->nearPlaneInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
-			// 
-			// label25
-			// 
-			this->label25->AutoSize = true;
-			this->label25->Location = System::Drawing::Point(6, 43);
-			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(178, 13);
-			this->label25->TabIndex = 1;
-			this->label25->Text = L"Äàëüíÿÿ îòñåêàþùàÿ ïëîñêîñòü:";
-			// 
-			// label23
-			// 
-			this->label23->AutoSize = true;
-			this->label23->Location = System::Drawing::Point(6, 19);
-			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(178, 13);
-			this->label23->TabIndex = 0;
-			this->label23->Text = L"Áëèæíÿÿ îòñåêàþùàÿ ïëîñêîñòü:";
-			// 
-			// groupBox4
-			// 
-			this->groupBox4->Controls->Add(this->cProjectionRb);
-			this->groupBox4->Controls->Add(this->pProjectionRb);
-			this->groupBox4->Location = System::Drawing::Point(8, 9);
-			this->groupBox4->Name = L"groupBox4";
-			this->groupBox4->Size = System::Drawing::Size(280, 64);
-			this->groupBox4->TabIndex = 0;
-			this->groupBox4->TabStop = false;
-			this->groupBox4->Text = L"Âèä ïðîåöèðîâàíèÿ";
-			// 
-			// cProjectionRb
-			// 
-			this->cProjectionRb->AutoSize = true;
-			this->cProjectionRb->Location = System::Drawing::Point(6, 42);
-			this->cProjectionRb->Name = L"cProjectionRb";
-			this->cProjectionRb->Size = System::Drawing::Size(90, 17);
-			this->cProjectionRb->TabIndex = 1;
-			this->cProjectionRb->Text = L"öåíòðàëüíîå";
-			this->cProjectionRb->UseVisualStyleBackColor = true;
-			this->cProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
-			// 
-			// pProjectionRb
-			// 
-			this->pProjectionRb->AutoSize = true;
-			this->pProjectionRb->Checked = true;
-			this->pProjectionRb->Location = System::Drawing::Point(6, 19);
-			this->pProjectionRb->Name = L"pProjectionRb";
-			this->pProjectionRb->Size = System::Drawing::Size(97, 17);
-			this->pProjectionRb->TabIndex = 0;
-			this->pProjectionRb->TabStop = true;
-			this->pProjectionRb->Text = L"ïàðàëëåëüíîå";
-			this->pProjectionRb->UseVisualStyleBackColor = true;
-			this->pProjectionRb->CheckedChanged += gcnew System::EventHandler(this, &MainForm::onProjectionTypeChanged);
-			// 
 			// controllersPanel
 			// 
 			this->controllersPanel->Controls->Add(this->cameraControllerPanel);
@@ -1592,19 +1611,21 @@ namespace Bladestick
 			this->controllersPanel->Dock = System::Windows::Forms::DockStyle::Left;
 			this->controllersPanel->Location = System::Drawing::Point(0, 24);
 			this->controllersPanel->Name = L"controllersPanel";
-			this->controllersPanel->Size = System::Drawing::Size(310, 740);
+			this->controllersPanel->Size = System::Drawing::Size(310, 808);
 			this->controllersPanel->TabIndex = 8;
 			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1264, 764);
+			this->ClientSize = System::Drawing::Size(1264, 832);
 			this->Controls->Add(this->canvas);
 			this->Controls->Add(this->controllersPanel);
 			this->Controls->Add(this->menuStrip);
+			this->KeyPreview = true;
 			this->Name = L"MainForm";
 			this->Text = L"MainForm";
+			this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::MainForm_KeyPress);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->objControllerPanel->ResumeLayout(false);
@@ -1643,6 +1664,11 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosZ))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosY))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRelativePosX))->EndInit();
+			this->groupBox5->ResumeLayout(false);
+			this->groupBox5->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->EndInit();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraRoll))->EndInit();
@@ -1654,23 +1680,19 @@ namespace Bladestick
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosZ))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosY))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->cameraPosX))->EndInit();
+			this->groupBox4->ResumeLayout(false);
+			this->groupBox4->PerformLayout();
 			this->renderControllerPanel->ResumeLayout(false);
 			this->groupBox7->ResumeLayout(false);
 			this->groupBox7->PerformLayout();
 			this->groupBox6->ResumeLayout(false);
 			this->groupBox6->PerformLayout();
-			this->groupBox5->ResumeLayout(false);
-			this->groupBox5->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fovInput))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->farPlaneInput))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nearPlaneInput))->EndInit();
-			this->groupBox4->ResumeLayout(false);
-			this->groupBox4->PerformLayout();
 			this->controllersPanel->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
+private: System::Void MainForm_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }

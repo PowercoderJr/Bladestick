@@ -134,11 +134,13 @@ namespace Bladestick
 		System::Windows::Forms::RadioButton^  pProjectionRb;
 		Drawing::Scene ^ scene;
 		array<Control ^> ^ selectionDependedControls;
-private: System::Windows::Forms::CheckBox^  simulateLightChb;
-		 bool autoApplyTransform;
+		System::Windows::Forms::CheckBox^  simulateLightChb;
+		bool autoApplyObjTransform;
+		bool autoApplyCameraTransform;
 		void redrawScene();
 		void applyObjTransform(Object ^ sender);
 		void applyObjParams();
+		bool applyCameraTransform(Object ^ sender);
 		void updateObjComboBoxes();
 		void updateCameraTransformInputs();
 		System::Void secondarySpikesCountInput_ValueChanged(System::Object^  sender, System::EventArgs^  e);
@@ -387,32 +389,35 @@ private: System::Windows::Forms::CheckBox^  simulateLightChb;
 			// îáíîâèòüToolStripMenuItem
 			// 
 			this->îáíîâèòüToolStripMenuItem->Name = L"îáíîâèòüToolStripMenuItem";
-			this->îáíîâèòüToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->îáíîâèòüToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F5;
+			this->îáíîâèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->îáíîâèòüToolStripMenuItem->Text = L"Îáíîâèòü";
 			this->îáíîâèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::îáíîâèòüToolStripMenuItem_Click);
 			// 
 			// î÷èñòèòüToolStripMenuItem
 			// 
 			this->î÷èñòèòüToolStripMenuItem->Name = L"î÷èñòèòüToolStripMenuItem";
-			this->î÷èñòèòüToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->î÷èñòèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->î÷èñòèòüToolStripMenuItem->Text = L"Î÷èñòèòü";
 			this->î÷èñòèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::clearObjBtn_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this->toolStripSeparator1->Name = L"toolStripSeparator1";
-			this->toolStripSeparator1->Size = System::Drawing::Size(138, 6);
+			this->toolStripSeparator1->Size = System::Drawing::Size(178, 6);
 			// 
 			// ñîõðàíèòüToolStripMenuItem
 			// 
 			this->ñîõðàíèòüToolStripMenuItem->Name = L"ñîõðàíèòüToolStripMenuItem";
-			this->ñîõðàíèòüToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->ñîõðàíèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
+			this->ñîõðàíèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->ñîõðàíèòüToolStripMenuItem->Text = L"Ñîõðàíèòü...";
 			// 
 			// çàãðóçèòüToolStripMenuItem
 			// 
 			this->çàãðóçèòüToolStripMenuItem->Name = L"çàãðóçèòüToolStripMenuItem";
-			this->çàãðóçèòüToolStripMenuItem->Size = System::Drawing::Size(141, 22);
+			this->çàãðóçèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::O));
+			this->çàãðóçèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->çàãðóçèòüToolStripMenuItem->Text = L"Çàãðóçèòü...";
 			// 
 			// ïóëüòToolStripMenuItem
@@ -511,8 +516,6 @@ private: System::Windows::Forms::CheckBox^  simulateLightChb;
 			// autoApplyParamsChb
 			// 
 			this->autoApplyParamsChb->Appearance = System::Windows::Forms::Appearance::Button;
-			this->autoApplyParamsChb->Checked = true;
-			this->autoApplyParamsChb->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->autoApplyParamsChb->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7));
 			this->autoApplyParamsChb->Location = System::Drawing::Point(5, 402);
 			this->autoApplyParamsChb->Name = L"autoApplyParamsChb";
@@ -1333,8 +1336,8 @@ private: System::Windows::Forms::CheckBox^  simulateLightChb;
 			// 
 			this->cameraPitch->DecimalPlaces = 2;
 			this->cameraPitch->Location = System::Drawing::Point(139, 75);
-			this->cameraPitch->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 90, 0, 0, 0 });
-			this->cameraPitch->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 90, 0, 0, System::Int32::MinValue });
+			this->cameraPitch->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 8999999, 0, 0, 327680 });
+			this->cameraPitch->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 8999999, 0, 0, -2147155968 });
 			this->cameraPitch->Name = L"cameraPitch";
 			this->cameraPitch->Size = System::Drawing::Size(64, 20);
 			this->cameraPitch->TabIndex = 19;

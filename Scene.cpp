@@ -199,6 +199,8 @@ void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color colo
 
 void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 {
+	if ((drawFlags & DRAW_FILL | drawFlags & DRAW_EDGES) == 0) return;
+
 	int vCount = obj->vertices->Length;
 	array<Vector3D ^> ^ vertices = gcnew array<Vector3D ^>(vCount);
 	for (int i = 0; i < vCount; ++i)
@@ -217,15 +219,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 		double ctg = 1 / Math::Tan(vfov / 2);
 		double n = camera->near, f = camera->far;
 		if (camera->perspective)
-		{			
-			//VER_1
-			/*v->mw = v->mz;
-			v->mx = ctg / aspect * v->mx;
-			v->my = ctg * v->my;
-			v->mz = -(2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);*/
-			//-
-
-			//VER_2
+		{		
 			double hfov = camera->fov;
 			double vfov = hfov / width * height;
 			float r = Math::Tan(degToRad(hfov / 2));
@@ -237,7 +231,6 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			v->mx = -((2 * src->mx * n) / (-l + r) + (src->mz * (l + r)) / (l - r));
 			v->my = (2 * src->my * n) / (-b + t) + (src->mz * (b + t)) / (b - t);
 			v->mz = -((2 * f * n) / (f - n) + (src->mz * (f + n)) / (f - n));
-			//-
 
 			if (v->mw != 1)
 			{
@@ -248,7 +241,6 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 
 			v->mx = (v->mx + 1) * this->width / 2;
 			v->my = (v->my + 1) * this->height / 2;
-			//v->mz = v->mz * (camera->far - camera->near);
 			int i = 1;
 		}
 		else
@@ -265,9 +257,12 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 	Random ^ rnd = gcnew Random();
 	for (int i = 0; i < obj->indices->Length; i += 3)
 	{
-		Color color = drawFlags & USE_RND_COLORS ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3];
-		bool toDraw = true;
-		if (drawFlags & SIMULATE_LIGHT)
+		Vector3D ^ v1 = vertices[obj->indices[i] - 1];
+		Vector3D ^ v2 = vertices[obj->indices[i + 1] - 1];
+		Vector3D ^ v3 = vertices[obj->indices[i + 2] - 1];
+
+		Color color = (drawFlags & DRAW_FILL) && (drawFlags & USE_RND_COLORS) ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3];
+		if ((drawFlags & DRAW_FILL) && (drawFlags & SIMULATE_LIGHT))
 		{
 			Vector3D ^ n = obj->normals[i / 3]->clone();
 			double alpha = degToRad(obj->rotation->x);
@@ -285,9 +280,6 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			double cosBetaSqr = cosBeta * cosBeta;
 			double sinGammaSqr = sinGamma * sinGamma;
 			double cosGammaSqr = cosGamma * cosGamma;
-			/*n->mx = (n->x * (cosAlpha * cosAlpha * cosBeta * cosGamma + cosBeta * cosGamma * sinAlpha * sinAlpha)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->y * (cosGamma * sinAlpha * sinBeta - cosAlpha * cosBeta * cosBeta * sinGamma - cosAlpha * sinBeta * sinBeta * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->z * (cosAlpha * cosGamma * sinBeta + cosBeta * cosBeta * sinAlpha * sinGamma + sinAlpha * sinBeta * sinBeta * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma);
-			n->my = (n->x * (cosAlpha * cosAlpha * cosBeta * sinGamma + cosBeta * sinAlpha * sinAlpha * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->z * (-cosBeta * cosBeta * cosGamma * sinAlpha - cosGamma * sinAlpha * sinBeta * sinBeta + cosAlpha * sinBeta * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->y * (cosAlpha * cosBeta * cosBeta * cosGamma + cosAlpha * cosGamma * sinBeta * sinBeta + sinAlpha * sinBeta * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma);
-			n->mz = (n->z * (cosAlpha * cosBeta * cosGamma * cosGamma + cosAlpha * cosBeta * sinGamma * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->y * (cosBeta * cosGamma * cosGamma * sinAlpha + cosBeta * sinAlpha * sinGamma * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma) + (n->x * (-cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta - cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta - cosAlpha * cosAlpha * sinBeta * sinGamma * sinGamma - sinAlpha * sinAlpha * sinBeta * sinGamma * sinGamma)) / (cosAlpha * cosAlpha * cosBeta * cosBeta * cosGamma * cosGamma + cosBeta * cosBeta * cosGamma * cosGamma * sinAlpha * sinAlpha + cosAlpha * cosAlpha * cosGamma * cosGamma * sinBeta * sinBeta + cosGamma * cosGamma * sinAlpha * sinAlpha * sinBeta * sinBeta + cosAlpha * cosAlpha * cosBeta * cosBeta * sinGamma * sinGamma + cosBeta * cosBeta * sinAlpha * sinAlpha * sinGamma * sinGamma + cosAlpha * cosAlpha * sinBeta * sinBeta * sinGamma * sinGamma + sinAlpha * sinAlpha * sinBeta * sinBeta * sinGamma * sinGamma);*/
 			n->mx = (n->x * (cosAlphaSqr * cosBeta * cosGamma + cosBeta * cosGamma * sinAlphaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->y * (cosGamma * sinAlpha * sinBeta - cosAlpha * cosBetaSqr * sinGamma - cosAlpha * sinBetaSqr * sinGamma)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->z * (cosAlpha * cosGamma * sinBeta + cosBetaSqr * sinAlpha * sinGamma + sinAlpha * sinBetaSqr * sinGamma)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr);
 			n->my = (n->x * (cosAlphaSqr * cosBeta * sinGamma + cosBeta * sinAlphaSqr * sinGamma)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->z * (-cosBetaSqr * cosGamma * sinAlpha - cosGamma * sinAlpha * sinBetaSqr + cosAlpha * sinBeta * sinGamma)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->y * (cosAlpha * cosBetaSqr * cosGamma + cosAlpha * cosGamma * sinBetaSqr + sinAlpha * sinBeta * sinGamma)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr);
 			n->mz = (n->z * (cosAlpha * cosBeta * cosGammaSqr + cosAlpha * cosBeta * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->y * (cosBeta * cosGammaSqr * sinAlpha + cosBeta * sinAlpha * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->x * (-cosAlphaSqr * cosGammaSqr * sinBeta - cosGammaSqr * sinAlphaSqr * sinBeta - cosAlphaSqr * sinBeta * sinGammaSqr - sinAlphaSqr * sinBeta * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr);
@@ -297,17 +289,10 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			if (intensity > 0)
 				color = Color::FromArgb(color.R * intensity, color.G * intensity, color.B * intensity);
 			else
-			{
 				color = Color::Black;
-				toDraw = false;
-			}
 		}
 
-		if (toDraw)
-			drawTriangle(vertices[obj->indices[i] - 1],
-				vertices[obj->indices[i + 1] - 1],
-				vertices[obj->indices[i + 2] - 1],
-				color, drawFlags);
+		drawTriangle(v1, v2, v3, color, drawFlags);
 	}
 }
 

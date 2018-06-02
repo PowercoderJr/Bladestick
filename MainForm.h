@@ -144,6 +144,10 @@ namespace Bladestick
 		bool applyCameraTransform(Object ^ sender);
 		void updateObjComboBoxes();
 		void updateCameraTransformInputs();
+		bool isLMBDown, isRMBDown;
+		bool isCursorShown;
+		int pastMouseX, pastMouseY;
+
 		System::Void secondarySpikesCountInput_ValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void createObjBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void deleteObjBtn_Click(System::Object^  sender, System::EventArgs^  e);
@@ -168,9 +172,14 @@ namespace Bladestick
 		System::Void onPaletteBtnClicked(System::Object^  sender, System::EventArgs^  e);
 		System::Void onFovInputValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onDrawMethodChanged(System::Object^  sender, System::EventArgs^  e);
-		System::Void MainForm_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 		System::Void ñîõðàíèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void çàãðóçèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void canvas_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		System::Void canvas_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		System::Void canvas_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		System::Void canvas_MouseWheel(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		System::Void canvas_MouseEnter(System::Object^  sender, System::EventArgs^  e);
+		System::Void canvas_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 
 	public:
 		MainForm(void);
@@ -1077,6 +1086,10 @@ namespace Bladestick
 			this->canvas->Size = System::Drawing::Size(954, 808);
 			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
+			this->canvas->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseDown);
+			this->canvas->MouseEnter += gcnew System::EventHandler(this, &MainForm::canvas_MouseEnter);
+			this->canvas->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseMove);
+			this->canvas->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseUp);
 			this->canvas->Resize += gcnew System::EventHandler(this, &MainForm::canvas_Resize);
 			// 
 			// cameraControllerPanel
@@ -1640,7 +1653,6 @@ namespace Bladestick
 			this->KeyPreview = true;
 			this->Name = L"MainForm";
 			this->Text = L"Bladestick";
-			this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::MainForm_KeyPress);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
 			this->objControllerPanel->ResumeLayout(false);

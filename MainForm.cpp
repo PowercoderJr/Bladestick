@@ -50,11 +50,13 @@ MainForm::MainForm(void)
 			setDefaultParamsBtn
 	};
 	setDefaultParamsBtn_Click(this, nullptr);
-	this->color1Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
-	this->color2Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
-	this->color3Btn->Click += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
-	this->secondarySpikesCountInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onObjParamChanged);
-	this->fovInput->ValueChanged += gcnew System::EventHandler(this, &MainForm::onFrustumChanged);
+	this->color1Btn->Click += gcnew EventHandler(this, &MainForm::onObjParamChanged);
+	this->color2Btn->Click += gcnew EventHandler(this, &MainForm::onObjParamChanged);
+	this->color3Btn->Click += gcnew EventHandler(this, &MainForm::onObjParamChanged);
+	this->secondarySpikesCountInput->ValueChanged += gcnew EventHandler(this, &MainForm::onObjParamChanged);
+	this->fovInput->ValueChanged += gcnew EventHandler(this, &MainForm::onFrustumChanged);
+	this->canvas->MouseWheel += gcnew MouseEventHandler(this, &MainForm::canvas_MouseWheel);
+	this->canvas->KeyPress += gcnew KeyPressEventHandler(this, &MainForm::canvas_KeyPress);
 
 	objectsListBox->DataSource = scene->objects;
 	updateObjComboBoxes();
@@ -68,36 +70,142 @@ MainForm::MainForm(void)
 	redrawScene();
 	autoApplyParamsChb->Checked = true;
 	autoApplyInputs = true;
+
+	isLMBDown = isRMBDown = false;
+	isCursorShown = true;
 }
 
-Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
+Void MainForm::canvas_MouseWheel(Object ^ sender, MouseEventArgs ^ e)
+{
+	static const double SPEED = 50;
+	if (e->Delta > 0 && (scene->camera->target - scene->camera->position)->getMagnitude() <= (SPEED + 1)) return;
+	
+	scene->camera->position -= scene->camera->backDir->scale(SPEED * Math::Sign(e->Delta));
+	updateCameraTransformInputs();
+	redrawScene();
+}
+
+Void MainForm::canvas_MouseEnter(Object ^ sender, EventArgs ^ e)
+{
+	canvas->Select();
+}
+
+Void MainForm::canvas_MouseDown(Object ^ sender, MouseEventArgs ^ e)
+{
+	if (e->Button == ::MouseButtons::Left || e->Button == ::MouseButtons::Right)
+	{
+		if (e->Button == ::MouseButtons::Left)
+			isLMBDown = true;
+		else if (e->Button == ::MouseButtons::Right)
+			isRMBDown = true;
+
+		pastMouseX = this->Cursor->Position.X;
+		pastMouseY = this->Cursor->Position.Y;
+
+		if (isCursorShown)
+		{
+			isCursorShown = false;
+			System::Windows::Forms::Cursor::Hide();
+		}
+	}
+}
+
+Void MainForm::canvas_MouseMove(Object ^ sender, MouseEventArgs ^ e)
+{
+	if (isLMBDown || isRMBDown)
+	{
+		const int dx = this->Cursor->Position.X - pastMouseX;
+		const int dy = - (this->Cursor->Position.Y - pastMouseY);
+
+		const double DIST = (scene->camera->target - scene->camera->position)->getMagnitude();
+		double currYaw = Vector3D::getAngleBetween(scene->camera->rightDir, Vector3D::RIGHT) + degToRad(90);
+		if (scene->camera->target->x < scene->camera->position->x)
+			currYaw = Math::PI - currYaw;
+		double currPitch = Vector3D::getAngleBetween(scene->camera->upDir, Vector3D::UP);
+		if (scene->camera->target->y < scene->camera->position->y)
+			currPitch = -currPitch;
+
+		const double SPEED = Math::PI / DIST;
+		const double PITCH_RESTRICT = degToRad(89);
+		if (isLMBDown)
+		{
+			double newYaw = -Math::PI + currYaw + dx * SPEED;
+			double newPitch = currPitch + dy * SPEED;
+			if (newPitch < -PITCH_RESTRICT)
+				newPitch = -PITCH_RESTRICT;
+			else if (newPitch > PITCH_RESTRICT)
+				newPitch = PITCH_RESTRICT;
+			Vector3D ^ buf = (gcnew Vector3D(Math::Cos(newYaw) * Math::Cos(newPitch),
+				Math::Sin(newPitch), Math::Sin(newYaw) * Math::Cos(newPitch)))->
+				normalized()->scale(DIST, DIST, DIST);
+			scene->camera->target = scene->camera->position + buf;
+		}
+		else if (isRMBDown)
+		{
+			double newYaw = currYaw + dx * SPEED;
+			double newPitch = -(currPitch + dy * SPEED);
+			if (newPitch < -PITCH_RESTRICT)
+				newPitch = -PITCH_RESTRICT;
+			else if (newPitch > PITCH_RESTRICT)
+				newPitch = PITCH_RESTRICT;
+			Vector3D ^ buf = (gcnew Vector3D(Math::Cos(newYaw) * Math::Cos(newPitch),
+				Math::Sin(newPitch), Math::Sin(newYaw) * Math::Cos(newPitch)))->
+				normalized()->scale(DIST, DIST, DIST);
+			scene->camera->position = scene->camera->target + buf;
+		}
+
+		this->Cursor->Position = Point(pastMouseX, pastMouseY);
+		scene->camera->updateDirs();
+		updateCameraTransformInputs();
+		redrawScene();
+	}
+}
+
+Void MainForm::canvas_MouseUp(Object ^ sender, MouseEventArgs ^ e)
+{
+	if (e->Button == ::MouseButtons::Left || e->Button == ::MouseButtons::Right)
+	{
+		if (e->Button == ::MouseButtons::Left)
+			isLMBDown = false;
+		else if (e->Button == ::MouseButtons::Right)
+			isRMBDown = false;
+
+		if (!(isLMBDown || isRMBDown))
+		{
+			System::Windows::Forms::Cursor::Show();
+			isCursorShown = true;
+		}
+	}
+}
+
+Void MainForm::canvas_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 {
 	bool modified = false;
-	const double speed = 5.0;
+	const double SPEED = 5.0;
 	Vector3D ^ buf;
 	char input = Char::ToUpper(e->KeyChar);
-	List<char> ^ moving = gcnew List<char>(gcnew array<char>(14) { 'W', 'A', 'S', 'D', '+', '-' });
+	List<char> ^ moving = gcnew List<char>(gcnew array<char>(12) { 'W', 'A', 'S', 'D', 'J', 'K', '8', '4', '2', '6', '+', '-' });
 	if (moving->Contains(input))
 	{
 		switch (input)
 		{
-		case 'W':
-			buf = scene->camera->upDir->scale(speed, speed, speed);
+		case 'W':case '8':
+			buf = scene->camera->upDir->scale(SPEED, SPEED, SPEED);
 			break;
-		case 'A':
-			buf = scene->camera->rightDir->scale(-speed, -speed, -speed);
+		case 'A':case '4':
+			buf = scene->camera->rightDir->scale(-SPEED, -SPEED, -SPEED);
 			break;
-		case 'S':
-			buf = scene->camera->upDir->scale(-speed, -speed, -speed);
+		case 'S':case '2':
+			buf = scene->camera->upDir->scale(-SPEED, -SPEED, -SPEED);
 			break;
-		case 'D':
-			buf = scene->camera->rightDir->scale(speed, speed, speed);
+		case 'D':case '6':
+			buf = scene->camera->rightDir->scale(SPEED, SPEED, SPEED);
 			break;
-		case '+':
-			buf = scene->camera->backDir->scale(-speed, -speed, -speed);
+		case 'J':case '+':
+			buf = scene->camera->backDir->scale(-SPEED, -SPEED, -SPEED);
 			break;
-		case '-':
-			buf = scene->camera->backDir->scale(speed, speed, speed);
+		case 'K':case '-':
+			buf = scene->camera->backDir->scale(SPEED, SPEED, SPEED);
 			break;
 		}
 		scene->camera->position += buf;
@@ -149,7 +257,6 @@ Void MainForm::çàãðóçèòüToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
 			fs = gcnew FileStream(openFileDialog->FileName, ::FileMode::Open);
 			objectsListBox->ClearSelected();
 			scene->loadFromStream(fs);
-			//objectsListBox->Refresh();
 			scene->camera->updateDirs();
 			updateCameraTransformInputs();
 			updateObjComboBoxes();
@@ -332,7 +439,7 @@ bool MainForm::applyCameraTransform(Object ^ sender)
 	{
 		double dist = (scene->camera->target - scene->camera->position)->getMagnitude();
 		double yaw = degToRad(Convert::ToDouble(cameraYaw->Value) - 90);
-		double pitch = degToRad(Convert::ToDouble(cameraPitch->Value) );
+		double pitch = degToRad(Convert::ToDouble(cameraPitch->Value));
 		double ox = Math::Cos(yaw) * Math::Cos(pitch) * dist;
 		double oy = Math::Sin(pitch) * dist;
 		double oz = Math::Sin(yaw) * Math::Cos(pitch) * dist;
@@ -403,9 +510,9 @@ void MainForm::updateCameraTransformInputs()
 	cameraTargetY->Value = Convert::ToDecimal(scene->camera->target->y);
 	cameraTargetZ->Value = Convert::ToDecimal(scene->camera->target->z);
 
-	double yaw = radToDeg(Vector3D::getAngleBetween(scene->camera->rightDir, gcnew Vector3D(1, 0, 0)));
+	double yaw = radToDeg(Vector3D::getAngleBetween(scene->camera->rightDir, Vector3D::RIGHT));
 	yaw = scene->camera->target->x < scene->camera->position->x ? -yaw : yaw;
-	double pitch = radToDeg(Vector3D::getAngleBetween(scene->camera->upDir, gcnew Vector3D(0, 1, 0)));
+	double pitch = radToDeg(Vector3D::getAngleBetween(scene->camera->upDir, Vector3D::UP));
 	pitch = scene->camera->target->y < scene->camera->position->y ? -pitch : pitch;
 	cameraYaw->Value = Convert::ToDecimal(yaw);
 	cameraPitch->Value = Convert::ToDecimal(pitch);

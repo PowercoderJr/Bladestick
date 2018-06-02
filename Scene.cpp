@@ -5,6 +5,7 @@
 using namespace Bladestick::Drawing;
 using namespace System::ComponentModel;
 using namespace System::Drawing;
+using namespace System::IO;
 using namespace System;
 
 Scene::Scene(int width, int height, Color bgColor, Color edgeColor)
@@ -53,7 +54,7 @@ void Scene::clear()
 
 bool Scene::isPointVisible(Vector3D ^ p)
 {
-	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height && p->mz >= camera->near && p->mz <= camera->far;
+	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height && p->mz <= -camera->near && p->mz >= -camera->far;
 }
 
 void Scene::setPixel(int x, int y, double z, Color color)
@@ -228,9 +229,9 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			float b = -t;
 			Vector3D ^ src = v->clone();
 			v->mw = src->mz;
-			v->mx = -((2 * src->mx * n) / (-l + r) + (src->mz * (l + r)) / (l - r));
+			v->mx = -(2 * src->mx * n) / (-l + r) - (src->mz * (l + r)) / (l - r);
 			v->my = (2 * src->my * n) / (-b + t) + (src->mz * (b + t)) / (b - t);
-			v->mz = -((2 * f * n) / (f - n) + (src->mz * (f + n)) / (f - n));
+			v->mz = -(2 * f * n) / (f - n) + (src->mz * (f + n)) / (f - n);
 
 			if (v->mw != 1)
 			{
@@ -248,7 +249,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			//Нужно ли искажение X и Y?
 			/*v->mx = -ctg / aspect * v->mx;
 			v->my = -ctg * v->my;*/
-			v->mz = -(2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);
+			v->mz = (2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);
 			v->mx += width / 2;
 			v->my += height / 2;
 		}
@@ -285,7 +286,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			n->mz = (n->z * (cosAlpha * cosBeta * cosGammaSqr + cosAlpha * cosBeta * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->y * (cosBeta * cosGammaSqr * sinAlpha + cosBeta * sinAlpha * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr) + (n->x * (-cosAlphaSqr * cosGammaSqr * sinBeta - cosGammaSqr * sinAlphaSqr * sinBeta - cosAlphaSqr * sinBeta * sinGammaSqr - sinAlphaSqr * sinBeta * sinGammaSqr)) / (cosAlphaSqr * cosBetaSqr * cosGammaSqr + cosBetaSqr * cosGammaSqr * sinAlphaSqr + cosAlphaSqr * cosGammaSqr * sinBetaSqr + cosGammaSqr * sinAlphaSqr * sinBetaSqr + cosAlphaSqr * cosBetaSqr * sinGammaSqr + cosBetaSqr * sinAlphaSqr * sinGammaSqr + cosAlphaSqr * sinBetaSqr * sinGammaSqr + sinAlphaSqr * sinBetaSqr * sinGammaSqr);
 
 			n->modifiedToMain();
-			double intensity = camera->backDir->normalized()->scale(-1, -1, 1)->scalarProduct(n);
+			double intensity = camera->backDir->normalized()->scale(-1, -1, -1)->scalarProduct(n);
 			if (intensity > 0)
 				color = Color::FromArgb(color.R * intensity, color.G * intensity, color.B * intensity);
 			else
@@ -315,4 +316,111 @@ Color Scene::getBgColor()
 void Scene::setBgColor(Color color)
 {
 	this->bgColor = color;
+}
+
+void Scene::saveToStream(StreamWriter ^ writer)
+{
+	writer->WriteLine("### Параметры сцены и камеры");
+
+	writer->WriteLine("# Позиция камеры");
+	writer->WriteLine(SceneMarks::CAMERA_POSITION + camera->position->x + " " + camera->position->y + " " + camera->position->z);
+	writer->WriteLine("# Цель камеры");
+	writer->WriteLine(SceneMarks::CAMERA_TARGET + camera->target->x + " " + camera->target->y + " " + camera->target->z);
+	writer->WriteLine("# Отсекающие плоскости");
+	writer->WriteLine(SceneMarks::FUSTRUM + camera->near + " " + camera->far);
+	writer->WriteLine("# FOV");
+	writer->WriteLine(SceneMarks::FOV + camera->fov);
+	writer->WriteLine("# Вид проецирования");
+	writer->WriteLine(SceneMarks::PROJ_TYPE + (camera->perspective ? "1" : "0"));
+	writer->WriteLine("# Цвет фона");
+	writer->WriteLine(SceneMarks::BG_COLOR + bgColor.R + " " + bgColor.G + " " + bgColor.B);
+	writer->WriteLine("# Цвет линии");
+	writer->WriteLine(SceneMarks::LINE_COLOR + edgeColor.R + " " + edgeColor.G + " " + edgeColor.B);
+	writer->WriteLine("# Счётчик объектов");
+	writer->WriteLine(SceneMarks::OBJ_COUNT + objTotalCount);
+	writer->WriteLine();
+
+	writer->WriteLine("### Объекты");
+	for each (SceneObject ^ obj in objects)
+	{
+		obj->saveToStream(writer);
+		writer->WriteLine(SceneMarks::END_OF_OBJECT);
+		writer->WriteLine();
+		writer->WriteLine();
+	}
+}
+
+void Scene::loadFromStream(Stream ^ stream)
+{
+	objects->Clear();
+	StreamReader ^ reader = gcnew StreamReader(stream);
+
+	String ^ line;
+	while ((line = reader->ReadLine()) != nullptr)
+	{
+		if (line->Length == 0)
+			continue;
+		if (line->StartsWith(SceneMarks::CAMERA_POSITION))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			camera->position = gcnew Vector3D(double::Parse(data[1]), double::Parse(data[2]), double::Parse(data[3]));
+		}
+		else if (line->StartsWith(SceneMarks::CAMERA_TARGET))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			camera->target = gcnew Vector3D(double::Parse(data[1]), double::Parse(data[2]), double::Parse(data[3]));
+		}
+		else if (line->StartsWith(SceneMarks::FUSTRUM))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			camera->near = double::Parse(data[1]);
+			camera->far = double::Parse(data[2]);
+		}
+		else if (line->StartsWith(SceneMarks::FOV))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			camera->fov = double::Parse(data[1]);
+		}
+		else if (line->StartsWith(SceneMarks::PROJ_TYPE))
+		{
+			camera->perspective = line[SceneMarks::PROJ_TYPE->Length] == '1';
+		}
+		else if (line->StartsWith(SceneMarks::BG_COLOR))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			bgColor = Color::FromArgb(int::Parse(data[1]), int::Parse(data[2]), int::Parse(data[3]));
+		}
+		else if (line->StartsWith(SceneMarks::LINE_COLOR))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			edgeColor = Color::FromArgb(int::Parse(data[1]), int::Parse(data[2]), int::Parse(data[3]));
+		}
+		else if (line->StartsWith(SceneMarks::OBJ_COUNT))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			objTotalCount = int::Parse(data[1]);
+		}
+		else if (line->StartsWith(ObjectMarks::OBJECT))
+		{
+			Stream ^ buf = gcnew MemoryStream();
+			StreamWriter ^ writer = gcnew StreamWriter(buf);
+			writer->WriteLine(line);
+
+			while ((line = reader->ReadLine()) != nullptr)
+			{
+				if (line->Equals(SceneMarks::END_OF_OBJECT))
+					break;
+
+				writer->WriteLine(line);
+			}
+			writer->Flush();
+			SceneObject ^ obj = gcnew SceneObject();
+			buf->Seek(0, ::SeekOrigin::Begin);
+			obj->loadFromStream(buf);
+			buf->Close();
+			obj->transform();
+			//WTF HERE
+			objects->Add(obj);
+		}
+	}
 }

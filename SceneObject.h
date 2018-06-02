@@ -6,6 +6,17 @@ namespace Bladestick
 	{
 		ref class Vector3D;
 
+		public ref class ObjectMarks
+		{
+		public:
+			static initonly System::String ^ OBJECT = "o ";
+			static initonly System::String ^ VERTEX = "v  ";
+			static initonly System::String ^ FACET = "f ";
+			static initonly System::String ^ OFFSET = "ooff ";
+			static initonly System::String ^ ROTATION = "orot ";
+			static initonly System::String ^ SCALING = "oscl ";
+		};
+
 		public ref class SceneObject
 		{
 		private:/// <summary>
@@ -122,6 +133,7 @@ namespace Bladestick
 			void moveOriginal(double x, double y, double z);
 			void moveOriginal(Vector3D ^ offset);
 
+			void saveToStream(System::IO::StreamWriter ^ stream);
 			void loadFromStream(System::IO::Stream ^ stream);
 			System::String ^ ToString() override;
 		};

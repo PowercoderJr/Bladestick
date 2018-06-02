@@ -8,6 +8,20 @@ namespace Bladestick
 {
 	namespace Drawing
 	{
+		public ref class SceneMarks
+		{
+		public:
+			static initonly System::String ^ CAMERA_POSITION = "cpos ";
+			static initonly System::String ^ CAMERA_TARGET = "ctar ";
+			static initonly System::String ^ FUSTRUM = "fstr ";
+			static initonly System::String ^ FOV = "fov ";
+			static initonly System::String ^ PROJ_TYPE = "cper ";
+			static initonly System::String ^ BG_COLOR = "bc ";
+			static initonly System::String ^ LINE_COLOR = "lc ";
+			static initonly System::String ^ OBJ_COUNT = "obc ";
+			static initonly System::String ^ END_OF_OBJECT = "eoo";
+		};
+
 		public enum DrawFlags
 		{
 			DRAW_EDGES = 1,
@@ -53,6 +67,9 @@ namespace Bladestick
 			void render(System::Drawing::Graphics ^ g);
 			System::Drawing::Color getBgColor();
 			void setBgColor(System::Drawing::Color color);
+
+			void saveToStream(System::IO::StreamWriter ^ stream);
+			void loadFromStream(System::IO::Stream ^ stream);
 		};
 
 	}

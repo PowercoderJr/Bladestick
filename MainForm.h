@@ -135,8 +135,9 @@ namespace Bladestick
 		Drawing::Scene ^ scene;
 		array<Control ^> ^ selectionDependedControls;
 		System::Windows::Forms::CheckBox^  simulateLightChb;
-		bool autoApplyObjTransform;
-		bool autoApplyCameraTransform;
+		System::Windows::Forms::SaveFileDialog^  saveFileDialog;
+		System::Windows::Forms::OpenFileDialog^  openFileDialog;
+		bool autoApplyInputs;
 		void redrawScene();
 		void applyObjTransform(Object ^ sender);
 		void applyObjParams();
@@ -167,6 +168,9 @@ namespace Bladestick
 		System::Void onPaletteBtnClicked(System::Object^  sender, System::EventArgs^  e);
 		System::Void onFovInputValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onDrawMethodChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void MainForm_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+		System::Void ñîõðàíèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void çàãðóçèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 
 	public:
 		MainForm(void);
@@ -311,6 +315,8 @@ namespace Bladestick
 			this->drawFillChb = (gcnew System::Windows::Forms::CheckBox());
 			this->drawEdgesChb = (gcnew System::Windows::Forms::CheckBox());
 			this->controllersPanel = (gcnew System::Windows::Forms::Panel());
+			this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->menuStrip->SuspendLayout();
 			this->objControllerPanel->SuspendLayout();
 			this->objParamsGroup->SuspendLayout();
@@ -412,6 +418,7 @@ namespace Bladestick
 			this->ñîõðàíèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
 			this->ñîõðàíèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->ñîõðàíèòüToolStripMenuItem->Text = L"Ñîõðàíèòü...";
+			this->ñîõðàíèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ñîõðàíèòüToolStripMenuItem_Click);
 			// 
 			// çàãðóçèòüToolStripMenuItem
 			// 
@@ -419,6 +426,7 @@ namespace Bladestick
 			this->çàãðóçèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::O));
 			this->çàãðóçèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
 			this->çàãðóçèòüToolStripMenuItem->Text = L"Çàãðóçèòü...";
+			this->çàãðóçèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::çàãðóçèòüToolStripMenuItem_Click);
 			// 
 			// ïóëüòToolStripMenuItem
 			// 
@@ -1079,7 +1087,7 @@ namespace Bladestick
 			this->cameraControllerPanel->Controls->Add(this->groupBox5);
 			this->cameraControllerPanel->Controls->Add(this->groupBox1);
 			this->cameraControllerPanel->Controls->Add(this->groupBox4);
-			this->cameraControllerPanel->Location = System::Drawing::Point(296, 13);
+			this->cameraControllerPanel->Location = System::Drawing::Point(296, 22);
 			this->cameraControllerPanel->Name = L"cameraControllerPanel";
 			this->cameraControllerPanel->Size = System::Drawing::Size(310, 740);
 			this->cameraControllerPanel->TabIndex = 6;
@@ -1617,6 +1625,10 @@ namespace Bladestick
 			this->controllersPanel->Size = System::Drawing::Size(310, 808);
 			this->controllersPanel->TabIndex = 8;
 			// 
+			// openFileDialog
+			// 
+			this->openFileDialog->FileName = L"openFileDialog1";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -1627,7 +1639,7 @@ namespace Bladestick
 			this->Controls->Add(this->menuStrip);
 			this->KeyPreview = true;
 			this->Name = L"MainForm";
-			this->Text = L"MainForm";
+			this->Text = L"Bladestick";
 			this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainForm::MainForm_KeyPress);
 			this->menuStrip->ResumeLayout(false);
 			this->menuStrip->PerformLayout();
@@ -1696,6 +1708,6 @@ namespace Bladestick
 
 		}
 #pragma endregion
-private: System::Void MainForm_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+
 };
 }

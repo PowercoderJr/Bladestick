@@ -8,6 +8,7 @@ using namespace Bladestick;
 using namespace System::ComponentModel;
 using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
+using namespace System::IO;
 using namespace System::Drawing;
 using namespace System::Threading;
 using namespace System;
@@ -26,8 +27,7 @@ MainForm::MainForm(void)
 	InitializeComponent();
 	scene = gcnew Drawing::Scene();
 	autoApplyParamsChb->Checked = false;
-	autoApplyObjTransform = false;
-	autoApplyCameraTransform = false;
+	autoApplyInputs = false;
 	selectionDependedControls = gcnew array<Control ^>(27)
 	{
 		deleteObjBtn, objPosX, objPosY, objPosZ,
@@ -67,8 +67,7 @@ MainForm::MainForm(void)
 
 	redrawScene();
 	autoApplyParamsChb->Checked = true;
-	autoApplyObjTransform = true;
-	autoApplyCameraTransform = true;
+	autoApplyInputs = true;
 }
 
 Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
@@ -77,21 +76,21 @@ Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 	const double speed = 5.0;
 	Vector3D ^ buf;
 	char input = Char::ToUpper(e->KeyChar);
-	List<char> ^ moving = gcnew List<char>(gcnew array<char>(14) { 'W', 'A', 'S', 'D', '8', '4', '2', '6', '+', '-' });
+	List<char> ^ moving = gcnew List<char>(gcnew array<char>(14) { 'W', 'A', 'S', 'D', '+', '-' });
 	if (moving->Contains(input))
 	{
 		switch (input)
 		{
-		case 'W': case '8':
+		case 'W':
 			buf = scene->camera->upDir->scale(speed, speed, speed);
 			break;
-		case 'A': case '4':
+		case 'A':
 			buf = scene->camera->rightDir->scale(-speed, -speed, -speed);
 			break;
-		case 'S': case '2':
+		case 'S':
 			buf = scene->camera->upDir->scale(-speed, -speed, -speed);
 			break;
-		case 'D': case '6':
+		case 'D':
 			buf = scene->camera->rightDir->scale(speed, speed, speed);
 			break;
 		case '+':
@@ -107,8 +106,8 @@ Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 	}
 	else if (input == 'F')
 	{
-		buf = scene->camera->position;
-		scene->camera->position = scene->camera->target;
+		buf = scene->camera->position->clone();
+		scene->camera->position = scene->camera->target->clone();
 		scene->camera->target = buf;
 		modified = true;
 	}
@@ -120,9 +119,65 @@ Void MainForm::MainForm_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 	}
 }
 
+Void MainForm::сохранитьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
+{
+	StreamWriter ^ fs;
+	if (saveFileDialog->ShowDialog(this) == ::DialogResult::OK)
+	{
+		try
+		{
+			fs = gcnew StreamWriter(saveFileDialog->FileName);
+			scene->saveToStream(fs);
+			fs->Flush();
+		}
+		finally
+		{
+			fs->Close();
+		}
+	}
+}
+
+Void MainForm::загрузитьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
+{
+	FileStream ^ fs;
+	if (openFileDialog->ShowDialog(this) == ::DialogResult::OK)
+	{
+		bool currAutoApplyInputs = autoApplyInputs;
+		autoApplyInputs = false;
+		try
+		{
+			fs = gcnew FileStream(openFileDialog->FileName, ::FileMode::Open);
+			objectsListBox->ClearSelected();
+			scene->loadFromStream(fs);
+			//objectsListBox->Refresh();
+			scene->camera->updateDirs();
+			updateCameraTransformInputs();
+			updateObjComboBoxes();
+			pProjectionRb->Checked = !scene->camera->perspective;
+			cProjectionRb->Checked = scene->camera->perspective;
+			nearPlaneInput->Value = Convert::ToDecimal(scene->camera->near);
+			farPlaneInput->Value = Convert::ToDecimal(scene->camera->far);
+			fovInput->Value = scene->camera->fov;
+			sceneBgColorBtn->BackColor = scene->bgColor;
+			edgesColorBtn->BackColor = scene->edgeColor;
+			redrawScene();
+		}
+		catch (...)
+		{
+			MessageBox::Show(this, "Во время загрузки сцены произошла ошибка", "Ошибка", ::MessageBoxButtons::OK, ::MessageBoxIcon::Error);
+		}
+		finally
+		{
+			fs->Close();
+			autoApplyInputs = currAutoApplyInputs;
+		}
+	}
+}
+
 Void MainForm::onDrawMethodChanged(Object ^ sender, EventArgs ^ e)
 {
-	redrawScene();
+	if (autoApplyInputs)
+		redrawScene();
 }
 
 Void MainForm::onProjectionTypeChanged(Object ^ sender, EventArgs ^ e)
@@ -134,7 +189,8 @@ Void MainForm::onProjectionTypeChanged(Object ^ sender, EventArgs ^ e)
 	else if (sender == cProjectionRb)
 		scene->camera->perspective = true;
 
-	redrawScene();
+	if (autoApplyInputs)
+		redrawScene();
 }
 
 Void MainForm::onFrustumChanged(Object ^ sender, EventArgs ^ e)
@@ -159,7 +215,9 @@ Void MainForm::onPaletteBtnClicked(Object ^ sender, EventArgs ^ e)
 		else if (sender == edgesColorBtn)
 			scene->edgeColor = colorDialog->Color;
 
-		redrawScene();
+
+		if (autoApplyInputs)
+			redrawScene();
 	}
 }
 
@@ -270,15 +328,6 @@ bool MainForm::applyCameraTransform(Object ^ sender)
 		newTargetY = Convert::ToDouble(cameraTargetY->Value);
 	else if (sender == cameraTargetZ)
 		newTargetZ = Convert::ToDouble(cameraTargetZ->Value);
-	/*else if (sender == cameraYaw || sender == cameraPitch)
-	{
-		double dist = (scene->camera->target - scene->camera->position)->getMagnitude();
-		double yaw = degToRad(Convert::ToDouble(cameraYaw->Value) - 90);
-		double ox = Math::Cos(yaw) * dist;
-		double oz = Math::Sin(yaw) * dist;
-		newTargetX = scene->camera->position->x + ox;
-		newTargetZ = scene->camera->position->z + oz;
-	}*/
 	else if (sender == cameraYaw || sender == cameraPitch)
 	{
 		double dist = (scene->camera->target - scene->camera->position)->getMagnitude();
@@ -343,8 +392,8 @@ void MainForm::updateObjComboBoxes()
 
 void MainForm::updateCameraTransformInputs()
 {
-	bool currAutoApplyCameraTransform = autoApplyCameraTransform;
-	autoApplyCameraTransform = false;
+	bool currAutoApplyInputs = autoApplyInputs;
+	autoApplyInputs = false;
 
 	cameraPosX->Value = Convert::ToDecimal(scene->camera->position->x);
 	cameraPosY->Value = Convert::ToDecimal(scene->camera->position->y);
@@ -360,9 +409,8 @@ void MainForm::updateCameraTransformInputs()
 	pitch = scene->camera->target->y < scene->camera->position->y ? -pitch : pitch;
 	cameraYaw->Value = Convert::ToDecimal(yaw);
 	cameraPitch->Value = Convert::ToDecimal(pitch);
-	//cameraRoll->Value = NEEDED?;
 
-	autoApplyCameraTransform = currAutoApplyCameraTransform;
+	autoApplyInputs = currAutoApplyInputs;
 }
 
 Void MainForm::secondarySpikesCountInput_ValueChanged(Object ^ sender, EventArgs ^ e)
@@ -439,7 +487,7 @@ Void MainForm::colorBtn_Click(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::onObjTransformationKeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 {
-	if ((char)(e->KeyChar) == (char)Keys::Enter && autoApplyObjTransform) //Enter
+	if ((char)(e->KeyChar) == (char)Keys::Enter && autoApplyInputs) //Enter
 	{
 		applyObjTransform(sender);
 		redrawScene();
@@ -491,14 +539,13 @@ Void MainForm::placeCameraRelativeBtn_Click(Object ^ sender, EventArgs ^ e)
 		Vector3D ^ newCameraPos = objPos + offset;
 
 		if (cmpDoubles(newCameraPos->x, scene->camera->target->x) == 0 && cmpDoubles(newCameraPos->z, scene->camera->target->z) == 0)
-			MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена", ::MessageBoxButtons::OK, ::MessageBoxIcon::Exclamation);
-		else
-		{
-			scene->camera->position = newCameraPos;
-			scene->camera->updateDirs();
-			updateCameraTransformInputs();
-			redrawScene();
-		}
+			newCameraPos = newCameraPos->add(0, 0, 1);
+			//MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена", ::MessageBoxButtons::OK, ::MessageBoxIcon::Exclamation);
+		
+		scene->camera->position = newCameraPos;
+		scene->camera->updateDirs();
+		updateCameraTransformInputs();
+		redrawScene();
 	}
 	else
 	{
@@ -510,17 +557,16 @@ Void MainForm::cameraLookAtBtn_Click(Object ^ sender, EventArgs ^ e)
 {
 	if (cameraLookAtCb->SelectedIndex > -1)
 	{
-		Vector3D ^ objPos = safe_cast<SceneObject ^>(cameraLookAtCb->SelectedItem)->offset;
+		Vector3D ^ objPos = safe_cast<SceneObject ^>(cameraLookAtCb->SelectedItem)->offset->clone();
 
 		if (cmpDoubles(objPos->x, scene->camera->position->x) == 0 && cmpDoubles(objPos->z, scene->camera->position->z) == 0)
-			MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена", ::MessageBoxButtons::OK, ::MessageBoxIcon::Exclamation);
-		else
-		{
-			scene->camera->target = objPos;
-			scene->camera->updateDirs();
-			updateCameraTransformInputs();
-			redrawScene();
-		}
+			objPos = objPos->subtract(0, 0, 1);
+			//MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена", ::MessageBoxButtons::OK, ::MessageBoxIcon::Exclamation);	
+
+		scene->camera->target = objPos;
+		scene->camera->updateDirs();
+		updateCameraTransformInputs();
+		redrawScene();
 	}
 	else
 	{
@@ -530,7 +576,7 @@ Void MainForm::cameraLookAtBtn_Click(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::onCameraTransformationChanged(Object ^ sender, EventArgs ^ e)
 {
-	if (autoApplyCameraTransform)
+	if (autoApplyInputs)
 	{
 		if (applyCameraTransform(sender))
 		{
@@ -545,7 +591,7 @@ Void MainForm::onCameraTransformationChanged(Object ^ sender, EventArgs ^ e)
 
 Void MainForm::onObjTransformationChanged(Object ^ sender, EventArgs ^ e)
 {
-	if (autoApplyObjTransform)
+	if (autoApplyInputs)
 	{
 		applyObjTransform(sender);
 		redrawScene();
@@ -569,8 +615,8 @@ Void MainForm::objectsListBox_SelectedValueChanged(Object ^ sender, EventArgs ^ 
 
 	if (isAnySelected)
 	{
-		bool currAutoApplyObjTransform = autoApplyObjTransform;
-		autoApplyObjTransform = false;
+		bool currAutoApplyInputs = autoApplyInputs;
+		autoApplyInputs = false;
 		
 		SceneObject ^ obj = safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0]);
 		objPosX->Value = Convert::ToDecimal(obj->offset->x);
@@ -583,7 +629,7 @@ Void MainForm::objectsListBox_SelectedValueChanged(Object ^ sender, EventArgs ^ 
 		objScaleY->Value = Convert::ToDecimal(obj->scaling->y);
 		objScaleZ->Value = Convert::ToDecimal(obj->scaling->z);
 
-		autoApplyObjTransform = currAutoApplyObjTransform;
+		autoApplyInputs = currAutoApplyInputs;
 
 		objTransformGroup->Text = "Преобразования (" + obj->name + (objectsListBox->SelectedItems->Count > 1 ? " + ещё " + (objectsListBox->SelectedItems->Count - 1) + "шт." : "") + ")";
 	}

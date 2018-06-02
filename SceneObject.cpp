@@ -104,10 +104,36 @@ void SceneObject::moveOriginal(Vector3D ^ offset)
 	moveOriginal(offset->x, offset->y, offset->z);
 }
 
+void SceneObject::saveToStream(StreamWriter ^ writer)
+{
+	writer->WriteLine("# Объект " + name);
+	writer->WriteLine(ObjectMarks::OBJECT + name);
+	for (int i = 0; i < vertices->Length; ++i)
+		writer->WriteLine(ObjectMarks::VERTEX + vertices[i]->x + " " + vertices[i]->y + " " + vertices[i]->z);
+
+	writer->WriteLine();
+	for (int i = 0; i < indices->Length; i += 3)
+	{
+		int ii = i / 3;
+		writer->WriteLine(ObjectMarks::FACET + indices[i] + "//" + normals[ii]->x + "/" + colors[ii].R + " " +
+			indices[i + 1] + "//" + normals[ii]->y + "/" + colors[ii].G + " " + 
+			indices[i + 2] + "//" + normals[ii]->z + "/" + colors[ii].B);
+	}
+
+	writer->WriteLine();
+	writer->WriteLine("# Смещение");
+	writer->WriteLine(ObjectMarks::OFFSET + offset->x + " " + offset->y + " " + offset->z);
+	writer->WriteLine("# Поворот");
+	writer->WriteLine(ObjectMarks::ROTATION + rotation->x + " " + rotation->y + " " + rotation->z);
+	writer->WriteLine("# Масштаб");
+	writer->WriteLine(ObjectMarks::SCALING + scaling->x + " " + scaling->y + " " + scaling->z);
+}
+
 void SceneObject::loadFromStream(Stream ^ stream)
 {
 	List<Vector3D ^> ^ vertices = gcnew List<Vector3D ^>(N);
 	List<int> ^ indices = gcnew List<int>(3 * N);
+	List<Vector3D ^> ^ normals = gcnew List<Vector3D ^>(N);
 	List<Color> ^ colors = gcnew List<Color>(N);
 	String ^ line;
 	Random ^ rnd = gcnew Random();
@@ -118,7 +144,11 @@ void SceneObject::loadFromStream(Stream ^ stream)
 		if (line->Length == 0)
 			continue;
 
-		if (line->Length >= 3 && line->Substring(0, 3)->Equals("v  "))
+		if (line->StartsWith(ObjectMarks::OBJECT))
+		{
+			this->name = line->Substring(ObjectMarks::OBJECT->Length);
+		}
+		else if (line->StartsWith(ObjectMarks::VERTEX))
 		{
 			array<String ^> ^ data = line->Split(' ');
 			array<double> ^ coords = gcnew array<double>(3);
@@ -126,21 +156,45 @@ void SceneObject::loadFromStream(Stream ^ stream)
 				coords[i] = Double::Parse(data[i + 2]->Split('/')[0]->Replace('.', ','));
 			vertices->Add(gcnew Vector3D(coords[0], coords[1], coords[2]));
 		}
-		else if (line->Length >= 2 && line->Substring(0, 2)->Equals("f "))
+		else if (line->StartsWith(ObjectMarks::FACET))
 		{
+			static int nt = 0;
+			++nt;
 			array<String ^> ^ data = line->Split(' ');
+			array<double> ^ normalValues = gcnew array<double>(3);
 			array<int> ^ colorValues = gcnew array<int>(3);
 			for (int i = 0; i < 3; ++i)
 			{
 				array<String ^> ^ splitted = data[i + 1]->Split('/');
 				indices->Add(int::Parse(splitted[0]));
+				normalValues[i] = splitted->Length >= 3 ? double::Parse(splitted[2]) : 0;
 				colorValues[i] = splitted->Length >= 4 ? int::Parse(splitted[3]) : rnd->Next(256);
 			}
 			colors->Add(Color::FromArgb(colorValues[0], colorValues[1], colorValues[2]));
+			Vector3D ^ normal = (gcnew Vector3D(normalValues[0], normalValues[1], normalValues[2]))->normalized();
+			if (normal->getMagnitude() == 0)
+				normal->z = 1;
+			normals->Add(normal);
+		}
+		else if (line->StartsWith(ObjectMarks::OFFSET))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			offset = gcnew Vector3D(double::Parse(data[1]), double::Parse(data[2]), double::Parse(data[3]));
+		}
+		else if (line->StartsWith(ObjectMarks::ROTATION))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			rotation = gcnew Vector3D(double::Parse(data[1]), double::Parse(data[2]), double::Parse(data[3]));
+		}
+		else if (line->StartsWith(ObjectMarks::SCALING))
+		{
+			array<String ^> ^ data = line->Split(' ');
+			scaling = gcnew Vector3D(double::Parse(data[1]), double::Parse(data[2]), double::Parse(data[3]));
 		}
 	}
 	this->vertices = vertices->ToArray();
 	this->indices = indices->ToArray();
+	this->normals = normals->ToArray();
 	this->colors = colors->ToArray();
 }
 

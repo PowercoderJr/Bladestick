@@ -48,6 +48,7 @@ namespace Bladestick
 			Vector3D ^ vectorProduct(Vector3D ^ v);
 			Vector3D ^ clone();
 			void modifiedToMain();
+			void swapModifiedAndMain();
 			bool Equals(Vector3D ^ v) override;
 		};
 	}

@@ -13,7 +13,7 @@ namespace Bladestick
 		public:
 			static initonly System::String ^ CAMERA_POSITION = "cpos ";
 			static initonly System::String ^ CAMERA_TARGET = "ctar ";
-			static initonly System::String ^ FUSTRUM = "fstr ";
+			static initonly System::String ^ FUSTRUM = "frst ";
 			static initonly System::String ^ FOV = "fov ";
 			static initonly System::String ^ PROJ_TYPE = "cper ";
 			static initonly System::String ^ BG_COLOR = "bc ";
@@ -33,7 +33,10 @@ namespace Bladestick
 		public ref class Scene
 		{
 		private:
-			bool isPointVisible(Vector3D ^ p);
+			bool isPointInRect(Vector3D ^ p);
+			Vector3D ^ getPointAtY(Vector3D ^ A, Vector3D ^ B, double y);
+			Vector3D ^ getPointAtX(Vector3D ^ A, Vector3D ^ B, double x);
+			array<Vector3D ^> ^ clipLineXY(Vector3D ^ p1, Vector3D ^ p2);
 
 		internal:
 			System::Drawing::Bitmap ^ bitmap;
@@ -52,9 +55,6 @@ namespace Bladestick
 			void drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, System::Drawing::Color color, char drawFlags);
 
 		public:
-			/*static const int MAX_WIDTH = 1920;
-			static const int MAX_HEIGHT = 1080;*/
-
 			Scene(int width, int height, System::Drawing::Color bgColor, System::Drawing::Color edgeColor);
 			Scene(int width, int height);
 			Scene();

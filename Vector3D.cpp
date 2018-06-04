@@ -150,6 +150,22 @@ void Vector3D::modifiedToMain()
 	w = mw;
 }
 
+void Vector3D::swapModifiedAndMain()
+{
+	double buf = x;
+	x = mx;
+	mx = buf;
+	buf = y;
+	y = my;
+	my = buf;
+	buf = z;
+	z = mz;
+	mz = buf;
+	buf = w;
+	w = mw;
+	mw = buf;
+}
+
 bool Vector3D::Equals(Vector3D ^ v)
 {
 	return this->x == v->x && this->y == v->y && this->z == v->z;

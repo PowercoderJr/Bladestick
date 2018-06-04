@@ -76,7 +76,8 @@ namespace Bladestick
 		System::Windows::Forms::NumericUpDown^  objPosX;
 		System::Windows::Forms::ToolStripMenuItem^  ñöåíàToolStripMenuItem;
 		System::Windows::Forms::ToolStripMenuItem^  îáíîâèòüToolStripMenuItem;
-		System::Windows::Forms::ToolStripMenuItem^  î÷èñòèòüToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  ïåğåñîçäàòüToolStripMenuItem;
+
 		System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 		System::Windows::Forms::ToolStripMenuItem^  ñîõğàíèòüToolStripMenuItem;
 		System::Windows::Forms::ToolStripMenuItem^  çàãğóçèòüToolStripMenuItem;
@@ -165,13 +166,14 @@ namespace Bladestick
 		System::Void placeCameraRelativeBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void cameraLookAtBtn_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void canvas_Resize(System::Object^  sender, System::EventArgs^  e);
-		System::Void îáíîâèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void controllerPanelSwitch_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void onProjectionTypeChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onFrustumChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onPaletteBtnClicked(System::Object^  sender, System::EventArgs^  e);
 		System::Void onFovInputValueChanged(System::Object^  sender, System::EventArgs^  e);
 		System::Void onDrawMethodChanged(System::Object^  sender, System::EventArgs^  e);
+		System::Void îáíîâèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		System::Void ïåğåñîçäàòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void ñîõğàíèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void çàãğóçèòüToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		System::Void canvas_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
@@ -213,7 +215,7 @@ namespace Bladestick
 			this->menuStrip = (gcnew System::Windows::Forms::MenuStrip());
 			this->ñöåíàToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->îáíîâèòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->î÷èñòèòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ïåğåñîçäàòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->ñîõğàíèòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->çàãğóçèòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -395,7 +397,7 @@ namespace Bladestick
 			// 
 			this->ñöåíàToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
 				this->îáíîâèòüToolStripMenuItem,
-					this->î÷èñòèòüToolStripMenuItem, this->toolStripSeparator1, this->ñîõğàíèòüToolStripMenuItem, this->çàãğóçèòüToolStripMenuItem
+					this->ïåğåñîçäàòüToolStripMenuItem, this->toolStripSeparator1, this->ñîõğàíèòüToolStripMenuItem, this->çàãğóçèòüToolStripMenuItem
 			});
 			this->ñöåíàToolStripMenuItem->Name = L"ñöåíàToolStripMenuItem";
 			this->ñöåíàToolStripMenuItem->Size = System::Drawing::Size(53, 20);
@@ -409,12 +411,13 @@ namespace Bladestick
 			this->îáíîâèòüToolStripMenuItem->Text = L"Îáíîâèòü";
 			this->îáíîâèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::îáíîâèòüToolStripMenuItem_Click);
 			// 
-			// î÷èñòèòüToolStripMenuItem
+			// ïåğåñîçäàòüToolStripMenuItem
 			// 
-			this->î÷èñòèòüToolStripMenuItem->Name = L"î÷èñòèòüToolStripMenuItem";
-			this->î÷èñòèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
-			this->î÷èñòèòüToolStripMenuItem->Text = L"Î÷èñòèòü";
-			this->î÷èñòèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::clearObjBtn_Click);
+			this->ïåğåñîçäàòüToolStripMenuItem->Name = L"ïåğåñîçäàòüToolStripMenuItem";
+			this->ïåğåñîçäàòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::R));
+			this->ïåğåñîçäàòüToolStripMenuItem->Size = System::Drawing::Size(184, 22);
+			this->ïåğåñîçäàòüToolStripMenuItem->Text = L"Ïåğåñîçäàòü";
+			this->ïåğåñîçäàòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ïåğåñîçäàòüToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 

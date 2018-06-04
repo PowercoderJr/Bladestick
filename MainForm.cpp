@@ -222,6 +222,7 @@ Void MainForm::canvas_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 
 	if (modified)
 	{
+		scene->camera->updateDirs();
 		updateCameraTransformInputs();
 		redrawScene();
 	}
@@ -559,7 +560,7 @@ Void MainForm::deleteObjBtn_Click(Object ^ sender, EventArgs ^ e)
 	String ^ question = objectsListBox->SelectedItems->Count > 1 ?
 		"Удалить выделенные объекты (" + objectsListBox->SelectedItems->Count + " шт.)?" :
 		"Удалить " + ((SceneObject ^)objectsListBox->SelectedItem)->name + "?";
-	if (MessageBox::Show(this, question, "Подтвердите операцию", MessageBoxButtons::YesNo) == ::DialogResult::Yes)
+	if (MessageBox::Show(this, question, "Подтвердите операцию", MessageBoxButtons::YesNo, ::MessageBoxIcon::Question) == ::DialogResult::Yes)
 	{
 		Collections::Generic::List<SceneObject ^> ^ items = gcnew Collections::Generic::List<SceneObject ^>(objectsListBox->SelectedItems->Count);
 		for (int i = 0; i < objectsListBox->SelectedItems->Count; ++i)
@@ -577,7 +578,7 @@ Void MainForm::clearObjBtn_Click(Object ^ sender, EventArgs ^ e)
 {
 	if (scene->objects->Count == 0) return;
 
-	if (MessageBox::Show(this, "Очистить список объектов?", "Подтвердите операцию", MessageBoxButtons::YesNo) == ::DialogResult::Yes)
+	if (MessageBox::Show(this, "Очистить список объектов?", "Подтвердите операцию", MessageBoxButtons::YesNo, ::MessageBoxIcon::Question) == ::DialogResult::Yes)
 	{
 		scene->objects->Clear();
 		updateObjComboBoxes();
@@ -610,6 +611,22 @@ Void MainForm::canvas_Resize(Object ^ sender, EventArgs ^ e)
 Void MainForm::обновитьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
 {
 	redrawScene();
+}
+
+Void MainForm::пересоздатьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
+{
+
+	if (MessageBox::Show(this, "Пересоздать сцену? Все объекты будут удалены, а камера будет установлена в исходное положение.", "Подтвердите операцию", MessageBoxButtons::YesNo, ::MessageBoxIcon::Question) == ::DialogResult::Yes)
+	{
+		scene->objects->Clear();
+		updateObjComboBoxes();
+		scene->camera->position = gcnew Vector3D(0, 0, 1000);
+		scene->camera->target = gcnew Vector3D(0, 0, 0);
+		scene->camera->updateDirs();
+		updateCameraTransformInputs();
+
+		redrawScene();
+	}
 }
 
 Void MainForm::controllerPanelSwitch_Click(Object ^ sender, EventArgs ^ e)

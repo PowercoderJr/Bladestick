@@ -4,6 +4,7 @@
 
 using namespace Bladestick::Drawing;
 using namespace System::ComponentModel;
+using namespace System::Collections::Generic;
 using namespace System::Drawing;
 using namespace System::IO;
 using namespace System;
@@ -52,9 +53,82 @@ void Scene::clear()
 	delete g;
 }
 
-bool Scene::isPointVisible(Vector3D ^ p)
+bool Scene::isPointInRect(Vector3D ^ p)
 {
-	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height && p->mz <= -camera->near && p->mz >= -camera->far;
+	return p->mx >= 0 && p->mx <= width && p->my >= 0 && p->my <= height;
+}
+
+Vector3D ^ Scene::getPointAtX(Vector3D ^ A, Vector3D ^ B, double x)
+{
+	double xRatio = (B->x - A->x) / (x - A->x);
+	double y = A->y + (B->y - A->y) / xRatio;
+	double z = A->z + (B->z - A->z) / xRatio;
+	return gcnew Vector3D(x, y, z);
+}
+
+Vector3D ^ Scene::getPointAtY(Vector3D ^ A, Vector3D ^ B, double y)
+{
+	double yRatio = (B->y - A->y) / (y - A->y);
+	double x = A->x + (B->x - A->x) / yRatio;
+	double z = A->z + (B->z - A->z) / yRatio;
+	return gcnew Vector3D(x, y, z);
+}
+
+array<Vector3D ^> ^ Scene::clipLineXY(Vector3D ^ p1, Vector3D ^ p2)
+{
+	//Версия с пруфом
+	/*if (p1->mx < 5 && p2->mx < 5 ||
+		p1->mx > width - 5 && p2->mx > width - 5 ||
+		p1->my < 5 && p2->my < 5 ||
+		p1->my > height - 5 && p2->my > height - 5)
+		return gcnew array<Vector3D ^>(2) { nullptr, nullptr };*/
+
+	if (p1->mx < 0 && p2->mx < 0 ||
+		p1->mx > width && p2->mx > width ||
+		p1->my < 0 && p2->my < 0 ||
+		p1->my > height && p2->my > height)
+		return gcnew array<Vector3D ^>(2) { nullptr, nullptr };
+
+	p1->swapModifiedAndMain();
+	p2->swapModifiedAndMain();
+	array<Vector3D ^> ^ input = gcnew array<Vector3D ^>(2) {p1, p2};
+	array<Vector3D ^> ^ copies = gcnew array<Vector3D ^>(2) {p1->clone(), p2->clone()};
+
+	for (int i = 0; i < input->Length; ++i)
+	{
+		//Версия с пруфом
+		/*if (input[i]->x < 5)
+			input[i] = getPointAtX(p1, p2, 5);
+		else if (input[i]->x > width - 5)
+			input[i] = getPointAtX(p1, p2, width - 5);
+
+		if (input[i]->y < 5)
+			input[i] = getPointAtY(p1, p2, 5);
+		else if (input[i]->y > height - 5)
+			input[i] = getPointAtY(p1, p2, height - 5);*/
+
+		if (input[i]->x < 0)
+			input[i] = getPointAtX(p1, p2, 0);
+		else if (input[i]->x > width)
+			input[i] = getPointAtX(p1, p2, width);
+
+		if (input[i]->y < 0)
+			input[i] = getPointAtY(p1, p2, 0);
+		else if (input[i]->y > height)
+			input[i] = getPointAtY(p1, p2, height);
+
+		input[i]->mx = copies[i]->x;
+		input[i]->my = copies[i]->y;
+		input[i]->mz = copies[i]->z;
+		input[i]->mw = copies[i]->w;
+	}
+
+	p1 = input[0];
+	p2 = input[1];
+	p1->swapModifiedAndMain();
+	p2->swapModifiedAndMain();
+
+	return gcnew array<Vector3D ^>(2) {p1, p2};
 }
 
 void Scene::setPixel(int x, int y, double z, Color color)
@@ -65,8 +139,7 @@ void Scene::setPixel(int x, int y, double z, Color color)
 	if (z >= zbuffer[index])
 	{
 		zbuffer[index] = z;
-		bitmap->SetPixel(x, camera->perspective ? y : height - y, color);
-		//bitmap->SetPixel(x, height - y, color);
+		bitmap->SetPixel(x, y, color);
 	}
 }
 
@@ -117,7 +190,10 @@ void Scene::drawLine(Vector3D ^ p1, Vector3D ^ p2, Color color)
 void Scene::drawTriangle(Vector3D ^ p1, Vector3D ^ p2, Vector3D ^ p3, Color color, char drawFlags)
 {
 	if (cmpDoubles(p1->my, p2->my) == 0 && cmpDoubles(p2->my, p3->my) == 0) return;
-	if (!(isPointVisible(p1) && isPointVisible(p2) && isPointVisible(p3))) return;
+
+	if (-p1->mz > camera->far || -p1->mz < camera->near ||
+		-p2->mz > camera->far || -p2->mz < camera->near ||
+		-p3->mz > camera->far || -p3->mz < camera->near) return;
 
 	if (p1->my > p2->my) swap(&p1, &p2);
 	if (p1->my > p3->my) swap(&p1, &p3);
@@ -208,6 +284,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 		vertices[i] = obj->vertices[i]->clone();
 	for each (Vector3D ^ v in vertices)
 	{
+		//Преобразование вида
 		double xOffset = v->mx - camera->position->x;
 		double yOffset = v->my - camera->position->y;
 		double zOffset = v->mz - camera->position->z;
@@ -251,7 +328,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 			v->my = -ctg * v->my;*/
 			v->mz = (2 * f * n / (n - f) + (f + n) / (f - n) * v->mz);
 			v->mx += width / 2;
-			v->my += height / 2;
+			v->my = height / 2 - v->my;
 		}
 	}
 
@@ -263,6 +340,7 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 		Vector3D ^ v3 = vertices[obj->indices[i + 2] - 1];
 
 		Color color = (drawFlags & DRAW_FILL) && (drawFlags & USE_RND_COLORS) ? Color::FromArgb(rnd->Next(256), rnd->Next(256), rnd->Next(256)) : obj->colors[i / 3];
+		//Освещение
 		if ((drawFlags & DRAW_FILL) && (drawFlags & SIMULATE_LIGHT))
 		{
 			Vector3D ^ n = obj->normals[i / 3]->clone();
@@ -293,7 +371,35 @@ void Scene::drawToBuffer(SceneObject ^ obj, char drawFlags)
 				color = Color::Black;
 		}
 
-		drawTriangle(v1, v2, v3, color, drawFlags);
+		//Отсечение граней
+		array<Vector3D ^> ^ vAfterClip = gcnew array<Vector3D ^>(6);
+		array<Vector3D ^> ^ buf;
+		buf = clipLineXY(v1->clone(), v2->clone());
+		vAfterClip[0] = buf[0];
+		vAfterClip[1] = buf[1];
+		buf = clipLineXY(v2->clone(), v3->clone());
+		vAfterClip[2] = buf[0];
+		vAfterClip[3] = buf[1];
+		buf = clipLineXY(v3->clone(), v1->clone());
+		vAfterClip[4] = buf[0];
+		vAfterClip[5] = buf[1];
+		List<Vector3D ^> ^ uniques = gcnew List<Vector3D ^>(6);
+		for (int i2 = 0; i2 < vAfterClip->Length; ++i2)
+		{
+			if (vAfterClip[i2] == nullptr)
+				continue;
+
+			bool repeat = false;
+			for (int j2 = 0; !repeat && j2 < uniques->Count; ++j2)
+				repeat = cmpDoubles(vAfterClip[i2]->mx, uniques[j2]->mx) == 0 &&
+				cmpDoubles(vAfterClip[i2]->my, uniques[j2]->my) == 0 &&
+				cmpDoubles(vAfterClip[i2]->mz, uniques[j2]->mz) == 0;
+			if (!repeat)
+				uniques->Add(vAfterClip[i2]);
+		}
+
+		for (int i = 1; i + 1 < uniques->Count; ++i)
+			drawTriangle(uniques[0], uniques[i], uniques[i + 1], color, drawFlags);
 	}
 }
 
@@ -419,7 +525,6 @@ void Scene::loadFromStream(Stream ^ stream)
 			obj->loadFromStream(buf);
 			buf->Close();
 			obj->transform();
-			//WTF HERE
 			objects->Add(obj);
 		}
 	}

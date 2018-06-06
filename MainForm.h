@@ -180,7 +180,7 @@ namespace Bladestick
 		System::Void canvas_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 		System::Void canvas_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 		System::Void canvas_MouseWheel(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
-		System::Void canvas_MouseEnter(System::Object^  sender, System::EventArgs^  e);
+		System::Void canvas_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 		System::Void canvas_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 
 	public:
@@ -1090,7 +1090,7 @@ namespace Bladestick
 			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
 			this->canvas->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseDown);
-			this->canvas->MouseEnter += gcnew System::EventHandler(this, &MainForm::canvas_MouseEnter);
+			this->canvas->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseClick);
 			this->canvas->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseMove);
 			this->canvas->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseUp);
 			this->canvas->Resize += gcnew System::EventHandler(this, &MainForm::canvas_Resize);

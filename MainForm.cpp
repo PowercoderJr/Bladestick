@@ -85,7 +85,7 @@ Void MainForm::canvas_MouseWheel(Object ^ sender, MouseEventArgs ^ e)
 	redrawScene();
 }
 
-Void MainForm::canvas_MouseEnter(Object ^ sender, EventArgs ^ e)
+Void MainForm::canvas_MouseClick(Object ^ sender, MouseEventArgs ^ e)
 {
 	canvas->Select();
 }

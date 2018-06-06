@@ -390,8 +390,8 @@ SceneObject ^ SceneObject::buildHandle(double radius, double height, int nEdges,
 SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, double exRadius, double thickness, int nEdges, array<Color> ^ palette)
 {
 	const int INDICES_MUL = 30;
-	Vector3D ^ nearCenter = gcnew Vector3D(0, 0, -thickness / 2);
-	Vector3D ^ farCenter = nearCenter->add(0, 0, thickness);
+	Vector3D ^ farCenter = gcnew Vector3D(0, 0, -thickness / 2);
+	Vector3D ^ nearCenter = farCenter->add(0, 0, thickness);
 	array<Vector3D ^> ^ vArr = gcnew array<Vector3D ^>(nEdges * 5);
 	array<int> ^ iArr = gcnew array<int>(nEdges * INDICES_MUL);
 	array<Vector3D ^> ^ nArr = gcnew array<Vector3D ^>(nEdges * INDICES_MUL / 3);
@@ -404,66 +404,66 @@ SceneObject ^ SceneObject::buildBladeRing(double inRadius, double bevelRadius, d
 	{
 		double sin = Math::Sin(alpha);
 		double cos = Math::Cos(alpha);
-		double inx = nearCenter->x + inRadius * cos;
-		double iny = nearCenter->y + inRadius * sin;
-		double bvx = nearCenter->x + bevelRadius * cos;
-		double bvy = nearCenter->y + bevelRadius * sin;
-		double exx = nearCenter->x + exRadius * cos;
-		double exy = nearCenter->y + exRadius * sin;
-		double exz = nearCenter->z + (farCenter->z - nearCenter->z) / 2;
+		double inx = farCenter->x + inRadius * cos;
+		double iny = farCenter->y + inRadius * sin;
+		double bvx = farCenter->x + bevelRadius * cos;
+		double bvy = farCenter->y + bevelRadius * sin;
+		double exx = farCenter->x + exRadius * cos;
+		double exy = farCenter->y + exRadius * sin;
+		double exz = farCenter->z + (nearCenter->z - farCenter->z) / 2;
 		alpha += dAlpha;
 
 		int ex = i;
-		int nBv = nEdges + i;
-		int nIn = nEdges * 2 + i;
-		int fIn = nEdges * 3 + i;
-		int fBv = nEdges * 4 + i;
+		int fBv = nEdges + i;
+		int fIn = nEdges * 2 + i;
+		int nIn = nEdges * 3 + i;
+		int nBv = nEdges * 4 + i;
 		vArr[ex] = gcnew Vector3D(exx, exy, exz);
-		vArr[nBv] = gcnew Vector3D(bvx, bvy, nearCenter->z);
-		vArr[nIn] = gcnew Vector3D(inx, iny, nearCenter->z);
-		vArr[fIn] = gcnew Vector3D(inx, iny, farCenter->z);
 		vArr[fBv] = gcnew Vector3D(bvx, bvy, farCenter->z);
+		vArr[fIn] = gcnew Vector3D(inx, iny, farCenter->z);
+		vArr[nIn] = gcnew Vector3D(inx, iny, nearCenter->z);
+		vArr[nBv] = gcnew Vector3D(bvx, bvy, nearCenter->z);
 
 		int mii = i * INDICES_MUL;
 		int mci = i * FACETS_PER_ITERATION;
-		iArr[mii] = nBv + 1;
-		iArr[mii + 1] = nBv + 2;
+		iArr[mii] = fBv + 1;
+		iArr[mii + 1] = fBv + 2;
 		iArr[mii + 2] = ex + 1;
-		iArr[mii + 3] = nBv + 2;
+		iArr[mii + 3] = fBv + 2;
 		iArr[mii + 4] = ex + 1;
 		iArr[mii + 5] = ex + 2;
 		cArr[mci] = cArr[mci + 1] = palette[1];
 
-		iArr[mii + 6] = nIn + 1;
-		iArr[mii + 7] = nIn + 2;
-		iArr[mii + 8] = nBv + 1;
-		iArr[mii + 9] = nIn + 2;
-		iArr[mii + 10] = nBv + 1;
-		iArr[mii + 11] = nBv + 2;
+		iArr[mii + 6] = fIn + 1;
+		iArr[mii + 7] = fIn + 2;
+		iArr[mii + 8] = fBv + 1;
+		iArr[mii + 9] = fIn + 2;
+		iArr[mii + 10] = fBv + 1;
+		iArr[mii + 11] = fBv + 2;
 		cArr[mci + 2] = cArr[mci + 3] = palette[0];
 
-		iArr[mii + 12] = nIn + 1;
-		iArr[mii + 13] = nIn + 2;
-		iArr[mii + 14] = fIn + 1;
-		iArr[mii + 15] = nIn + 2;
-		iArr[mii + 16] = fIn + 1;
-		iArr[mii + 17] = fIn + 2;
+		iArr[mii + 12] = fIn + 1;
+		iArr[mii + 13] = fIn + 2;
+		iArr[mii + 14] = nIn + 1;
+		iArr[mii + 15] = fIn + 2;
+		iArr[mii + 16] = nIn + 1;
+		iArr[mii + 17] = nIn + 2;
 		cArr[mci + 4] = cArr[mci + 5] = palette[0];
 
-		iArr[mii + 18] = fIn + 1;
-		iArr[mii + 19] = fIn + 2;
-		iArr[mii + 20] = fBv + 1;
-		iArr[mii + 21] = fIn + 2;
-		iArr[mii + 22] = fBv + 1;
-		iArr[mii + 23] = fBv + 2;
+		iArr[mii + 18] = nIn + 1;
+		iArr[mii + 19] = nIn + 2;
+		iArr[mii + 20] = nBv + 1;
+		iArr[mii + 21] = nIn + 2;
+		iArr[mii + 22] = nBv + 1;
+		iArr[mii + 23] = nBv + 2;
 		cArr[mci + 6] = cArr[mci + 7] = palette[0];
 
 		iArr[mii + 24] = ex + 1;
 		iArr[mii + 25] = ex + 2;
-		iArr[mii + 26] = fBv + 1;
+		iArr[mii + 26] = nBv + 1;
 		iArr[mii + 27] = ex + 2;
-		iArr[mii + 28] = fBv + 1;
-		iArr[mii + 29] = fBv + 2;
+		iArr[mii + 28] = nBv + 1;
+		iArr[mii + 29] = nBv + 2;
 		cArr[mci + 8] = cArr[mci + 9] = palette[1];
 	}
 
@@ -748,22 +748,22 @@ SceneObject ^ SceneObject::buildSpike(double inDistance, double exDistance, doub
 	const double hThickness = thickness / 2;
 	const double sideBevelDist = bevelStartPoint * sideDist / exLength;
 	Vector3D ^ sideBevelVec = (gcnew Vector3D(dir->y, -dir->x, 0))->scale(sideBevelDist);
-	Vector3D ^ nearTop = exCenter->add(bevelStartPoint * cos, bevelStartPoint * sin, -hThickness);
-	Vector3D ^ nearLeft = exCenter->subtract(0, 0, hThickness) - sideBevelVec;
-	Vector3D ^ nearRight = nearLeft + sideBevelVec->scale(2);
-	Vector3D ^ farTop = nearTop->scale(1, 1, -1);
-	Vector3D ^ farLeft = nearLeft->scale(1, 1, -1);
-	Vector3D ^ farRight = nearRight->scale(1, 1, -1);
+	Vector3D ^ farTop = exCenter->add(bevelStartPoint * cos, bevelStartPoint * sin, -hThickness);
+	Vector3D ^ farLeft = exCenter->subtract(0, 0, hThickness) - sideBevelVec;
+	Vector3D ^ farRight = farLeft + sideBevelVec->scale(2);
+	Vector3D ^ nearTop = farTop->scale(1, 1, -1);
+	Vector3D ^ nearLeft = farLeft->scale(1, 1, -1);
+	Vector3D ^ nearRight = farRight->scale(1, 1, -1);
 
 	vArr[0] = exV;
 	vArr[1] = exCenter - sideVec;
 	vArr[2] = exCenter + sideVec;
-	vArr[3] = nearLeft;
-	vArr[4] = farLeft;
-	vArr[5] = nearRight;
-	vArr[6] = farRight;
-	vArr[7] = nearTop;
-	vArr[8] = farTop;
+	vArr[3] = farLeft;
+	vArr[4] = nearLeft;
+	vArr[5] = farRight;
+	vArr[6] = nearRight;
+	vArr[7] = farTop;
+	vArr[8] = nearTop;
 	vArr[9] = inCenter->subtract(sideVec->x, sideVec->y, hThickness);
 	vArr[10] = inCenter->subtract(sideVec->x, sideVec->y, -hThickness);
 	vArr[11] = inCenter->add(sideVec->x, sideVec->y, hThickness);

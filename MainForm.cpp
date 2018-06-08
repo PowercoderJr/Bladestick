@@ -228,6 +228,23 @@ Void MainForm::canvas_KeyPress(Object ^ sender, KeyPressEventArgs ^ e)
 	}
 }
 
+Void MainForm::objectsListBox_DoubleClick(Object ^ sender, EventArgs ^ e)
+{
+	if (objectsListBox->SelectedItems->Count > 0)
+	{
+		Vector3D ^ objPos = safe_cast<SceneObject ^>(objectsListBox->SelectedItems[0])->offset->clone();
+
+		if (cmpDoubles(objPos->x, scene->camera->position->x) == 0 && cmpDoubles(objPos->z, scene->camera->position->z) == 0)
+			objPos = objPos->subtract(0, 0, 1);
+		//MessageBox::Show("Координаты камеры и цели не должны совпадать", "Операция отклонена", ::MessageBoxButtons::OK, ::MessageBoxIcon::Exclamation);	
+
+		scene->camera->target = objPos;
+		scene->camera->updateDirs();
+		updateCameraTransformInputs();
+		redrawScene();
+	}
+}
+
 Void MainForm::сохранитьToolStripMenuItem_Click(Object ^ sender, EventArgs ^ e)
 {
 	StreamWriter ^ fs;

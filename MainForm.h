@@ -182,6 +182,7 @@ namespace Bladestick
 		System::Void canvas_MouseWheel(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 		System::Void canvas_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
 		System::Void canvas_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+		System::Void objectsListBox_DoubleClick(System::Object^  sender, System::EventArgs^  e);
 
 	public:
 		MainForm(void);
@@ -407,7 +408,7 @@ namespace Bladestick
 			// 
 			this->îáíîâèòüToolStripMenuItem->Name = L"îáíîâèòüToolStripMenuItem";
 			this->îáíîâèòüToolStripMenuItem->ShortcutKeys = System::Windows::Forms::Keys::F5;
-			this->îáíîâèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
+			this->îáíîâèòüToolStripMenuItem->Size = System::Drawing::Size(184, 22);
 			this->îáíîâèòüToolStripMenuItem->Text = L"Îáíîâèòü";
 			this->îáíîâèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::îáíîâèòüToolStripMenuItem_Click);
 			// 
@@ -422,13 +423,13 @@ namespace Bladestick
 			// toolStripSeparator1
 			// 
 			this->toolStripSeparator1->Name = L"toolStripSeparator1";
-			this->toolStripSeparator1->Size = System::Drawing::Size(178, 6);
+			this->toolStripSeparator1->Size = System::Drawing::Size(181, 6);
 			// 
 			// ñîõðàíèòüToolStripMenuItem
 			// 
 			this->ñîõðàíèòüToolStripMenuItem->Name = L"ñîõðàíèòüToolStripMenuItem";
 			this->ñîõðàíèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
-			this->ñîõðàíèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
+			this->ñîõðàíèòüToolStripMenuItem->Size = System::Drawing::Size(184, 22);
 			this->ñîõðàíèòüToolStripMenuItem->Text = L"Ñîõðàíèòü...";
 			this->ñîõðàíèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::ñîõðàíèòüToolStripMenuItem_Click);
 			// 
@@ -436,7 +437,7 @@ namespace Bladestick
 			// 
 			this->çàãðóçèòüToolStripMenuItem->Name = L"çàãðóçèòüToolStripMenuItem";
 			this->çàãðóçèòüToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::O));
-			this->çàãðóçèòüToolStripMenuItem->Size = System::Drawing::Size(181, 22);
+			this->çàãðóçèòüToolStripMenuItem->Size = System::Drawing::Size(184, 22);
 			this->çàãðóçèòüToolStripMenuItem->Text = L"Çàãðóçèòü...";
 			this->çàãðóçèòüToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::çàãðóçèòüToolStripMenuItem_Click);
 			// 
@@ -1080,6 +1081,7 @@ namespace Bladestick
 			this->objectsListBox->Size = System::Drawing::Size(282, 108);
 			this->objectsListBox->TabIndex = 1;
 			this->objectsListBox->SelectedValueChanged += gcnew System::EventHandler(this, &MainForm::objectsListBox_SelectedValueChanged);
+			this->objectsListBox->DoubleClick += gcnew System::EventHandler(this, &MainForm::objectsListBox_DoubleClick);
 			// 
 			// canvas
 			// 
@@ -1089,8 +1091,8 @@ namespace Bladestick
 			this->canvas->Size = System::Drawing::Size(954, 808);
 			this->canvas->TabIndex = 5;
 			this->canvas->TabStop = false;
-			this->canvas->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseDown);
 			this->canvas->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseClick);
+			this->canvas->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseDown);
 			this->canvas->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseMove);
 			this->canvas->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::canvas_MouseUp);
 			this->canvas->Resize += gcnew System::EventHandler(this, &MainForm::canvas_Resize);
@@ -1723,6 +1725,5 @@ namespace Bladestick
 
 		}
 #pragma endregion
-
 };
 }
